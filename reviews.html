@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Reviews</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Link to your CSS file for styling -->
+    <!-- Header Section -->
+    <header>
+      <nav class="navbar">
+        <ul class="nav-links">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#services">Services</a></li>
+          <li><a href="index.html#trainers">Trainers</a></li>
+          <li><a href="index.html#pricing-plan">Membership Plan</a></li>
+          <li><a href="index.html#contact">Contact Us</a></li>
+          <li><a href="login.html" class="login-btn">Login</a></li>
+          <li><a href="register.html" class="cta-btn">Register</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-content">
+        <div class="logo">
+          <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
+        </div>
+      </div>
+    </header>
+    <style>
+      /* Page Background */
+      body {
+        background-color: black; /* Set the page background to black */
+        color: white; /* Set default text color to white for better readability */
+        font-family: Arial, sans-serif; /* Optional: set a font for better aesthetics */
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 10px; /* Add space between text and bottom border */
+      }
+
+      /* Additional text styling */
+      .additional-text {
+        text-align: center;
+        margin: 20px 0; /* Add vertical spacing */
+        padding-bottom: 10px; /* Add space before the border */
+        border-bottom: 2px solid #007bff; /* Add border below this text */
+      }
+
+      /* Simple card styling for the reviews */
+      .review-c {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: #f9f9f9; /* Card background color */
+        color: black; /* Change text color inside the card for readability */
+      }
+
+      .review-c h3 {
+        margin-top: 0;
+        color: #007bff; /* Title color */
+      }
+
+      .review-c p {
+        margin-bottom: 0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto; /* Center the container */
+        padding: 20px;
+      }
+
+      /* Centering the cards */
+      #all-reviews {
+        display: flex; /* Use flexbox to center cards */
+        flex-direction: column; /* Stack cards vertically */
+        align-items: center; /* Center align items */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>All Client Reviews</h1>
+
+      <!-- Additional text below the reviews header -->
+      <p class="additional-text">
+        Here you can find feedback from our valued clients.
+      </p>
+
+      <div id="all-reviews">
+        <div class="review-c">
+          <!-- Subscription details will be loaded here -->
+        </div>
+        <!-- All reviews will be loaded here from all_reviews.php -->
+      </div>
+    </div>
+   
+  </body>
+</html>
+<footer>
+  <p>&copy; 2024 Gym10 - All Rights Reserved</p>
+</footer>
+
+<script>
+  // Function to load client reviews from fetch_reviews.php
+  function loadClientReviews() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "all_reviews.php", true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          // Insert the response data into the feedback section
+          document.getElementById("all-reviews").innerHTML = xhr.responseText;
+        } else {
+          // Handle error response
+          document.getElementById("all-reviews").innerHTML =
+            "<p>Error loading client reviews.</p>";
+        }
+      }
+    };
+    xhr.send();
+  }
+
+  // Call the function to load client reviews when the page loads
+  window.onload = loadClientReviews;
+</script>
+
+

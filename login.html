@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Gym10</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* Add CSS to control the logo size */
+      .logo-img {
+        max-width: 90px; /* Adjust the max-width as needed */
+        height: auto;
+      }
+      /* Ensure the body and html take the full height of the page */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      /* Use flexbox to ensure footer stays at the bottom */
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      /* Main content should take up the available space */
+      main {
+        flex-grow: 1;
+      }
+
+      /* Footer styling */
+      footer {
+        background-color: #000000; /* Footer background color */
+        text-align: center; /* Center footer text */
+        padding: 18px; /* Padding inside footer */
+        margin-top: auto; /* Ensure footer stays at the bottom */
+      }
+
+      footer p {
+        margin: 0; /* Remove default margin */
+        color: white; /* Footer text color */
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
+        <ul class="nav-links">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#services">Services</a></li>
+          <li><a href="index.html#trainers">Trainers</a></li>
+          <li><a href="index.html#pricing-plan">Membership Plan</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="index.html#contact">Contact Us</a></li>
+          <li><a href="login.html" class="login-btn">Login</a></li>
+        </ul>
+      </nav>
+      <h1>Login to Gym10</h1>
+    </header>
+    <main>
+      <h2>Choose Login Type</h2>
+      <form action="login_process.php" method="POST">
+        <label for="login-type">Login as:</label>
+        <select
+          id="login-type"
+          name="login_type"
+          required
+          onchange="toggleLoginFields()"
+        >
+          <option value="client">Client (Email)</option>
+          <option value="admin">Admin (Username)</option>
+          <option value="trainer">Trainer (Username)</option>
+        </select>
+
+        <label for="username-email">Username or Email</label>
+        <input type="text" id="username-email" name="username_email" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit">Login</button>
+      </form>
+      <p>Don't have an account? <a href="register.html">Register here</a></p>
+    </main>
+
+    <script>
+      // Function to toggle the placeholder text based on login type
+      function toggleLoginFields() {
+        const loginType = document.getElementById("login-type").value;
+        const inputField = document.getElementById("username-email");
+        inputField.placeholder =
+          loginType === "admin" || loginType === "trainer"
+            ? "Username"
+            : "Email";
+      }
+
+      // Initialize the placeholder
+      toggleLoginFields();
+    </script>
+    <footer>
+      <p>&copy; 2024 Gym10 - All Rights Reserved</p>
+    </footer>
+  </body>
+</html>
+<style>
+  /* Footer styling */
+  footer {
+    background-color: #000000; /* Footer background color */
+    text-align: center; /* Center footer text */
+    padding: 18px; /* Padding inside footer */
+    margin-top: auto; /* Ensure footer stays at the bottom */
+  }
+
+  footer p {
+    margin: 0; /* Remove default margin */
+    color: white; /* Footer text color */
+  }
+</style>

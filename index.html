@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gym10 - Fitness Center</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Header Section -->
+    <header>
+      <nav class="navbar">
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#pricing-plan">Membership Plan</a></li>
+          <li><a href="#trainers">Trainers</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+
+          <li><a href="login.html" class="login-btn">Login</a></li>
+        </ul>
+      </nav>
+      <div class="header-content">
+        <div class="logo">
+          <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
+        </div>
+        <h1>Welcome to Gym10</h1>
+        <p style="margin-bottom: 20px">
+          Your journey to a healthier lifestyle starts here.
+        </p>
+        <a href="#services" class="cta-btn">Explore Our Services</a>
+      </div>
+    </header>
+
+    <!-- Services Section -->
+    <section id="services">
+      <h2>Our Services</h2>
+
+      <div class="service-cards">
+        <div class="card">
+          <h3>Strength</h3>
+          <p>
+            Embrace the essence of strength as we delve into its various
+            dimensions: physical, mental, and emotional.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Physical Fitness</h3>
+          <p>
+            It encompasses a range of activities that improve health, strength,
+            flexibility, and overall well-being.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Fat Loss</h3>
+          <p>
+            Through a combination of workout routines and expert guidance, we'll
+            empower you to reach your goals.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Weight Gain</h3>
+          <p>
+            Designed for individuals, our program offers an effective approach
+            to gaining weight in a sustainable manner.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Personal Training</h3>
+          <p>Work with certified trainers to meet your fitness goals.</p>
+        </div>
+        <div class="card">
+          <h3>Group Classes</h3>
+          <p>Join classes like Yoga, Pilates, Cardio, and more.</p>
+        </div>
+      </div>
+      <p class="services-description">
+        Discover a wide range of services tailored to meet your fitness needs
+        and help you achieve your personal goals.
+      </p>
+      <!-- Join Now Button -->
+      <div class="join-now">
+        <a href="register.html" class="join-now-btn">Join Now ➔</a>
+      </div>
+    </section>
+
+    <section id="pricing-plan">
+      <h2>Our Pricing Plan</h2>
+      <div class="pricing-container">
+        <div class="plan">
+          <h3>Basic Plan</h3>
+          <p>Access to gym facilities.</p>
+          <p>Price: Rs 800/month</p>
+          <button onclick="subscribe('Basic Plan', 20)">Subscribe</button>
+        </div>
+        <div class="plan">
+          <h3>Standard Plan</h3>
+          <p>Access to gym facilities + group classes.</p>
+          <p>Price: Rs 1000/month</p>
+          <button onclick="subscribe('Standard Plan', 30)">Subscribe</button>
+        </div>
+        <div class="plan">
+          <h3>Premium Plan</h3>
+          <p>All Standard benefits + personal training sessions.</p>
+          <p>Price: Rs 1500/month</p>
+          <button onclick="subscribe('Premium Plan', 50)">Subscribe</button>
+        </div>
+        <p
+          style="
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            margin-top: 60px;
+          "
+        >
+          Our pricing plan comes with various membership tiers, each tailored to
+          cater to different preferences and fitness aspirations.<br />Choose
+          the perfect fit and take the first step toward achieving your
+          aspirations today!
+        </p>
+      </div>
+    </section>
+
+    <script>
+      // Simulate login status; replace this with actual login check
+      var isLoggedIn = false; // Change this based on actual login status
+
+      function subscribe(planName, price) {
+        if (isLoggedIn) {
+          // Redirect to the subscription process with selected plan details
+          window.location.href = `subscribe.php?plan=${encodeURIComponent(
+            planName
+          )}&price=${price}`;
+        } else {
+          // Redirect to the login page if not logged in
+          alert("You must log in to subscribe to a membership.");
+          window.location.href = "login.html";
+        }
+      }
+    </script>
+
+    <section id="why-join-us">
+      <h2>Why Join Us?</h2>
+
+      <p>
+        At our gym, we are committed to helping you achieve your fitness goals
+        with personalized support and world-class facilities. Here’s what sets
+        us apart:
+      </p>
+
+      <div class="features-container">
+        <!-- Feature 1 -->
+        <div class="feature">
+          <h3>Expert Trainers</h3>
+          <p>
+            Our certified trainers are dedicated to guiding you every step of
+            the way, offering customized workout plans tailored to your needs.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature">
+          <h3>State-of-the-art Equipment</h3>
+          <p>
+            We offer top-of-the-line equipment to ensure you have access to the
+            best tools to maximize your fitness potential.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature">
+          <h3>Flexible Memberships</h3>
+          <p>
+            Our pricing plans are designed to be flexible and affordable, giving
+            you the freedom to choose the plan that best suits your lifestyle.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature">
+          <h3>Supportive Community</h3>
+          <p>
+            Join a community of like-minded individuals who are equally
+            committed to their fitness journey and inspire each other to stay
+            motivated.
+          </p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature">
+          <h3>Personalized Nutrition Plans</h3>
+          <p>
+            Our in-house nutritionists will provide you with personalized meal
+            plans that complement your fitness routine, helping you achieve your
+            goals faster.
+          </p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature">
+          <h3>Group Fitness Classes</h3>
+          <p>
+            From yoga to high-intensity interval training (HIIT), we offer a
+            wide range of group fitness classes to keep your workouts exciting
+            and challenging.
+          </p>
+        </div>
+      </div>
+
+      <div class="join-now">
+        <a href="register.html" class="join-now-btn">Join Now ➔</a>
+      </div>
+    </section>
+
+    <!-- Trainers Section -->
+    <section id="trainers">
+      <h2>Meet Our Trainers</h2>
+      <div class="trainer-cards">
+        <div class="card">
+          <img src="img/trainer1.jpg" alt="Trainer John Doe" />
+          <h3>John Doe</h3>
+          <p>Certified Personal Trainer</p>
+        </div>
+        <div class="card">
+          <img src="img/trainer2.jpg" alt="Trainer Jane Smith" />
+          <h3>Jane Smith</h3>
+          <p>Yoga & Pilates Instructor</p>
+        </div>
+        <div class="card">
+          <img src="img/trainer3.jpg" alt="Trainer Chris Lee" />
+          <h3>Chris Lee</h3>
+          <p>Strength & Conditioning Coach</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="client-review">
+      <h2>Clients Review</h2>
+      <!-- Text description below the heading -->
+      <p class="review-description">
+        See what our clients are saying about their experience with us!
+      </p>
+
+      <div id="feedback">
+        <div class="review-c">
+          <!-- Subscription details will be loaded here -->
+        </div>
+      </div>
+
+      <!-- "Read More Reviews" button -->
+      <div class="read-more-container">
+        <a href="reviews.html" class="read-more-btn">Read More Reviews</a>
+      </div>
+    </section>
+
+    <script>
+      // Function to load client reviews from fetch_reviews.php
+      function loadClientReviews() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "fetch_reviews.php", true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+              // Insert the response data into the feedback section
+              document.getElementById("feedback").innerHTML = xhr.responseText;
+            } else {
+              // Handle error response
+              document.getElementById("feedback").innerHTML =
+                "<p>Error loading client reviews.</p>";
+            }
+          }
+        };
+        xhr.send();
+      }
+
+      // Call the function to load client reviews when the page loads
+      window.onload = loadClientReviews;
+    </script>
+
+    <!-- Contact Section -->
+    <section id="contact">
+      <h2>Contact Us</h2>
+      <form id="contact-form" action="submit_contact.php" method="POST">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+    <footer>
+      <p>&copy; 2024 Gym10 - All Rights Reserved</p>
+    </footer>
+
+    <script>
+      function viewMembership() {
+        // Redirect to membership plans page without login requirement
+        window.location.href = "membership.html";
+
+      function checkLogin() {
+        // Simulating a login check. In real scenarios, this should check session or authentication.
+        const loggedIn = false; // Set this to true if the user is logged in
+
+        if (loggedIn) {
+          alert("You can now subscribe to a membership.");
+          // Redirect to the subscription process or membership selection page
+        } else {
+          alert("You must log in to subscribe to a membership.");
+          window.location.href = "login.html"; // Redirect to the login page if not logged in
+        }
+      }
+    </script>
+  </body>
+</html>

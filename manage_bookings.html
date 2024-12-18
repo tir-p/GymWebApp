@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Bookings - Gym10</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+    <style>
+        .logo-img {
+            max-width: 90px; /* You can adjust the size */
+            height: auto;
+        }
+        /* Additional styling for booking list */
+        .booking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        .booking-item button {
+            background-color: #dc3545; /* Red color for cancel button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 10px;
+        }
+        .booking-item button.edit-btn {
+            background-color: #007bff; /* Blue color for edit button */
+        }
+        .booking-item button:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+        .booking-item button.edit-btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        /* Styling for the edit form */
+        .edit-form {
+            display: none; /* Hidden by default */
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .action-buttons {
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 20px; /* Space between the buttons */
+    margin-top: 30px; /* Space above the buttons */
+}
+
+.action-buttons button {
+    background-color: #007bff; /* Blue color for buttons */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px; /* Padding for the buttons */
+    font-size: 1em; /* Font size */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transition effects */
+}
+
+.action-buttons button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.action-buttons button:active {
+    transform: translateY(0); /* Return to normal when clicked */
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
+            <ul class="nav-links">
+                <li><a href="client_dashboard.html">Back To Dashboard</a></li>
+                <li><a href="account.html" class="booking-btn active">Manage Account</a></li>
+            </ul>
+        </nav>
+        <h1>Manage Your Bookings</h1>
+    </header>
+    <main>
+        <h2>Your Bookings</h2>
+        <div id="booking-info" class="booking-list" style="min-height: 300px;">
+            <!-- Example booking items -->
+            <div class="booking-item">
+                <span>Yoga Class - <span class="date">2024-10-15</span> at <span class="time">10:00 AM</span></span>
+                <div>
+                    <button class="edit-btn" onclick="toggleEditForm(this)">Edit</button>
+                    <button onclick="cancelBooking('Yoga Class - 2024-10-15 at 10:00 AM')">Cancel</button>
+                </div>
+                <form class="edit-form">
+                    <label for="edit-date">New Date:</label>
+                    <input type="date" id="edit-date" required />
+                    <label for="edit-time">New Time:</label>
+                    <input type="time" id="edit-time" required />
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+            <div class="booking-item">
+                <span>Pilates - <span class="date">2024-10-16</span> at <span class="time">2:00 PM</span></span>
+                <div>
+                    <button class="edit-btn" onclick="toggleEditForm(this)">Edit</button>
+                    <button onclick="cancelBooking('Pilates - 2024-10-16 at 2:00 PM')">Cancel</button>
+                </div>
+                <form class="edit-form">
+                    <label for="edit-date">New Date:</label>
+                    <input type="date" id="edit-date" required />
+                    <label for="edit-time">New Time:</label>
+                    <input type="time" id="edit-time" required />
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+            <!-- More booking items can be added here -->
+        </div>
+
+        <!-- Buttons for managing bookings -->
+        <div class="action-buttons">
+            <button onclick="window.location.href='booking.html'">Book a New Class</button>
+        </div>
+    </main>
+
+    <script>
+        function cancelBooking(booking) {
+            // Placeholder function for canceling a booking
+            alert('Booking canceled: ' + booking);
+            // Here, you would typically make an AJAX request to cancel the booking on the server
+        }
+
+        function toggleEditForm(button) {
+            const editForm = button.closest('.booking-item').querySelector('.edit-form');
+            editForm.style.display = editForm.style.display === 'none' || editForm.style.display === '' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>
