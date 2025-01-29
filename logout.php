@@ -7,4 +7,6 @@ $_SESSION = array();
 session_destroy();
 header("Location: login.html");
 exit();
+
+// Ensure session is correctly destroyed
 ?>

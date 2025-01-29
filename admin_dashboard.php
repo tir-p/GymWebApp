@@ -31,3 +31,5 @@ $data = [
 // Return the data in JSON format
 header('Content-Type: application/json');
 echo json_encode($data);
+
+// Ensure all queries are correctly fetching data

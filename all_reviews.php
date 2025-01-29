@@ -36,4 +36,6 @@ if ($result->num_rows > 0) {
 
 // Close the connection
 $conn->close();
+
+// Ensure all queries are correctly fetching data
 ?>

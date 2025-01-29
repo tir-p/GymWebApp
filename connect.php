@@ -13,4 +13,9 @@ try {
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
+
+// Ensure connection is correctly established
 ?>
+
+
+

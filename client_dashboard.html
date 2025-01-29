@@ -1,237 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Dashboard - Gym10</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <!-- Header Section -->
     <header>
-        <nav class="navbar">
-            <ul class="nav-links">
-                <li><a href="#dashboard">Dashboard</a></li>
-                <li><a href="#membership" onclick="loadSubscriptions()">My Membership</a></li>
-                <li><a href="#plans">Subscribe to New Plans</a></li>
-                <li><a href="booking.html">Manage Bookings</a></li> <!-- New Manage Bookings link -->
-                <li><a href="account.html" class="booking-btn">Manage Account</a></li>
-                <li><a href="logout.php" class="logout-btn">Logout</a></li>
-            </ul>
-        </nav>
-        <div class="header-content">
-            <div class="logo">
-                <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
-            </div>
-            <h1>Welcome to your Client Dashboard</h1>
-            <p>View your memberships, subscribe to new plans, and more.</p>
+      <nav class="navbar">
+        <ul class="nav-links">
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li>
+            <a href="#membership" onclick="loadSubscriptions()"
+              >My Membership</a
+            >
+          </li>
+          <li><a href="#plans">Subscribe to New Plans</a></li>
+          <li><a href="booking.html">Manage Bookings</a></li>
+          <!-- New Manage Bookings link -->
+          <li><a href="account.html" class="booking-btn">Manage Account</a></li>
+          <li><a href="logout.php" class="logout-btn">Logout</a></li>
+        </ul>
+      </nav>
+      <div class="header-content">
+        <div class="logo">
+          <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
         </div>
+        <h1>Welcome to your Client Dashboard</h1>
+        <p>View your memberships, subscribe to new plans, and more.</p>
+      </div>
     </header>
 
     <!-- Dashboard Section -->
     <section id="dashboard">
-        <h2>Your Dashboard</h2>
-        <p>Manage your account, view active memberships, and explore new plans.</p>
-        <div class="dashboard-actions">
-            <button class="cta-btn" onclick="window.location.href='#membership'">View Memberships</button>
-            <button class="cta-btn" onclick="window.location.href='#plans'">Subscribe to New Plans</button>
-        </div>
+      <h2>Your Dashboard</h2>
+      <p>
+        Manage your account, view active memberships, and explore new plans.
+      </p>
+      <div class="dashboard-actions">
+        <button class="cta-btn" onclick="window.location.href='#membership'">
+          View Memberships
+        </button>
+        <button class="cta-btn" onclick="window.location.href='#plans'">
+          Subscribe to New Plans
+        </button>
+      </div>
     </section>
 
     <!-- Membership Section -->
     <section id="membership">
-        <h2>Your Memberships</h2>
-        <div id="membership-info">
-            <!-- Subscription details will be loaded here -->
-        </div>
+      <h2>Your Memberships</h2>
+      <div id="membership-info">
+        <!-- Subscription details will be loaded here -->
+      </div>
     </section>
 
     <!-- Subscription Plans Section -->
     <section id="plans">
-        <h2>Subscribe to New Plans</h2>
-        <div class="service-cards">
-            <div class="card">
-                <h3>Basic Plan</h3>
-                <p>Access to gym facilities.</p>
-                <p>Price: Rs 800/month</p>
-                <button class="cta-btn" onclick="subscribeToPlan('Basic')">Subscribe</button>
-            </div>
-            <div class="card">
-                <h3>Standard Plan</h3>
-                <p>Access to gym facilities + group classes.</p>
-                <p>Price: Rs 1000/month</p>
-                <button class="cta-btn" onclick="subscribeToPlan('Standard')">Subscribe</button>
-            </div>
-            <div class="card">
-                <h3>Premium Plan</h3>
-                <p>All Standard benefits + personal training sessions.</p>
-                <p>Price: Rs 1500/month</p>
-                <button class="cta-btn" onclick="subscribeToPlan('Premium')">Subscribe</button>
-            </div>
+      <h2>Subscribe to New Plans</h2>
+      <div class="service-cards">
+        <div class="card">
+          <h3>Basic Plan</h3>
+          <p>Access to gym facilities.</p>
+          <p>Price: Rs 800/month</p>
+          <button class="cta-btn" onclick="subscribeToPlan('Basic')">
+            Subscribe
+          </button>
         </div>
+        <div class="card">
+          <h3>Standard Plan</h3>
+          <p>Access to gym facilities + group classes.</p>
+          <p>Price: Rs 1000/month</p>
+          <button class="cta-btn" onclick="subscribeToPlan('Standard')">
+            Subscribe
+          </button>
+        </div>
+        <div class="card">
+          <h3>Premium Plan</h3>
+          <p>All Standard benefits + personal training sessions.</p>
+          <p>Price: Rs 1500/month</p>
+          <button class="cta-btn" onclick="subscribeToPlan('Premium')">
+            Subscribe
+          </button>
+        </div>
+      </div>
     </section>
 
     <section id="add-review">
-        <h2>Add Your Review</h2>
-        <p>Your feedback helps us improve! Please share your thoughts about your experience with our trainers.</p>
-        <form action="submit_review.php" method="POST">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required />
-  
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required />
-  
-          <!-- New Trainer Name field -->
-          <label for="trainer-name">Trainer Name</label>
-          <input type="text" id="trainer-name" name="trainer_name" required />
-  
-          <label for="review">Your Review</label>
-          <textarea id="review" name="review" rows="4" required></textarea>
-  
-          <button type="submit">Submit Review</button>
-        </form>
-      </section>
+      <h2>Add Your Review</h2>
+      <p>
+        Your feedback helps us improve! Please share your thoughts about your
+        experience with our trainers.
+      </p>
+      <form action="submit_review.php" method="POST">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+        <!-- Ensure all form fields are correctly named and functional -->
+        <label for="trainer-name">Trainer Name</label>
+        <input type="text" id="trainer-name" name="trainer_name" required />
+        <label for="review">Your Review</label>
+        <textarea id="review" name="review" rows="4" required></textarea>
+        <button type="submit">Submit Review</button>
+      </form>
+    </section>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Gym10 - All Rights Reserved</p>
+      <p>&copy; 2024 Gym10 - All Rights Reserved</p>
     </footer>
 
     <script>
-        // Function to load subscriptions from fetch_subscription.php
-        function loadSubscriptions() {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', 'fetch_subscription.php', true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        // Insert the response data into the membership-info section
-                        document.getElementById('membership-info').innerHTML = xhr.responseText;
-                    } else {
-                        // Handle error response
-                        document.getElementById('membership-info').innerHTML = '<p>Error loading subscriptions.</p>';
-                    }
-                }
-            };
-            xhr.send();
-        }
-
-        // Subscription functionality for new plans
-        function subscribeToPlan(planName) {
-            const loggedIn = true; // Replace with real session validation
-
-            if (loggedIn) {
-                alert('You have subscribed to the ' + planName + ' plan.');
-                // You can implement backend logic here to handle subscription
+      // Function to load subscriptions from fetch_subscription.php
+      function loadSubscriptions() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "fetch_subscription.php", true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+              // Insert the response data into the membership-info section
+              document.getElementById("membership-info").innerHTML =
+                xhr.responseText;
             } else {
-                alert('You must be logged in to subscribe to a plan.');
-                window.location.href = 'login.html'; // Redirect to login if not authenticated
+              // Handle error response
+              document.getElementById("membership-info").innerHTML =
+                "<p>Error loading subscriptions.</p>";
             }
-        }
-        window.onload = function() {
-            loadSubscriptions();
+          }
         };
+        xhr.send();
+      }
+
+      // Subscription functionality for new plans
+      function subscribeToPlan(planName) {
+        const loggedIn = true; // Replace with real session validation
+
+        if (loggedIn) {
+          alert("You have subscribed to the " + planName + " plan.");
+          // You can implement backend logic here to handle subscription
+        } else {
+          alert("You must be logged in to subscribe to a plan.");
+          window.location.href = "login.html"; // Redirect to login if not authenticated
+        }
+      }
+      window.onload = function () {
+        loadSubscriptions();
+      };
     </script>
-</body>
+  </body>
 </html>
 
-
 <style>
-   
-    /* Header Content */
-    
-    /* Dashboard Section */
-   /* Dashboard Section */
-   #dashboard {
-        padding: 30px;
-        text-align: center;
-        background-color: #ffffff; /* White background for contrast */
-        margin: 20px; /* Margin around the section */
-        border-radius: 10px; /* Rounded corners */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    }
+  /* Header Content */
 
-    #dashboard h2 {
-        font-size: 2em;
-        margin-bottom: 20px;
-        color: #333; /* Darker color for heading */
-    }
+  /* Dashboard Section */
+  /* Dashboard Section */
+  #dashboard {
+    padding: 30px;
+    text-align: center;
+    background-color: #ffffff; /* White background for contrast */
+    margin: 20px; /* Margin around the section */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
 
-    #dashboard p {
-        font-size: 1.1em;
-        color: #555;
-    }
+  #dashboard h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333; /* Darker color for heading */
+  }
 
-    /* Dashboard Actions */
-    .dashboard-actions {
-        margin-top: 20px;
-    }
+  #dashboard p {
+    font-size: 1.1em;
+    color: #555;
+  }
 
-    .dashboard-actions button {
-        margin: 0 10px;
-        margin-bottom: 10px;
-    }
+  /* Dashboard Actions */
+  .dashboard-actions {
+    margin-top: 20px;
+  }
 
-    .cta-btn {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 1em;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-    }
+  .dashboard-actions button {
+    margin: 0 10px;
+    margin-bottom: 10px;
+  }
 
-    .cta-btn:hover {
-        background-color: #0056b3;
-        transform: scale(1.05);
-    }
+  .cta-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
 
-    /* Membership Section */
-    #membership {
-        background-color: #f9f9f9;
-        padding: 30px;
-        margin: 20px; /* Margin around the section */
-        border-radius: 10px; /* Rounded corners */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    }
+  .cta-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
 
-    #membership h2 {
-        font-size: 2em;
-        margin-bottom: 20px;
-        color: #333; /* Darker color for heading */
-    }
+  /* Membership Section */
+  #membership {
+    background-color: #f9f9f9;
+    padding: 30px;
+    margin: 20px; /* Margin around the section */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
 
-    #membership-info {
-        font-size: 1.1em;
-        color: #555;
-    }
+  #membership h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333; /* Darker color for heading */
+  }
 
-    /* Subscription Plans Section */
-    /* Subscription Plans Section */
-#plans {
+  #membership-info {
+    font-size: 1.1em;
+    color: #555;
+  }
+
+  /* Subscription Plans Section */
+  /* Subscription Plans Section */
+  #plans {
     background-color: #ffffff;
     padding: 30px;
     margin: 20px; /* Margin around the section */
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
+  }
 
-#plans h2 {
+  #plans h2 {
     font-size: 2em;
     margin-bottom: 20px;
     color: #333; /* Darker color for heading */
-}
+  }
 
-.service-cards {
+  .service-cards {
     display: flex;
     justify-content: space-between; /* Space between cards */
     flex-wrap: wrap; /* Allow wrapping on smaller screens */
-}
+  }
 
-.card {
+  .card {
     background-color: #f0f4f8;
     padding: 20px;
     border-radius: 10px;
@@ -241,56 +257,54 @@
     transition: transform 0.2s;
     min-width: 250px; /* Minimum width for smaller screens */
     max-width: 300px; /* Maximum width to maintain uniformity */
-}
+  }
 
-.card:hover {
+  .card:hover {
     transform: translateY(-5px);
-}
+  }
 
-.card h3 {
+  .card h3 {
     margin-top: 0;
-}
+  }
 
-.price {
+  .price {
     font-weight: bold;
     font-size: 1.2em;
     color: #007bff; /* Blue for price */
-}
+  }
 
-/* Reviews Section */
-#reviews {
+  /* Reviews Section */
+  #reviews {
     background-color: #f9f9f9; /* Light grey background */
     padding: 30px;
     margin: 20px; /* Margin around the section */
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     text-align: center; /* Center text in the section */
-}
+  }
 
-#add-review h2 {
+  #add-review h2 {
     text-align: center;
     font-size: 2em;
     margin-bottom: 20px;
     color: #333; /* Darker color for heading */
-    
-}
+  }
 
-#add-review p {
+  #add-review p {
     text-align: center;
     font-size: 1.1em; /* Adjust font size */
     color: #555; /* Lighter color for body text */
     margin-top: 10px; /* Space above the paragraph */
     margin-bottom: 20px; /* Space below the paragraph */
-}
+  }
 
-
-.review-cards {
+  .review-cards {
     display: flex;
     justify-content: space-between; /* Space between cards */
     flex-wrap: wrap; /* Allow wrapping on smaller screens */
-}
+  }
 
-.review-card {
+  .review-card {
     background-color: #ffffff; /* White background for reviews */
     padding: 20px;
     border-radius: 10px; /* Rounded corners */
@@ -300,49 +314,45 @@
     transition: transform 0.2s;
     min-width: 250px; /* Minimum width for smaller screens */
     max-width: 350px; /* Maximum width to maintain uniformity */
-}
+  }
 
-.review-card:hover {
+  .review-card:hover {
     transform: translateY(-5px); /* Lift effect on hover */
-}
+  }
 
-.review-card h3 {
+  .review-card h3 {
     font-size: 1.5em;
     margin: 10px 0; /* Spacing around the title */
     color: #007bff; /* Blue color for the review title */
-}
+  }
 
-.review-card p {
+  .review-card p {
     font-size: 1em;
     color: #555; /* Dark grey for review text */
     margin-bottom: 10px; /* Spacing below the paragraph */
-}
+  }
 
-.review-card .reviewer {
+  .review-card .reviewer {
     font-weight: bold;
     color: #333; /* Darker color for reviewer name */
-}
+  }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
+  /* Responsive Styles */
+  @media (max-width: 768px) {
     .review-card {
-        flex: 1 1 100%; /* Stack cards on smaller screens */
-        max-width: none; /* Remove max-width constraint */
+      flex: 1 1 100%; /* Stack cards on smaller screens */
+      max-width: none; /* Remove max-width constraint */
     }
-}
+  }
 
-    /* Footer */
-    footer {
-        text-align: center;
-        padding: 10px 0;
-        background-color: #000000; /* Footer color */
-        color: white;
-        position: relative;
-        bottom: 0;
-        width: 100%;
-    }
-    
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #000000; /* Footer color */
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }
 </style>
-
-
-

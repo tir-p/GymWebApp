@@ -60,3 +60,5 @@ if (bookingForm) {
     }
   });
 }
+
+// Ensure all functions are correctly implemented and functional
