@@ -36,7 +36,7 @@ if ($login_type === 'admin') {
     $stmt->bind_param("s", $username_email);
 } else {
     // Prepare and bind for client login
-    $stmt = $conn->prepare("SELECT ClientID, Password FROM client WHERE Email = ?");
+    $stmt = $conn->prepare("SELECT ClientID, Password, Name FROM client WHERE Email = ?");
     $stmt->bind_param("s", $username_email);
 }
 
@@ -56,11 +56,11 @@ if ($result->num_rows === 1) {
         $user_id = $row['TrainerID'];
     } else {
         $user_id = $row['ClientID'];
+        $user_name = $row['Name']; // Get the client's name
     }
     
-    // Verify password (direct comparison)
-    // Note: In a production environment, you should use password_verify() with hashed passwords
-    if ($pass === $stored_password) {
+    // Check if the password is correct
+    if (password_verify($pass, $stored_password)) {
         // Password is correct, set session variables
         if ($login_type === 'admin') {
             $_SESSION['admin_id'] = $user_id;
@@ -72,17 +72,22 @@ if ($result->num_rows === 1) {
             header("Location: trainer_dashboard.html");
         } else {
             $_SESSION['client_id'] = $user_id;
-            $_SESSION['username'] = $username_email;
+            $_SESSION['email'] = $username_email;
+            $_SESSION['name'] = $user_name;
             header("Location: client_dashboard.html");
         }
         exit();
     } else {
         // Invalid password
+        echo "<div style='background-color: #ffcccc; padding: 10px; margin: 10px; border: 1px solid #ff0000;'>";
         echo "<p>Invalid password. <a href='login.html'>Try again</a>.</p>";
+        echo "</div>";
     }
 } else {
     // User does not exist
+    echo "<div style='background-color: #ffcccc; padding: 10px; margin: 10px; border: 1px solid #ff0000;'>";
     echo "<p>Invalid username/email. <a href='login.html'>Try again</a>.</p>";
+    echo "</div>";
 }
 
 // Close the statement and connection
