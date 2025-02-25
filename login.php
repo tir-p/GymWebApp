@@ -16,9 +16,15 @@ if ($conn->connect_error) {
 }
 
 // Get form data
-$login_type = $_POST['login_type']; // 'admin', 'client', or 'trainer'
-$username_email = $_POST['username_email'] ?? null; // Username for admin or Email for client
-$pass = $_POST['password'] ?? null; // Password input
+$login_type = $_POST['login_type'] ?? ''; // 'admin', 'client', or 'trainer'
+$username_email = $_POST['username_email'] ?? ''; // Username for admin or Email for client
+$pass = $_POST['password'] ?? ''; // Password input
+
+// Validate input
+if (empty($login_type) || empty($username_email) || empty($pass)) {
+    echo "<p>All fields are required. <a href='login.html'>Try again</a>.</p>";
+    exit();
+}
 
 if ($login_type === 'admin') {
     // Prepare and bind for admin login
@@ -53,22 +59,20 @@ if ($result->num_rows === 1) {
     }
     
     // Verify password (direct comparison)
+    // Note: In a production environment, you should use password_verify() with hashed passwords
     if ($pass === $stored_password) {
         // Password is correct, set session variables
         if ($login_type === 'admin') {
             $_SESSION['admin_id'] = $user_id;
-            $_SESSION['username'] = $username_email; // Use the username for admin
-            // Redirect to the admin dashboard
+            $_SESSION['username'] = $username_email;
             header("Location: admin_dashboard.html");
         } elseif ($login_type === 'trainer') {
-            $_SESSION['trainer_id'] = $user_id; // Store trainer ID in session
-            $_SESSION['username'] = $username_email; // Use the username for trainer
-            // Redirect to the trainer dashboard
+            $_SESSION['trainer_id'] = $user_id;
+            $_SESSION['username'] = $username_email;
             header("Location: trainer_dashboard.html");
         } else {
-            $_SESSION['client_id'] = $user_id; // Use consistent session variable name
-            $_SESSION['username'] = $username_email; // Use the email for client
-            // Redirect to the client dashboard
+            $_SESSION['client_id'] = $user_id;
+            $_SESSION['username'] = $username_email;
             header("Location: client_dashboard.html");
         }
         exit();

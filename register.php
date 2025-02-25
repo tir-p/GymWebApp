@@ -30,16 +30,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
     
-    // Check if the email already exists
-    $email_check_query = "SELECT * FROM client WHERE Email='$email' LIMIT 1";
-    $result = $conn->query($email_check_query);
+    // Check if the email already exists using prepared statement
+    $email_check_sql = "SELECT * FROM client WHERE Email = ? LIMIT 1";
+    $check_stmt = $conn->prepare($email_check_sql);
+    $check_stmt->bind_param("s", $email);
+    $check_stmt->execute();
+    $check_result = $check_stmt->get_result();
     
-    if ($result->num_rows > 0) {
+    if ($check_result->num_rows > 0) {
         echo "Email is already registered.";
+        $check_stmt->close();
         exit();
     }
+    $check_stmt->close();
     
-    // Insert the user into the database (no password hashing)
+    // Insert the user into the database
+    // Note: In a production environment, you should use password_hash() for password security
     $sql = "INSERT INTO client (Name, Email, Password, Phone, Address) VALUES (?, ?, ?, ?, ?)";
     
     // Create a prepared statement

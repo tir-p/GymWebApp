@@ -13,7 +13,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// SQL query to fetch all feedback
+// SQL query to fetch feedback with limit for homepage display
 $sql = "SELECT c.Name, f.Comments 
         FROM feedback f 
         JOIN client c ON f.ClientID = c.ClientID

@@ -24,7 +24,7 @@ $result = $conn->query($sql);
 // Display the fetched feedback details
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        echo "<div class='review-c'>";  // Using review-c class for card style
+        echo "<div class='review-c'>";
         echo "<h3>" . $row['Name'] . "</h3>";
         echo "<p>" . $row['Comments'] . "</p>";
         echo "</div>";

@@ -58,4 +58,3 @@ echo json_encode($data);
 // Close connection
 $conn->close();
 
-// Ensure all queries are correctly fetching data

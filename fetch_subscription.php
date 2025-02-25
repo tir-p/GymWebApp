@@ -30,7 +30,7 @@ $sql = "SELECT s.SubscriptionID, c.Name AS ClientName, pt.PlanName AS PlanTypeNa
         FROM subscription s 
         JOIN client c ON s.ClientID = c.ClientID 
         JOIN plantype pt ON s.PlanTypeID = pt.PlanTypeID 
-        WHERE s.ClientID = ? AND s.Status = 'active'";
+        WHERE s.ClientID = ?";
 
 // Prepare statement
 $stmt = $conn->prepare($sql);
@@ -50,7 +50,7 @@ if ($result->num_rows > 0) {
         echo "</div><br>";
     }
 } else {
-    echo '<p>No active subscriptions found.</p>';
+    echo '<p>No subscriptions found.</p>';
 }
 
 // Close the statement and connection
