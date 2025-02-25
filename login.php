@@ -1,15 +1,14 @@
-<?php include 'connect.php'; ?>
 <?php
 session_start();
 
-// Database connection settings
-$servername = "localhost"; // Change if necessary
-$db_username = "root"; // Change to your DB username
-$db_password = ""; // Change to your DB password
-$dbname = "gymwebapp"; // Database name
+// Database connection parameters
+$host = 'localhost';
+$dbname = 'gymwebapp';
+$username = 'root';
+$password = '';
 
-// Create connection|
-$conn = new mysqli($servername, $db_username, $db_password, $dbname);
+// Create connection
+$conn = new mysqli($host, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
@@ -37,15 +36,25 @@ if ($login_type === 'admin') {
 
 // Execute the statement
 $stmt->execute();
-$stmt->store_result();
+$result = $stmt->get_result();
 
 // Check if user exists
-if ($stmt->num_rows > 0) {
-    // Fetch the user data (AdminID/ClientID/TrainerID and Password)
-    $stmt->bind_result($user_id, $stored_password);
-    $stmt->fetch();
-    if ($pass === $stored_password) { // Direct comparison (password_hash and password_verify removed)
-        // Start a session based on login type
+if ($result->num_rows === 1) {
+    $row = $result->fetch_assoc();
+    $stored_password = $row['Password'];
+    
+    // Get the user ID based on login type
+    if ($login_type === 'admin') {
+        $user_id = $row['AdminID'];
+    } elseif ($login_type === 'trainer') {
+        $user_id = $row['TrainerID'];
+    } else {
+        $user_id = $row['ClientID'];
+    }
+    
+    // Verify password (direct comparison)
+    if ($pass === $stored_password) {
+        // Password is correct, set session variables
         if ($login_type === 'admin') {
             $_SESSION['admin_id'] = $user_id;
             $_SESSION['username'] = $username_email; // Use the username for admin

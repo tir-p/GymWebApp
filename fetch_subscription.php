@@ -1,4 +1,3 @@
-<?php include 'connect.php'; ?>
 <?php
 session_start();
 
@@ -13,28 +12,29 @@ $clientID = $_SESSION['client_id'];
 
 // Database connection parameters
 $host = 'localhost';
-$db = 'gymwebapp';
-$user = 'root';
-$pass = ''; // Update if necessary
+$dbname = 'gymwebapp';
+$username = 'root';
+$password = '';
 
 // Create connection
-$conn = new mysqli($host, $user, $pass, $db);
+$conn = new mysqli($host, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
-    die('Connection failed: ' . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 // SQL query to fetch all active subscription details for the logged-in client
-$sql = "SELECT s.SubscriptionID, c.Name AS ClientName, p.PlanName AS PlanTypeName, s.StartDate, s.EndDate
-        FROM subscription s
-        JOIN client c ON s.ClientID = c.ClientID
-        JOIN plantype p ON s.PlanTypeID = p.PlanTypeID
+$sql = "SELECT s.SubscriptionID, c.Name AS ClientName, pt.PlanName AS PlanTypeName, 
+        s.StartDate, s.EndDate 
+        FROM subscription s 
+        JOIN client c ON s.ClientID = c.ClientID 
+        JOIN plantype pt ON s.PlanTypeID = pt.PlanTypeID 
         WHERE s.ClientID = ? AND s.Status = 'active'";
 
 // Prepare statement
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $clientID); // Bind the client ID
+$stmt->bind_param('i', $clientID);
 $stmt->execute();
 $result = $stmt->get_result();
 

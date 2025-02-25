@@ -1,20 +1,17 @@
-<?php include 'connect.php'; ?>
 <?php
-// Database connection details
-$servername = "localhost";  // Use your server's details
-$username = "root";         // Your MySQL username
-$password = "";             // Your MySQL password
-$dbname = "gymwebapp";      // Your database name
+// Database connection parameters
+$host = 'localhost';
+$dbname = 'gymwebapp';
+$username = 'root';
+$password = '';
 
 // Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($host, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
-// Ensure all connections are correctly implemented
 
 // Check if the form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -28,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $address = $conn->real_escape_string($_POST['address']);
     
     // Check if passwords match
-    if ($password != $confirm_password) {
+    if ($password !== $confirm_password) {
         echo "Passwords do not match.";
         exit();
     }
@@ -43,9 +40,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Insert the user into the database (no password hashing)
-    $sql = "INSERT INTO client (Name, Email, Password, Phone, Address) VALUES ('$name', '$email', '$password', '$phone', '$address')";
+    $sql = "INSERT INTO client (Name, Email, Password, Phone, Address) VALUES (?, ?, ?, ?, ?)";
     
-    if ($conn->query($sql) === TRUE) {
+    // Create a prepared statement
+    $stmt = $conn->prepare($sql);
+    
+    // Bind parameters
+    $stmt->bind_param("sssss", $name, $email, $password, $phone, $address);
+    
+    // Execute the statement
+    if ($stmt->execute()) {
         // Registration successful, output message and redirect to login page
         echo "Registration successful. Redirecting to login page...";
         
@@ -53,8 +57,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("refresh:3;url=login.html");
         exit();
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: " . $stmt->error;
     }
+    
+    // Close statement
+    $stmt->close();
 }
 
 // Close connection

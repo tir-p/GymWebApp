@@ -1,17 +1,16 @@
-<?php include 'connect.php'; ?>
 <?php
 // Database connection parameters
 $host = 'localhost';
-$db = 'gymwebapp';
-$user = 'root';
-$pass = ''; // Update if necessary
+$dbname = 'gymwebapp';
+$username = 'root';
+$password = '';
 
 // Create connection
-$conn = new mysqli($host, $user, $pass, $db);
+$conn = new mysqli($host, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
-    die('Connection failed: ' . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 // SQL query to fetch all feedback
@@ -34,7 +33,7 @@ if ($result->num_rows > 0) {
     echo '<p>No feedback available.</p>';
 }
 
-// Close the connection
+// Close connection
 $conn->close();
 
 // Ensure all queries are correctly fetching data
