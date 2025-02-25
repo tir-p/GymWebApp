@@ -24,6 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $conn->real_escape_string($_POST['email']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
+    $phone = $conn->real_escape_string($_POST['phone']);
+    $address = $conn->real_escape_string($_POST['address']);
     
     // Check if passwords match
     if ($password != $confirm_password) {
@@ -41,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Insert the user into the database (no password hashing)
-    $sql = "INSERT INTO client (Name, Email, Password) VALUES ('$name', '$email', '$password')";
+    $sql = "INSERT INTO client (Name, Email, Password, Phone, Address) VALUES ('$name', '$email', '$password', '$phone', '$address')";
     
     if ($conn->query($sql) === TRUE) {
         // Registration successful, output message and redirect to login page

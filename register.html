@@ -1,197 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register - Gym10</title>
     <style>
       /* General Reset */
       * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
       /* Body Styles */
       body {
-          font-family: Arial, sans-serif; /* Font style for body */
-          line-height: 1.6; /* Line height for readability */
-          background-color: #f4f4f4; /* Light background color */
+        font-family: Arial, sans-serif; /* Font style for body */
+        line-height: 1.6; /* Line height for readability */
+        background-color: #f4f4f4; /* Light background color */
       }
 
       /* Navbar Styles */
       .navbar {
-          display: flex;
-          flex-direction: column; /* Stack items vertically */
-          align-items: center; /* Center items horizontally */
-          padding: 20px;
-          background-color: black; /* Dark background for navbar */
+        display: flex;
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center items horizontally */
+        padding: 20px;
+        background-color: black; /* Dark background for navbar */
       }
 
       .nav-links {
-          list-style: none; /* Remove default list styling */
-          display: flex; /* Flexbox for horizontal layout */
-          margin: 0; /* Remove default margin */
-          padding: 0; /* Remove default padding */
-          justify-content: center; /* Center the nav items */
-          flex: 1; /* Allow the nav links to take up available space */
+        list-style: none; /* Remove default list styling */
+        display: flex; /* Flexbox for horizontal layout */
+        margin: 0; /* Remove default margin */
+        padding: 0; /* Remove default padding */
+        justify-content: center; /* Center the nav items */
+        flex: 1; /* Allow the nav links to take up available space */
       }
 
       .nav-links li {
-          margin: 0 20px; /* Space between links */
+        margin: 0 20px; /* Space between links */
       }
 
       .nav-links a {
-          text-decoration: none; /* Remove underline */
-          color: green; /* Change link color to green */
-          font-size: 20px; /* Adjust font size */
-          transition: color 0.3s; /* Smooth color transition */
-          padding: 5px; /* Add padding for hover effect */
+        text-decoration: none; /* Remove underline */
+        color: green; /* Change link color to green */
+        font-size: 20px; /* Adjust font size */
+        transition: color 0.3s; /* Smooth color transition */
+        padding: 5px; /* Add padding for hover effect */
       }
 
       .nav-links a:hover {
-          color: #ffa200; /* Change link color on hover */
-          border-bottom: 2px solid #ffa200; /* Underline effect on hover */
+        color: #ffa200; /* Change link color on hover */
+        border-bottom: 2px solid #ffa200; /* Underline effect on hover */
       }
 
       .logo {
-          margin-top: 10px; /* Space above the logo */
+        margin-top: 10px; /* Space above the logo */
       }
 
       .logo-img {
-          max-width: 90px; /* Adjust logo size */
-          height: auto;
+        max-width: 90px; /* Adjust logo size */
+        height: auto;
       }
 
       .login-btn {
-         
-          color: white; /* Text color for the button */
-          padding: 10px 20px; /* Padding for the button */
-          border-radius: 5px; /* Rounded corners */
-          transition: background-color 0.3s; /* Smooth transition */
-          border: none; /* Remove border */
+        color: white; /* Text color for the button */
+        padding: 10px 20px; /* Padding for the button */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s; /* Smooth transition */
+        border: none; /* Remove border */
       }
 
       .login-btn:hover {
-          background-color: darkgreen; /* Change button background on hover */
+        background-color: darkgreen; /* Change button background on hover */
       }
 
       /* Header Content Styles */
       .header-content {
-          text-align: center; /* Center text in header */
-          margin-top: 20px; /* Space above header content */
+        text-align: center; /* Center text in header */
+        margin-top: 20px; /* Space above header content */
       }
 
       .header-content h1 {
-          font-size: 2.5rem; /* Increase header size */
-          color: #333; /* Dark text color */
+        font-size: 2.5rem; /* Increase header size */
+        color: #333; /* Dark text color */
       }
 
       .header-content p {
-          color: #666; /* Gray text color */
-          font-size: 1.2rem; /* Font size for paragraph */
-          margin-bottom: 20px; /* Space below paragraph */
+        color: #666; /* Gray text color */
+        font-size: 1.2rem; /* Font size for paragraph */
+        margin-bottom: 20px; /* Space below paragraph */
       }
 
       /* Registration Form Styles */
       #registration-form {
-          max-width: 500px; /* Max width for the form */
-          margin: 30px auto; /* Center form on page */
-          padding: 20px; /* Padding inside form */
-          background-color: white; /* White background for form */
-          border-radius: 8px; /* Rounded corners */
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        max-width: 500px; /* Max width for the form */
+        margin: 30px auto; /* Center form on page */
+        padding: 20px; /* Padding inside form */
+        background-color: white; /* White background for form */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
       }
 
       #registration-form label {
-          display: block; /* Block display for labels */
-          margin-bottom: 5px; /* Space below labels */
-          font-weight: bold; /* Bold font for labels */
+        display: block; /* Block display for labels */
+        margin-bottom: 5px; /* Space below labels */
+        font-weight: bold; /* Bold font for labels */
       }
 
       #registration-form input {
-          width: 100%; /* Full width for input */
-          padding: 10px; /* Padding inside inputs */
-          margin-bottom: 15px; /* Space below inputs */
-          border: 1px solid #ccc; /* Light border */
-          border-radius: 4px; /* Rounded corners */
+        width: 100%; /* Full width for input */
+        padding: 10px; /* Padding inside inputs */
+        margin-bottom: 15px; /* Space below inputs */
+        border: 1px solid #ccc; /* Light border */
+        border-radius: 4px; /* Rounded corners */
       }
 
       #registration-form button {
-          width: 100%; /* Full width for button */
-          padding: 10px; /* Padding inside button */
-          background-color: #007bff; /* Button background color */
-          color: white; /* Button text color */
-          border: none; /* Remove default border */
-          border-radius: 4px; /* Rounded corners */
-          cursor: pointer; /* Change cursor on hover */
-          transition: background-color 0.3s; /* Smooth transition */
+        width: 100%; /* Full width for button */
+        padding: 10px; /* Padding inside button */
+        background-color: #007bff; /* Button background color */
+        color: white; /* Button text color */
+        border: none; /* Remove default border */
+        border-radius: 4px; /* Rounded corners */
+        cursor: pointer; /* Change cursor on hover */
+        transition: background-color 0.3s; /* Smooth transition */
       }
 
       #registration-form button:hover {
-          background-color: #0056b3; /* Darker blue on hover */
+        background-color: #0056b3; /* Darker blue on hover */
       }
 
       /* Footer Styles */
       footer {
-          text-align: center; /* Center text in footer */
-          padding: 20px; /* Padding around footer */
-          background-color: black; /* Dark background for footer */
-          color: white; /* White text color */
-          position: relative;
-          bottom: 0;
-          width: 100%;
+        text-align: center; /* Center text in footer */
+        padding: 20px; /* Padding around footer */
+        background-color: black; /* Dark background for footer */
+        color: white; /* White text color */
+        position: relative;
+        bottom: 0;
+        width: 100%;
       }
-  </style>
-</head>
-<body>
+    </style>
+  </head>
+  <body>
     <!-- Header with Navigation Bar -->
     <header>
-        <nav class="navbar">
-            <ul class="nav-links">
-              <li><a href="index.html#home">Home</a></li>
+      <nav class="navbar">
+        <ul class="nav-links">
+          <li><a href="index.html#home">Home</a></li>
           <li><a href="index.html#services">Services</a></li>
           <li><a href="index.html#trainers">Trainers</a></li>
           <li><a href="index.html#pricing-plan">Membership Plan</a></li>
           <li><a href="about.html">About Us</a></li>
           <li><a href="index.html#contact">Contact Us</a></li>
-              <li><a href="register.html" class="cta-btn">Register</a></li>
-                <li><a href="login.html" class="login-btn">Login</a></li>
-                
-            </ul>
-            <div class="logo">
-                <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
-            </div>
-        </nav>
-        <div class="header-content">
-            <h1>Join Gym10 Today</h1>
-            <p>Take the first step towards a healthier lifestyle.</p>
+          <li><a href="register.html" class="cta-btn">Register</a></li>
+          <li><a href="login.html" class="login-btn">Login</a></li>
+        </ul>
+        <div class="logo">
+          <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
         </div>
+      </nav>
+      <div class="header-content">
+        <h1>Join Gym10 Today</h1>
+        <p>Take the first step towards a healthier lifestyle.</p>
+      </div>
     </header>
 
     <!-- Registration Form Section -->
     <div id="registration-form">
-        <h2>Register</h2>
-        <form action="register.php" method="POST">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" required />
+      <h2>Register</h2>
+      <form action="register.php" method="POST">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
 
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required />
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" required />
 
-            <label for="confirm-password">Confirm Password</label>
-            <input type="password" id="confirm-password" name="confirm_password" required />
+        <label for="address">Address</label>
+        <input type="text" id="address" name="address" required />
 
-            <button type="submit">Register</button>
-        </form>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+
+        <label for="confirm-password">Confirm Password</label>
+        <input
+          type="password"
+          id="confirm-password"
+          name="confirm_password"
+          required
+        />
+
+        <button type="submit">Register</button>
+      </form>
     </div>
 
     <!-- Footer Section -->
     <footer>
-        <p>&copy; 2024 Gym10 - All Rights Reserved</p>
+      <p>&copy; 2024 Gym10 - All Rights Reserved</p>
     </footer>
-</body>
+  </body>
 </html>
