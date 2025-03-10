@@ -1,4 +1,5 @@
 This is a assignment for my web module at uni.
+
 Home Page:
 ![Screenshot 2025-03-10 092311](https://github.com/user-attachments/assets/e4f9f818-b521-4306-8ecc-9ed4184d2974)
 Login Page:
