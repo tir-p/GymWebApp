@@ -1,65 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Membership Plans - Gym10</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
     <header>
-        <h1>Membership Plans</h1>
-        <nav class="navbar">
-            <ul class="nav-links">
-                <li><a href="index.html#home">Home</a></li>
-                <li><a href="index.html#services">Services</a></li>
-                <li><a href="index.html#trainers">Trainers</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-                <li><a href="login.html" class="login-btn">Login</a></li>
-                <li><a href="account.html" class="booking-btn">Manage Account</a></li>
-            </ul>
-        </nav>
+      <h1>Membership Plans</h1>
+      <nav class="navbar">
+        <ul class="nav-links">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#services">Services</a></li>
+          <li><a href="index.html#trainers">Trainers</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li><a href="login.html" class="login-btn">Login</a></li>
+          <li><a href="account.html" class="booking-btn">Manage Account</a></li>
+        </ul>
+      </nav>
     </header>
 
     <section id="membership-plans">
-        <h2>Choose Your Membership Plan</h2>
-        <p>Our pricing plan comes with various membership tiers, each tailored to cater to different preferences and fitness aspirations.</p>
-        <div class="plan-cards">
-            <div class="plan">
-                <h3>Basic Plan</h3>
-                <p>Access to gym facilities.</p>
-                <p>Price: $20/month</p>
-                <button onclick="subscribe('Basic Plan', 20)">Subscribe</button>
-            </div>
-            <div class="plan">
-                <h3>Standard Plan</h3>
-                <p>Access to gym facilities + group classes.</p>
-                <p>Price: $30/month</p>
-                <button onclick="subscribe('Standard Plan', 30)">Subscribe</button>
-            </div>
-            <div class="plan">
-                <h3>Premium Plan</h3>
-                <p>All Standard benefits + personal training sessions.</p>
-                <p>Price: $50/month</p>
-                <button onclick="subscribe('Premium Plan', 50)">Subscribe</button>
-            </div>
+      <h2>Choose Your Membership Plan</h2>
+      <p>
+        Our pricing plan comes with various membership tiers, each tailored to
+        cater to different preferences and fitness aspirations.
+      </p>
+      <div class="plan-cards">
+        <div class="plan">
+          <h3>Basic Plan</h3>
+          <p>Access to gym facilities.</p>
+          <p>Price: $20/month</p>
+          <button data-plan="Basic Plan" data-price="20">Subscribe</button>
         </div>
+        <div class="plan">
+          <h3>Standard Plan</h3>
+          <p>Access to gym facilities + group classes.</p>
+          <p>Price: $30/month</p>
+          <button data-plan="Standard Plan" data-price="30">Subscribe</button>
+        </div>
+        <div class="plan">
+          <h3>Premium Plan</h3>
+          <p>All Standard benefits + personal training sessions.</p>
+          <p>Price: $50/month</p>
+          <button data-plan="Premium Plan" data-price="50">Subscribe</button>
+        </div>
+      </div>
     </section>
 
     <script>
-        // Simulate login status; replace this with actual login check
-        var isLoggedIn = false; // Change this based on actual login status
+      // Simulate login status; replace this with actual login check
+      var isLoggedIn = false; // Change this based on actual login status
 
-        function subscribe(planName, price) {
-            if (isLoggedIn) {
-                // Redirect to the subscription process with selected plan details
-                window.location.href = `subscribe.php?plan=${encodeURIComponent(planName)}&price=${price}`;
-            } else {
-                // Redirect to the login page if not logged in
-                alert("You must log in to subscribe to a membership.");
-                window.location.href = 'login.html';
-            }
+      function subscribe(planName, price) {
+        if (isLoggedIn) {
+          // Redirect to the subscription process with selected plan details
+          window.location.href = `subscribe.php?plan=${encodeURIComponent(
+            planName
+          )}&price=${price}`;
+        } else {
+          // Redirect to the login page if not logged in
+          alert("You must log in to subscribe to a membership.");
+          window.location.href = "login.html";
         }
+      }
+
+      $(document).ready(function () {
+        $(".plan button").on("click", function () {
+          const planName = $(this).data("plan"); // Assuming you set data attributes
+          const price = $(this).data("price");
+
+          $.ajax({
+            url: "subscribe.php",
+            method: "POST",
+            data: { plan: planName, price: price },
+            success: function (response) {
+              alert("Subscribed to " + planName);
+            },
+            error: function () {
+              alert("Error subscribing to the plan.");
+            },
+          });
+        });
+      });
     </script>
-</body>
+  </body>
 </html>

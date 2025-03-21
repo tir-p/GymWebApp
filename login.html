@@ -99,6 +99,18 @@
 
       // Initialize the placeholder
       toggleLoginFields();
+
+      $(document).ready(function () {
+        $("form").on("submit", function (e) {
+          const username = $("#username-email").val();
+          const password = $("#password").val();
+
+          if (username === "" || password === "") {
+            e.preventDefault();
+            alert("Both fields are required!");
+          }
+        });
+      });
     </script>
     <footer>
       <p>&copy; 2024 Gym10 - All Rights Reserved</p>

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Dashboard - Gym10</title>
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
-    <!-- Header Section -->
     <header>
       <nav class="navbar">
         <ul class="nav-links">
@@ -19,7 +19,6 @@
           </li>
           <li><a href="#plans">Subscribe to New Plans</a></li>
           <li><a href="booking.html">Manage Bookings</a></li>
-          <!-- New Manage Bookings link -->
           <li><a href="account.html" class="booking-btn">Manage Account</a></li>
           <li><a href="logout.php" class="logout-btn">Logout</a></li>
         </ul>
@@ -33,7 +32,6 @@
       </div>
     </header>
 
-    <!-- Dashboard Section -->
     <section id="dashboard">
       <h2>Your Dashboard</h2>
       <p>
@@ -49,15 +47,11 @@
       </div>
     </section>
 
-    <!-- Membership Section -->
     <section id="membership">
       <h2>Your Memberships</h2>
-      <div id="membership-info">
-        <!-- Subscription details will be loaded here -->
-      </div>
+      <div id="membership-info"></div>
     </section>
 
-    <!-- Subscription Plans Section -->
     <section id="plans">
       <h2>Subscribe to New Plans</h2>
       <div class="service-cards">
@@ -94,12 +88,11 @@
         Your feedback helps us improve! Please share your thoughts about your
         experience with our trainers.
       </p>
-      <form action="submit_review.php" method="POST">
+      <form id="review-form" action="submit_review.php" method="POST">
         <label for="name">Name</label>
         <input type="text" id="name" name="name" required />
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required />
-        <!-- Ensure all form fields are correctly named and functional -->
         <label for="trainer-name">Trainer Name</label>
         <input type="text" id="trainer-name" name="trainer_name" required />
         <label for="review">Your Review</label>
@@ -108,24 +101,20 @@
       </form>
     </section>
 
-    <!-- Footer -->
     <footer>
       <p>&copy; 2024 Gym10 - All Rights Reserved</p>
     </footer>
 
     <script>
-      // Function to load subscriptions from fetch_subscription.php
       function loadSubscriptions() {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", "fetch_subscription.php", true);
         xhr.onreadystatechange = function () {
           if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
-              // Insert the response data into the membership-info section
               document.getElementById("membership-info").innerHTML =
                 xhr.responseText;
             } else {
-              // Handle error response
               document.getElementById("membership-info").innerHTML =
                 "<p>Error loading subscriptions.</p>";
             }
@@ -134,18 +123,35 @@
         xhr.send();
       }
 
-      // Subscription functionality for new plans
       function subscribeToPlan(planName) {
         const loggedIn = true; // Replace with real session validation
-
         if (loggedIn) {
           alert("You have subscribed to the " + planName + " plan.");
-          // You can implement backend logic here to handle subscription
         } else {
           alert("You must be logged in to subscribe to a plan.");
-          window.location.href = "login.html"; // Redirect to login if not authenticated
+          window.location.href = "login.html";
         }
       }
+
+      $(document).ready(function () {
+        $("#review-form").on("submit", function (e) {
+          e.preventDefault();
+          $.ajax({
+            type: "POST",
+            url: "submit_review.php",
+            data: $(this).serialize(),
+            success: function () {
+              alert("Review submitted successfully!");
+              // Optionally, refresh the reviews section
+              loadClientReviews();
+            },
+            error: function () {
+              alert("There was an error submitting your review.");
+            },
+          });
+        });
+      });
+
       window.onload = function () {
         loadSubscriptions();
       };

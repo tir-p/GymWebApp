@@ -97,7 +97,6 @@
         <!-- All reviews will be loaded here from all_reviews.php -->
       </div>
     </div>
-   
   </body>
 </html>
 <footer>
@@ -105,27 +104,20 @@
 </footer>
 
 <script>
-  // Function to load client reviews from fetch_reviews.php
-  function loadClientReviews() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "all_reviews.php", true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          // Insert the response data into the feedback section
-          document.getElementById("all-reviews").innerHTML = xhr.responseText;
-        } else {
-          // Handle error response
-          document.getElementById("all-reviews").innerHTML =
-            "<p>Error loading client reviews.</p>";
-        }
-      }
-    };
-    xhr.send();
-  }
+  $(document).ready(function () {
+    loadClientReviews(); // Call this function on page load
 
-  // Call the function to load client reviews when the page loads
-  window.onload = loadClientReviews;
+    function loadClientReviews() {
+      $.ajax({
+        url: "fetch_reviews.php",
+        method: "GET",
+        success: function (data) {
+          $("#all-reviews").html(data); // Populate the reviews section
+        },
+        error: function () {
+          $("#all-reviews").html("<p>Error loading reviews.</p>");
+        },
+      });
+    }
+  });
 </script>
-
-

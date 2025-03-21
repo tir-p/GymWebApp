@@ -96,7 +96,8 @@
         background-color: #fff;
       }
 
-      table th, table td {
+      table th,
+      table td {
         padding: 12px;
         text-align: left;
         border: 1px solid #ddd;
@@ -136,53 +137,53 @@
       }
 
       /* Action Button Styles */
-      button[onclick*='edit'],
-      button[onclick*='delete'],
-      button[onclick*='resetPassword'],
-      button[onclick*='verifyAccount'] {
+      button[onclick*="edit"],
+      button[onclick*="delete"],
+      button[onclick*="resetPassword"],
+      button[onclick*="verifyAccount"] {
         margin-right: 10px;
         background-color: #28a745;
       }
 
-      button[onclick*='edit']:hover,
-      button[onclick*='delete']:hover,
-      button[onclick*='resetPassword']:hover,
-      button[onclick*='verifyAccount']:hover {
+      button[onclick*="edit"]:hover,
+      button[onclick*="delete"]:hover,
+      button[onclick*="resetPassword"]:hover,
+      button[onclick*="verifyAccount"]:hover {
         background-color: #218838;
       }
 
       /* Delete Button */
-      button[onclick*='delete'] {
+      button[onclick*="delete"] {
         background-color: #dc3545;
       }
 
-      button[onclick*='delete']:hover {
+      button[onclick*="delete"]:hover {
         background-color: #c82333;
       }
 
       /* View Feedback Button */
-      button[onclick*='viewFeedback'] {
+      button[onclick*="viewFeedback"] {
         background-color: #17a2b8;
       }
 
-      button[onclick*='viewFeedback']:hover {
+      button[onclick*="viewFeedback"]:hover {
         background-color: #138496;
       }
       footer {
-    background-color: #000000; /* Black background for the footer */
-    color: white; /* White text color */
-    text-align: center; /* Center-align text */
-    padding: 15px 0; /* Padding above and below the text */
-    position: relative; /* Position relative for better placement */
-    bottom: 0; /* Stick to the bottom of the page */
-    width: 100%; /* Full width of the page */
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted look */
-    font-size: 1.0em; /* Slightly smaller font size */
-}
+        background-color: #000000; /* Black background for the footer */
+        color: white; /* White text color */
+        text-align: center; /* Center-align text */
+        padding: 15px 0; /* Padding above and below the text */
+        position: relative; /* Position relative for better placement */
+        bottom: 0; /* Stick to the bottom of the page */
+        width: 100%; /* Full width of the page */
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted look */
+        font-size: 1em; /* Slightly smaller font size */
+      }
 
-footer p {
-    margin: 0; /* Remove default margin */
-}
+      footer p {
+        margin: 0; /* Remove default margin */
+      }
     </style>
 
     <script>
@@ -276,7 +277,7 @@ footer p {
 
       // Function for logging out
       function logout() {
-        window.location.href = 'index.html';
+        window.location.href = "index.html";
       }
     </script>
   </head>
@@ -287,7 +288,6 @@ footer p {
       <ul>
         <li><a href="logout.php" class="logout-btn">Logout</a></li>
       </ul>
-     
     </nav>
 
     <div class="admin-dashboard">

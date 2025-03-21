@@ -6,6 +6,7 @@
     <title>Your Account - Gym10</title>
     <link rel="stylesheet" href="styles.css" />
     <script defer src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
       .logo-img {
         max-width: 90px;
@@ -21,10 +22,11 @@
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
       }
 
-      h1{
+      h1 {
         color: #ffffff;
       }
-      h2, h3 {
+      h2,
+      h3 {
         color: black;
       }
 
@@ -115,7 +117,11 @@
       <nav class="navbar">
         <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
         <ul class="nav-links">
-          <li><a href="client_dashboard.html" class="dashboard-btn">Go to Dashboard</a></li>
+          <li>
+            <a href="client_dashboard.html" class="dashboard-btn"
+              >Go to Dashboard</a
+            >
+          </li>
           <li><a href="logout.php" class="logout-btn">Logout</a></li>
         </ul>
       </nav>
@@ -129,12 +135,29 @@
       <!-- Account Info Section -->
       <section id="account-info">
         <h3>Account Information</h3>
-        <form id="account-form" class="account-form" method="POST" action="update_account.php">
+        <form
+          id="account-form"
+          class="account-form"
+          method="POST"
+          action="update_account.php"
+        >
           <label for="email">Email:</label>
-          <input type="email" id="email" name="email" value="john.doe@example.com" required />
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value="john.doe@example.com"
+            required
+          />
 
           <label for="phone">Phone Number:</label>
-          <input type="tel" id="phone" name="phone" value="+1234567890" required />
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value="+1234567890"
+            required
+          />
 
           <button type="submit">Update Account Info</button>
         </form>
@@ -143,19 +166,62 @@
       </section>
 
       <!-- Password Change Section (Hidden initially) -->
-      <section id="password-change" style="display: none;">
+      <section id="password-change" style="display: none">
         <h3>Change Password</h3>
-        <form id="password-form" class="account-form" method="POST" action="change_password.php">
+        <form
+          id="password-form"
+          class="account-form"
+          method="POST"
+          action="change_password.php"
+        >
           <label for="current-password">Current Password:</label>
-          <input type="password" id="current-password" name="current-password" required />
+          <input
+            type="password"
+            id="current-password"
+            name="current-password"
+            required
+          />
 
           <label for="new-password">New Password:</label>
-          <input type="password" id="new-password" name="new-password" required />
+          <input
+            type="password"
+            id="new-password"
+            name="new-password"
+            required
+          />
 
           <label for="confirm-password">Confirm New Password:</label>
-          <input type="password" id="confirm-password" name="confirm-password" required />
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            required
+          />
 
           <button type="submit">Change Password</button>
         </form>
       </section>
+
+      <!-- Booking List Section -->
+      <section id="booking-list">
+        <h3>Your Bookings</h3>
+        <p>Loading bookings...</p>
+      </section>
     </main>
+
+    <script>
+      $(document).ready(function () {
+        $.ajax({
+          url: "fetch_bookings.php",
+          method: "GET",
+          success: function (data) {
+            $("#booking-list").html(data);
+          },
+          error: function () {
+            alert("Error loading bookings.");
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
