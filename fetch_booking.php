@@ -1,6 +1,4 @@
 <?php
-// This file will handle fetching booking data
-// Currently, it is empty. Please implement the necessary logic here.
 
 // Database connection parameters
 $host = 'localhost';
