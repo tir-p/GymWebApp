@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Subscription Schema",
+    "type": "object",
+    "required": ["client_id", "plan_type_id", "start_date"],
+    "properties": {
+        "client_id": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "plan_type_id": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "start_date": {
+            "type": "string",
+            "format": "date"
+        },
+        "end_date": {
+            "type": "string",
+            "format": "date"
+        },
+        "status": {
+            "type": "string",
+            "enum": ["active", "expired", "cancelled"]
+        }
+    }
+} 

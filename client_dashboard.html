@@ -13,9 +13,7 @@
         <ul class="nav-links">
           <li><a href="#dashboard">Dashboard</a></li>
           <li>
-            <a href="#membership" onclick="loadSubscriptions()"
-              >My Membership</a
-            >
+            <a href="#membership" onclick="loadSubscriptions()">My Membership</a>
           </li>
           <li><a href="#plans">Subscribe to New Plans</a></li>
           <li><a href="booking.html">Manage Bookings</a></li>
@@ -34,9 +32,7 @@
 
     <section id="dashboard">
       <h2>Your Dashboard</h2>
-      <p>
-        Manage your account, view active memberships, and explore new plans.
-      </p>
+      <p>Manage your account, view active memberships, and explore new plans.</p>
       <div class="dashboard-actions">
         <button class="cta-btn" onclick="window.location.href='#membership'">
           View Memberships
@@ -59,7 +55,7 @@
           <h3>Basic Plan</h3>
           <p>Access to gym facilities.</p>
           <p>Price: Rs 800/month</p>
-          <button class="cta-btn" onclick="subscribeToPlan('Basic')">
+          <button class="cta-btn" onclick="subscribeToPlan(1, 'Basic')">
             Subscribe
           </button>
         </div>
@@ -67,7 +63,7 @@
           <h3>Standard Plan</h3>
           <p>Access to gym facilities + group classes.</p>
           <p>Price: Rs 1000/month</p>
-          <button class="cta-btn" onclick="subscribeToPlan('Standard')">
+          <button class="cta-btn" onclick="subscribeToPlan(2, 'Standard')">
             Subscribe
           </button>
         </div>
@@ -75,7 +71,7 @@
           <h3>Premium Plan</h3>
           <p>All Standard benefits + personal training sessions.</p>
           <p>Price: Rs 1500/month</p>
-          <button class="cta-btn" onclick="subscribeToPlan('Premium')">
+          <button class="cta-btn" onclick="subscribeToPlan(3, 'Premium')">
             Subscribe
           </button>
         </div>
@@ -107,30 +103,66 @@
 
     <script>
       function loadSubscriptions() {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "fetch_subscription.php", true);
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-              document.getElementById("membership-info").innerHTML =
-                xhr.responseText;
+        fetch('web_services/subscription_service.php')
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'success') {
+              const membershipInfo = document.getElementById('membership-info');
+              if (data.subscriptions.length > 0) {
+                let html = '<div class="subscriptions-list">';
+                data.subscriptions.forEach(sub => {
+                  html += `
+                    <div class="subscription-card">
+                      <h3>${sub.PlanTypeName}</h3>
+                      <p><strong>Status:</strong> ${sub.Status}</p>
+                      <p><strong>Start Date:</strong> ${sub.StartDate}</p>
+                      <p><strong>End Date:</strong> ${sub.EndDate}</p>
+                    </div>
+                  `;
+                });
+                html += '</div>';
+                membershipInfo.innerHTML = html;
+              } else {
+                membershipInfo.innerHTML = '<p>No active subscriptions found. Please subscribe to a plan.</p>';
+              }
             } else {
-              document.getElementById("membership-info").innerHTML =
-                "<p>Error loading subscriptions.</p>";
+              document.getElementById('membership-info').innerHTML = 
+                '<p>Error loading subscriptions. Please try again later.</p>';
             }
-          }
-        };
-        xhr.send();
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('membership-info').innerHTML = 
+              '<p>Error loading subscriptions. Please try again later.</p>';
+          });
       }
 
-      function subscribeToPlan(planName) {
-        const loggedIn = true; // Replace with real session validation
-        if (loggedIn) {
-          alert("You have subscribed to the " + planName + " plan.");
-        } else {
-          alert("You must be logged in to subscribe to a plan.");
-          window.location.href = "login.html";
-        }
+      function subscribeToPlan(planId, planName) {
+        const startDate = new Date().toISOString().split('T')[0];
+        
+        fetch('web_services/subscription_service.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            plan_type_id: planId,
+            start_date: startDate
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            alert(`Successfully subscribed to the ${planName} plan!`);
+            loadSubscriptions(); // Refresh the subscriptions list
+          } else {
+            alert(`Error: ${data.message}`);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error subscribing to plan. Please try again later.');
+        });
       }
 
       $(document).ready(function () {
@@ -152,7 +184,7 @@
         });
       });
 
-      window.onload = function () {
+      window.onload = function() {
         loadSubscriptions();
       };
     </script>
