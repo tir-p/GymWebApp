@@ -137,32 +137,48 @@
           });
       }
 
-      function subscribeToPlan(planId, planName) {
-        const startDate = new Date().toISOString().split('T')[0];
-        
-        fetch('web_services/subscription_service.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+      async function subscribeToPlan(planId, planName) {
+        try {
+          // Get client ID from session or cookie
+          const clientId = getClientId(); // We'll need to implement this function
+          
+          const subscriptionData = {
+            client_id: clientId,
             plan_type_id: planId,
-            start_date: startDate
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === 'success') {
-            alert(`Successfully subscribed to the ${planName} plan!`);
-            loadSubscriptions(); // Refresh the subscriptions list
+            start_date: new Date().toISOString().split('T')[0],
+            status: 'active'
+          };
+          
+          console.log('Sending subscription data:', subscriptionData);
+          
+          const response = await fetch('web_services/subscription_service.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(subscriptionData)
+          });
+
+          const result = await response.json();
+          console.log('Subscription response:', result);
+
+          if (response.ok) {
+            alert('Successfully subscribed to ' + planName);
+            loadSubscriptions();
           } else {
-            alert(`Error: ${data.message}`);
+            throw new Error(result.message || 'Failed to subscribe to plan');
           }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Error subscribing to plan. Please try again later.');
-        });
+        } catch (error) {
+          console.error('Subscription error:', error);
+          alert('Error subscribing to plan: ' + error.message + '\nPlease check the console for details.');
+        }
+      }
+
+      // Function to get client ID from session
+      function getClientId() {
+        // For now, we'll use a hardcoded value for testing
+        // In a real application, this would come from the session or a secure cookie
+        return 1; // Replace with actual client ID from session
       }
 
       $(document).ready(function () {

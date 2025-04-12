@@ -102,24 +102,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Execute the statement
     if ($stmt->execute()) {
-        // Registration successful, output message and redirect to login page
-        echo "<div style='background-color: #ccffcc; padding: 10px; margin: 10px; border: 1px solid #00cc00;'>";
-        echo "Registration successful. Redirecting to login page...";
-        echo "</div>";
-        
-        // Redirect to login page after 3 seconds
-        header("refresh:3;url=login.html");
-        exit();
+        $clientID = $conn->insert_id;
+
+        // Add default subscription
+        $planTypeID = 1; // Default plan
+        $startDate = date("Y-m-d");
+        $endDate = date("Y-m-d", strtotime("+30 days"));
+        $status = 'active';
+
+        $subSql = "INSERT INTO subscription (ClientID, PlanTypeID, StartDate, EndDate, Status)
+                   VALUES (?, ?, ?, ?, ?)";
+        $subStmt = $conn->prepare($subSql);
+        $subStmt->bind_param("iisss", $clientID, $planTypeID, $startDate, $endDate, $status);
+
+        if ($subStmt->execute()) {
+            echo "<div style='background-color: #ccffcc; padding: 10px; margin: 10px; border: 1px solid #00cc00;'>";
+            echo "Registration and default subscription successful. Redirecting to login page...</div>";
+            header("refresh:3;url=login.html");
+            exit();
+        } else {
+            echo "<div style='background-color: #ffcccc; padding: 10px; margin: 10px; border: 1px solid #ff0000;'>";
+            echo "User created, but failed to create subscription: " . $subStmt->error . "</div>";
+        }
+
+        $subStmt->close();
     } else {
         echo "<div style='background-color: #ffcccc; padding: 10px; margin: 10px; border: 1px solid #ff0000;'>";
-        echo "Error: " . $stmt->error;
-        echo "</div>";
+        echo "Failed to register user: " . $stmt->error . "</div>";
     }
-    
-    // Close statement
+
     $stmt->close();
 }
 
-// Close connection
 $conn->close();
 ?>

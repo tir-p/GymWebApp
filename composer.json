@@ -1,5 +1,5 @@
 {
-    "name": "gym-web-app",
+    "name": "gymwebapp/gymwebapp",
     "description": "Gym Web Application with JSON Schema Validation",
     "type": "project",
     "require": {
