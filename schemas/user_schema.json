@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "User Registration Schema",
+    "type": "object",
+    "required": ["username", "email", "password", "full_name", "phone"],
+    "properties": {
+        "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+        },
+        "email": {
+            "type": "string",
+            "format": "email"
+        },
+        "password": {
+            "type": "string",
+            "minLength": 8,
+            "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"
+        },
+        "full_name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100
+        },
+        "phone": {
+            "type": "string",
+            "pattern": "^\\+?[1-9]\\d{1,14}$"
+        },
+        "role": {
+            "type": "string",
+            "enum": ["client", "trainer", "admin"]
+        }
+    }
+} 

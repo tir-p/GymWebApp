@@ -1,0 +1,16 @@
+{
+    "name": "gym-web-app",
+    "description": "Gym Web Application with JSON Schema Validation",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "justinrainbow/json-schema": "^5.2",
+        "ext-pdo": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "GymWebApp\\": "src/"
+        }
+    }
+} 
