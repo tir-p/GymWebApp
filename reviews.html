@@ -3,9 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>All Reviews</title>
+    <title>Reviews - GymFit</title>
     <link rel="stylesheet" href="styles.css" />
-    <!-- Link to your CSS file for styling -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Header Section -->
     <header>
       <nav class="navbar">
@@ -34,7 +38,8 @@
         font-family: Arial, sans-serif; /* Optional: set a font for better aesthetics */
       }
 
-      h1 {
+      h1,
+      h2 {
         text-align: center;
         margin-bottom: 40px;
         padding-bottom: 10px; /* Add space between text and bottom border */
@@ -53,9 +58,9 @@
         border: 1px solid #ccc;
         border-radius: 8px;
         padding: 20px;
-        margin-bottom: 20px;
         background-color: #f9f9f9; /* Card background color */
         color: black; /* Change text color inside the card for readability */
+        height: 100%; /* Make all cards same height */
       }
 
       .review-c h3 {
@@ -68,56 +73,117 @@
       }
 
       .container {
-        max-width: 800px;
+        max-width: 1200px; /* Wider container for horizontal cards */
         margin: 0 auto; /* Center the container */
         padding: 20px;
       }
 
-      /* Centering the cards */
-      #all-reviews {
-        display: flex; /* Use flexbox to center cards */
-        flex-direction: column; /* Stack cards vertically */
-        align-items: center; /* Center align items */
+      /* Horizontal layout for review cards */
+      .review-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 992px) {
+        .review-cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 576px) {
+        .review-cards {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Stars styling */
+      .stars {
+        color: #ffc107;
+        margin-bottom: 10px;
+        letter-spacing: 2px;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>All Client Reviews</h1>
-
-      <!-- Additional text below the reviews header -->
-      <p class="additional-text">
-        Here you can find feedback from our valued clients.
-      </p>
-
-      <div id="all-reviews">
-        <div class="review-c">
-          <!-- Subscription details will be loaded here -->
-        </div>
-        <!-- All reviews will be loaded here from all_reviews.php -->
+      <h2>Client Reviews</h2>
+      <div id="reviews-container">
+        <p>Loading reviews...</p>
       </div>
     </div>
+
+    <script>
+      $(document).ready(function () {
+        // Fetch reviews from the API
+        $.ajax({
+          url: "all_reviews.php",
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            if (response.success) {
+              displayReviews(response.data);
+            } else {
+              showError(response.message);
+            }
+          },
+          error: function (xhr, status, error) {
+            showError("Failed to load reviews. Please try again later.");
+            console.error("Error: " + xhr.responseText);
+          },
+        });
+
+        // Function to display reviews
+        function displayReviews(reviews) {
+          if (!reviews || reviews.length === 0) {
+            $("#reviews-container").html("<p>No reviews available yet.</p>");
+            return;
+          }
+
+          // Start with a div that has the review-cards class for grid layout
+          let html = '<div class="review-cards">';
+
+          // Loop through each review and create HTML
+          reviews.forEach(function (review) {
+            let stars = "";
+            for (let i = 1; i <= 5; i++) {
+              if (i <= review.rating) {
+                stars += '<i class="fas fa-star"></i>';
+              } else {
+                stars += '<i class="far fa-star"></i>';
+              }
+            }
+
+            html += `
+              <div class="review-c">
+                <h3>${review.name}</h3>
+                <div class="stars">${stars}</div>
+                <p>${review.comments}</p>
+              </div>
+            `;
+          });
+
+          // Close the review-cards div
+          html += "</div>";
+
+          $("#reviews-container").html(html);
+        }
+
+        // Function to show error message
+        function showError(message) {
+          $("#reviews-container").html(`
+            <div class="error-message">
+              <p>${message}</p>
+            </div>
+          `);
+        }
+      });
+    </script>
   </body>
 </html>
 <footer>
   <p>&copy; 2024 Gym10 - All Rights Reserved</p>
 </footer>
-
-<script>
-  $(document).ready(function () {
-    loadClientReviews(); // Call this function on page load
-
-    function loadClientReviews() {
-      $.ajax({
-        url: "fetch_reviews.php",
-        method: "GET",
-        success: function (data) {
-          $("#all-reviews").html(data); // Populate the reviews section
-        },
-        error: function () {
-          $("#all-reviews").html("<p>Error loading reviews.</p>");
-        },
-      });
-    }
-  });
-</script>

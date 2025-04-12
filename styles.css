@@ -587,39 +587,38 @@ form button:hover {
   padding: 0 10px;
 }
 
+/* Reviews Card Grid Layout */
+.review-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
 /* Individual Review Card Style */
 .review-c {
-  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
   padding: 20px;
-  width: max-content; /* Make the card take full width inside grid item */
-  max-width: 350px; /* Optional max width for larger screens */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s, box-shadow 0.2s, border 0.2s;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  border: 2px solid transparent; /* Transparent border by default */
+  border: 2px solid transparent;
+  height: 100%;
+  color: black;
 }
 
-.review-description {
-  font-family: 'Arial', sans-serif;
-  color: #ffffff;
-  font-size: 18px;
-  margin-bottom: 20px;
-  text-align: center;
-  max-width: 600px; /* Optional: limit width for better readability */
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 80px;
-}
-
-/* Hover Effect for Review Cards */
+/* Review Card Hover Effect */
 .review-c:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-  border: 2px solid orange; /* Orange border on hover */
+  border: 2px solid orange;
 }
 
 /* Review Name Style */
@@ -629,63 +628,35 @@ form button:hover {
   margin-bottom: 10px;
 }
 
-/* Review Comments Style */
-.review-c p {
-  font-family: 'Georgia', serif;
-  color: #666;
-  line-height: 1.5;
-  margin: 0;
+/* Stars styling */
+.stars {
+  color: #ffc107;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+
+/* Responsive adjustments for review cards */
+@media (max-width: 992px) {
+  .review-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .review-cards {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Error Message Style */
-#error-message {
+.error-message {
   color: red;
   font-weight: bold;
   margin-top: 20px;
-}
-/* Container for the Read More button */
-.read-more-container {
-  text-align: center; /* Center the button */
-  margin-top: 80px; /* Space above the button */
+  text-align: center;
 }
 
-/* Read More Reviews Button Style */
-.read-more-btn {
-  background-color: #007bff; /* Primary button color */
-  color: white; /* Text color */
-  padding: 12px 24px; /* Vertical and horizontal padding */
-  border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
-  font-size: 16px; /* Font size */
-  text-decoration: none; /* Remove underline from link */
-  display: inline-block; /* Treat link as a block element for padding */
-  transition: background-color 0.3s, transform 0.3s; /* Transition for hover effects */
-}
-
-/* Hover Effect for Read More Button */
-.read-more-btn:hover {
-  background-color: #0056b3; /* Darker shade on hover */
-  transform: translateY(-2px); /* Slight lift on hover */
-}
-
-/* Focus Style for Accessibility */
-.read-more-btn:focus {
-  outline: none; /* Remove default outline */
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Add a shadow for focus */
-}
-
-
-@media (max-width: 768px) {
-  #feedback {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns for medium screens */
-  }
-}
-
-@media (max-width: 480px) {
-  #feedback {
-    grid-template-columns: repeat(1, 1fr); /* 1 column for small screens */
-  }
-}/* Contact Section Styles */
+/* Contact Section Styles */
 /* Contact Section Styles */
 #contact {
   background-image: url('img/RECEPTION.jpeg'); /* Add your image path here */
@@ -783,6 +754,50 @@ textarea {
   padding: 10px; /* Optional: add some padding for better spacing */
   width: 100%; /* Make the input take full width of the form */
   margin-bottom: 15px; /* Add space between input fields */
+}
+
+/* Review description text style */
+.review-description {
+  font-family: 'Arial', sans-serif;
+  color: #ffffff;
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 80px;
+}
+
+/* Container for the Read More button */
+.read-more-container {
+  text-align: center;
+  margin-top: 80px;
+}
+
+/* Read More Reviews Button Style */
+.read-more-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Hover Effect for Read More Button */
+.read-more-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Focus Style for Accessibility */
+.read-more-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }
 
 

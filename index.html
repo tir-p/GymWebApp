@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gym10 - Fitness Center</title>
     <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
   </head>
   <body>
     <!-- Header Section -->
@@ -242,9 +246,9 @@
         See what our clients are saying about their experience with us!
       </p>
 
-      <div id="feedback">
-        <div class="review-c">
-          <!-- Subscription details will be loaded here -->
+      <div class="container">
+        <div id="reviews-container">
+          <p>Loading reviews...</p>
         </div>
       </div>
 
@@ -254,28 +258,100 @@
       </div>
     </section>
 
-    <script>
-      // Function to load client reviews from fetch_reviews.php
-      function loadClientReviews() {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "fetch_reviews.php", true);
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-              // Insert the response data into the feedback section
-              document.getElementById("feedback").innerHTML = xhr.responseText;
-            } else {
-              // Handle error response
-              document.getElementById("feedback").innerHTML =
-                "<p>Error loading client reviews.</p>";
-            }
-          }
-        };
-        xhr.send();
+    <!-- Fix for horizontal reviews display -->
+    <style>
+      /* Ensure horizontal layout for reviews on index page */
+      #client-review .review-cards {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 20px !important;
       }
 
-      // Call the function to load client reviews when the page loads
-      window.onload = loadClientReviews;
+      @media (max-width: 992px) {
+        #client-review .review-cards {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+      }
+
+      @media (max-width: 576px) {
+        #client-review .review-cards {
+          grid-template-columns: 1fr !important;
+        }
+      }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Fetch reviews from the API
+        $.ajax({
+          url: "all_reviews.php",
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            if (response.success) {
+              displayReviews(response.data);
+            } else {
+              showError(response.message);
+            }
+          },
+          error: function (xhr, status, error) {
+            showError("Failed to load reviews. Please try again later.");
+            console.error("Error: " + xhr.responseText);
+          },
+        });
+
+        // Function to display reviews (limiting to just 3 for homepage)
+        function displayReviews(reviews) {
+          if (!reviews || reviews.length === 0) {
+            $("#reviews-container").html("<p>No reviews available yet.</p>");
+            return;
+          }
+
+          // Only show the first 3 reviews on the homepage
+          const displayReviews = reviews.slice(0, 3);
+
+          let html = '<div class="review-cards">';
+
+          // Loop through each review and create HTML
+          displayReviews.forEach(function (review) {
+            let stars = "";
+            for (let i = 1; i <= 5; i++) {
+              if (i <= review.rating) {
+                stars += '<i class="fas fa-star"></i>';
+              } else {
+                stars += '<i class="far fa-star"></i>';
+              }
+            }
+
+            html += `
+              <div class="review-c">
+                <h3>${review.name}</h3>
+                <div class="stars">${stars}</div>
+                <p>${review.comments}</p>
+              </div>
+            `;
+          });
+
+          html += "</div>";
+          $("#reviews-container").html(html);
+        }
+
+        // Function to show error message
+        function showError(message) {
+          $("#reviews-container").html(`
+            <div class="error-message">
+              <p>${message}</p>
+            </div>
+          `);
+        }
+      });
+
+      // Function to view membership
+      function viewMembership() {
+        // Redirect to membership plans page without login requirement
+        window.location.href = "membership.html";
+      }
     </script>
 
     <!-- Contact Section -->
@@ -295,12 +371,5 @@
     <footer>
       <p>&copy; 2024 Gym10 - All Rights Reserved</p>
     </footer>
-
-    <script>
-      function viewMembership() {
-        // Redirect to membership plans page without login requirement
-        window.location.href = "membership.html";
-      }
-    </script>
   </body>
 </html>

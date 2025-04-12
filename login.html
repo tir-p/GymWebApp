@@ -62,7 +62,11 @@
     </header>
     <main>
       <h2>Choose Login Type</h2>
-      <form action="login.php" method="POST">
+      <div
+        id="error-message"
+        style="display: none; color: red; margin-bottom: 15px"
+      ></div>
+      <form id="loginForm" method="post">
         <label for="login-type">Login as:</label>
         <select
           id="login-type"
@@ -86,6 +90,7 @@
       <p>Don't have an account? <a href="register.html">Register here</a></p>
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       // Function to toggle the placeholder text based on login type
       function toggleLoginFields() {
@@ -101,14 +106,30 @@
       toggleLoginFields();
 
       $(document).ready(function () {
-        $("form").on("submit", function (e) {
-          const username = $("#username-email").val();
-          const password = $("#password").val();
+        $("#loginForm").submit(function (e) {
+          e.preventDefault();
 
-          if (username === "" || password === "") {
-            e.preventDefault();
-            alert("Both fields are required!");
-          }
+          $.ajax({
+            url: "login.php",
+            type: "POST",
+            data: $(this).serialize(),
+            dataType: "json",
+            success: function (response) {
+              if (response.success) {
+                // Redirect based on user type
+                window.location.href = response.data.redirect;
+              } else {
+                // Show error message
+                $("#error-message").html(response.message).show();
+              }
+            },
+            error: function (xhr, status, error) {
+              $("#error-message")
+                .html("An error occurred. Please try again.")
+                .show();
+              console.error(xhr.responseText);
+            },
+          });
         });
       });
     </script>

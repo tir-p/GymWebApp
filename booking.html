@@ -6,60 +6,63 @@
     <title>Book a Class - Gym10</title>
     <link rel="stylesheet" href="styles.css" />
     <script defer src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
       .logo-img {
         max-width: 90px; /* You can adjust the size */
         height: auto;
       }
       .action-buttons {
-    display: flex;
-    justify-content: center; /* Center buttons horizontally */
-    gap: 20px; /* Space between buttons */
-    margin-top: 20px; /* Space above the buttons */
-}
+        display: flex;
+        justify-content: center; /* Center buttons horizontally */
+        gap: 20px; /* Space between buttons */
+        margin-top: 20px; /* Space above the buttons */
+      }
 
-.action-buttons button {
-    padding: 12px 20px; /* Button padding */
-    font-size: 1em; /* Font size */
-    color: white; /* Text color */
-    background-color: #007bff; /* Button background color */
-    border: none; /* Remove border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Transition effects */
-}
+      .action-buttons button {
+        padding: 12px 20px; /* Button padding */
+        font-size: 1em; /* Font size */
+        color: white; /* Text color */
+        background-color: #007bff; /* Button background color */
+        border: none; /* Remove border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+        transition: background-color 0.3s ease, transform 0.3s ease; /* Transition effects */
+      }
 
-.action-buttons button:hover {
-    background-color: #0056b3; /* Darker background on hover */
-    transform: translateY(-2px); /* Lift effect on hover */
-}
+      .action-buttons button:hover {
+        background-color: #0056b3; /* Darker background on hover */
+        transform: translateY(-2px); /* Lift effect on hover */
+      }
 
-.action-buttons button:focus {
-    outline: none; /* Remove outline on focus */
-}
-#booking-info {
-    min-height: 200px; /* Adjust the minimum height as needed */
-    padding: 15px; /* Add some padding for better spacing */
-    border: 1px solid #ccc; /* Optional: Add a border for better visibility */
-    border-radius: 8px; /* Optional: Add rounded corners */
-    background-color: rgba(240, 240, 240, 0.8); /* Light background for contrast */
-    display: flex; /* Make it a flex container */
-    align-items: center; /* Center content vertically */
-    justify-content: center; /* Center content horizontally */
-    text-align: center; /* Center text alignment */
-}
-.action-buttons {
-    min-height: 100px; /* Adjust the minimum height as needed */
-    display: flex; /* Use flexbox for alignment */
-    justify-content: center; /* Center the buttons horizontally */
-    align-items: center; /* Center the buttons vertically */
-    gap: 20px; /* Space between the buttons */
-    margin-top: 30px; /* Optional: space above the action buttons */
-    padding: 20px; /* Optional: add some padding for spacing */
-}
-
-
-
+      .action-buttons button:focus {
+        outline: none; /* Remove outline on focus */
+      }
+      #booking-info {
+        min-height: 200px; /* Adjust the minimum height as needed */
+        padding: 15px; /* Add some padding for better spacing */
+        border: 1px solid #ccc; /* Optional: Add a border for better visibility */
+        border-radius: 8px; /* Optional: Add rounded corners */
+        background-color: rgba(
+          240,
+          240,
+          240,
+          0.8
+        ); /* Light background for contrast */
+        display: flex; /* Make it a flex container */
+        align-items: center; /* Center content vertically */
+        justify-content: center; /* Center content horizontally */
+        text-align: center; /* Center text alignment */
+      }
+      .action-buttons {
+        min-height: 100px; /* Adjust the minimum height as needed */
+        display: flex; /* Use flexbox for alignment */
+        justify-content: center; /* Center the buttons horizontally */
+        align-items: center; /* Center the buttons vertically */
+        gap: 20px; /* Space between the buttons */
+        margin-top: 30px; /* Optional: space above the action buttons */
+        padding: 20px; /* Optional: add some padding for spacing */
+      }
     </style>
   </head>
   <body>
@@ -68,31 +71,50 @@
         <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
         <ul class="nav-links">
           <li><a href="client_dashboard.html">Back To Dashboard</a></li>
-          <li><a href="account.html" class="booking-btn active">Manage Account</a></li>
+          <li>
+            <a href="account.html" class="booking-btn active">Manage Account</a>
+          </li>
         </ul>
       </nav>
       <h1>Book a Class</h1>
     </header>
     <main>
       <h2>Select a Class</h2>
-      <form id="booking-form" action="process_booking.php" method="POST">
-        <label for="class">Choose a class:</label>
-        <select id="class" name="class" required>
-          <option value="yoga">Yoga</option>
-          <option value="pilates">Pilates</option>
-          <option value="cardio">Cardio</option>
-          <option value="strength_training">Strength Training</option>
-          <option value="zumba">Zumba</option>
-        </select>
+      <div class="container">
+        <p>Please fill in the details below to book your class.</p>
 
-        <label for="date">Select a date:</label>
-        <input type="date" id="date" name="date" required />
+        <div id="message-container" style="display: none"></div>
 
-        <label for="time">Select a time:</label>
-        <input type="time" id="time" name="time" required />
+        <form id="booking-form">
+          <div class="form-group">
+            <label for="class">Class:</label>
+            <select id="class" name="class" required>
+              <option value="">Select a class</option>
+              <!-- Classes will be loaded dynamically -->
+            </select>
+          </div>
 
-        <button type="submit">Book Now</button>
-      </form>
+          <div class="form-group">
+            <label for="trainer">Trainer:</label>
+            <select id="trainer" name="trainer" required>
+              <option value="">Select a trainer</option>
+              <!-- Trainers will be loaded dynamically -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required />
+          </div>
+
+          <div class="form-group">
+            <label for="notes">Notes (optional):</label>
+            <textarea id="notes" name="notes" rows="3"></textarea>
+          </div>
+
+          <button type="submit" class="btn">Book Now</button>
+        </form>
+      </div>
 
       <h3>Your Bookings:</h3>
       <div id="booking-info" class="booking-list">
@@ -101,12 +123,110 @@
 
       <!-- Buttons for managing bookings -->
       <div class="action-buttons">
-        <button onclick="window.location.href='booking.html'">Book a New Class</button>
-        <button onclick="window.location.href='manage_bookings.html'">Manage Bookings</button>
+        <button onclick="window.location.href='booking.html'">
+          Book a New Class
+        </button>
+        <button onclick="window.location.href='manage_bookings.html'">
+          Manage Bookings
+        </button>
       </div>
     </main>
     <footer>
       <p>&copy; 2024 Gym10 - All Rights Reserved</p>
     </footer>
+
+    <script>
+      $(document).ready(function () {
+        // Load classes
+        $.ajax({
+          url: "get_classes.php",
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            if (response.success) {
+              const classSelect = $("#class");
+              response.data.forEach(function (classItem) {
+                classSelect.append(
+                  `<option value="${classItem.id}">${classItem.name}</option>`
+                );
+              });
+            }
+          },
+        });
+
+        // Load trainers
+        $.ajax({
+          url: "get_trainers.php",
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            if (response.success) {
+              const trainerSelect = $("#trainer");
+              response.data.forEach(function (trainer) {
+                trainerSelect.append(
+                  `<option value="${trainer.id}">${trainer.name}</option>`
+                );
+              });
+            }
+          },
+        });
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split("T")[0];
+        $("#date").attr("min", today);
+
+        // Form submission
+        $("#booking-form").submit(function (e) {
+          e.preventDefault();
+
+          // Create booking data object
+          const bookingData = {
+            class_id: parseInt($("#class").val()),
+            trainer_id: parseInt($("#trainer").val()),
+            booking_date: $("#date").val(),
+            notes: $("#notes").val(),
+          };
+
+          // Send AJAX request
+          $.ajax({
+            url: "create_booking.php",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(bookingData),
+            dataType: "json",
+            success: function (response) {
+              if (response.success) {
+                showMessage(
+                  "success",
+                  "Booking created successfully! You will be redirected to your bookings page."
+                );
+                setTimeout(function () {
+                  window.location.href = "clientdashboard.php";
+                }, 2000);
+              } else {
+                showMessage("error", response.message);
+                if (response.errors) {
+                  console.error("Validation errors:", response.errors);
+                }
+              }
+            },
+            error: function (xhr, status, error) {
+              showMessage(
+                "error",
+                "An error occurred. Please try again later."
+              );
+              console.error(xhr.responseText);
+            },
+          });
+        });
+
+        // Function to show messages
+        function showMessage(type, message) {
+          const messageContainer = $("#message-container");
+          messageContainer.removeClass("success error").addClass(type);
+          messageContainer.html(`<p>${message}</p>`).show();
+        }
+      });
+    </script>
   </body>
 </html>

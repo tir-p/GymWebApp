@@ -7,12 +7,22 @@ $dbname = 'gymwebapp';
 $username = 'root';
 $password = '';
 
+// Response array for JSON output
+$response = [
+    'success' => false,
+    'message' => '',
+    'data' => null
+];
+
 // Create connection
 $conn = new mysqli($host, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    $response['message'] = "Connection failed: " . $conn->connect_error;
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit();
 }
 
 // Get form data
@@ -22,7 +32,9 @@ $pass = $_POST['password'] ?? ''; // Password input
 
 // Validate input
 if (empty($login_type) || empty($username_email) || empty($pass)) {
-    echo "<p>All fields are required. <a href='login.html'>Try again</a>.</p>";
+    $response['message'] = "All fields are required.";
+    header('Content-Type: application/json');
+    echo json_encode($response);
     exit();
 }
 
@@ -65,32 +77,50 @@ if ($result->num_rows === 1) {
         if ($login_type === 'admin') {
             $_SESSION['admin_id'] = $user_id;
             $_SESSION['username'] = $username_email;
-            header("Location: admin_dashboard.html");
+            $response['success'] = true;
+            $response['message'] = "Login successful";
+            $response['data'] = [
+                'redirect' => 'admin_dashboard.html',
+                'user_type' => 'admin',
+                'username' => $username_email
+            ];
         } elseif ($login_type === 'trainer') {
             $_SESSION['trainer_id'] = $user_id;
             $_SESSION['username'] = $username_email;
-            header("Location: trainer_dashboard.html");
+            $response['success'] = true;
+            $response['message'] = "Login successful";
+            $response['data'] = [
+                'redirect' => 'trainer_dashboard.html',
+                'user_type' => 'trainer',
+                'username' => $username_email
+            ];
         } else {
             $_SESSION['client_id'] = $user_id;
             $_SESSION['email'] = $username_email;
             $_SESSION['name'] = $user_name;
-            header("Location: client_dashboard.html");
+            $response['success'] = true;
+            $response['message'] = "Login successful";
+            $response['data'] = [
+                'redirect' => 'client_dashboard.html',
+                'user_type' => 'client',
+                'email' => $username_email,
+                'name' => $user_name
+            ];
         }
-        exit();
     } else {
         // Invalid password
-        echo "<div style='background-color: #ffcccc; padding: 10px; margin: 10px; border: 1px solid #ff0000;'>";
-        echo "<p>Invalid password. <a href='login.html'>Try again</a>.</p>";
-        echo "</div>";
+        $response['message'] = "Invalid password.";
     }
 } else {
     // User does not exist
-    echo "<div style='background-color: #ffcccc; padding: 10px; margin: 10px; border: 1px solid #ff0000;'>";
-    echo "<p>Invalid username/email. <a href='login.html'>Try again</a>.</p>";
-    echo "</div>";
+    $response['message'] = "Invalid username/email.";
 }
 
 // Close the statement and connection
 $stmt->close();
 $conn->close();
+
+// Return JSON response
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>
