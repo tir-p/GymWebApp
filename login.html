@@ -109,6 +109,12 @@
         $("#loginForm").submit(function (e) {
           e.preventDefault();
 
+          // Clear previous error messages
+          $("#error-message").hide().html("");
+
+          // Show loading message
+          $("#error-message").html("Logging in...").show();
+
           $.ajax({
             url: "login.php",
             type: "POST",
@@ -127,7 +133,6 @@
               $("#error-message")
                 .html("An error occurred. Please try again.")
                 .show();
-              console.error(xhr.responseText);
             },
           });
         });
@@ -138,17 +143,3 @@
     </footer>
   </body>
 </html>
-<style>
-  /* Footer styling */
-  footer {
-    background-color: #000000; /* Footer background color */
-    text-align: center; /* Center footer text */
-    padding: 18px; /* Padding inside footer */
-    margin-top: auto; /* Ensure footer stays at the bottom */
-  }
-
-  footer p {
-    margin: 0; /* Remove default margin */
-    color: white; /* Footer text color */
-  }
-</style>
