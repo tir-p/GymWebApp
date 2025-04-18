@@ -2,9 +2,9 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Booking Schema",
     "type": "object",
-    "required": ["user_id", "class_id", "booking_date", "time_slot"],
+    "required": ["client_id", "class_id", "booking_date", "start_time", "end_time"],
     "properties": {
-        "user_id": {
+        "client_id": {
             "type": "integer",
             "minimum": 1
         },
@@ -16,9 +16,13 @@
             "type": "string",
             "format": "date"
         },
-        "time_slot": {
+        "start_time": {
             "type": "string",
-            "pattern": "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+            "pattern": "^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+        },
+        "end_time": {
+            "type": "string",
+            "pattern": "^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
         },
         "status": {
             "type": "string",
