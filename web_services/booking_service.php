@@ -9,69 +9,20 @@ ini_set('display_errors', 1);
 
 class BookingService {
     private $conn;
-    private $schema;
 
     public function __construct($conn) {
         $this->conn = $conn;
-        $this->schema = json_decode(file_get_contents(__DIR__ . '/../schemas/booking_schema.json'), true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            error_log("Error loading schema: " . json_last_error_msg());
-        }
-    }
-
-    private function validateSchema($data) {
-        error_log("Validating data: " . print_r($data, true));
-        
-        $required = ['client_id', 'class_id', 'booking_date', 'start_time', 'end_time'];
-        $errors = [];
-        
-        foreach ($required as $field) {
-            if (!isset($data[$field])) {
-                $errors[] = "Missing required field: $field";
-            }
-        }
-        
-        // Type validation
-        if (isset($data['client_id']) && !is_int($data['client_id'])) {
-            $errors[] = "client_id must be an integer";
-        }
-        
-        if (isset($data['class_id']) && !is_int($data['class_id'])) {
-            $errors[] = "class_id must be an integer";
-        }
-        
-        // Date format validation
-        if (isset($data['booking_date'])) {
-            $datePattern = '/^\d{4}-\d{2}-\d{2}$/';
-            if (!preg_match($datePattern, $data['booking_date'])) {
-                $errors[] = "booking_date must be in YYYY-MM-DD format";
-            }
-        }
-        
-        // Time format validation
-        if (isset($data['start_time']) && isset($data['end_time'])) {
-            $timePattern = '/^\d{2}:\d{2}:\d{2}$/';
-            if (!preg_match($timePattern, $data['start_time']) || !preg_match($timePattern, $data['end_time'])) {
-                $errors[] = "Time must be in HH:MM:SS format";
-            }
-        }
-        
-        if (!empty($errors)) {
-            return ['valid' => false, 'errors' => $errors];
-        }
-        
-        return ['valid' => true];
     }
 
     public function getBookings($clientId) {
         try {
-            $sql = "SELECT b.BookingID, b.BookingDate, b.StartTime, b.EndTime, 
+            $sql = "SELECT b.BookingID, b.BookingDate, b.StartTime, b.EndTime,
                    c.ClassName, c.ClassType, t.Name AS TrainerName
-                   FROM booking b 
-                   JOIN class c ON b.ClassID = c.ClassID 
+                   FROM booking b
+                   JOIN class c ON b.ClassID = c.ClassID
                    JOIN trainer t ON c.TrainerID = t.TrainerID
-                   WHERE b.ClientID = ? 
-                   ORDER BY b.BookingDate DESC, b.StartTime DESC";
+                   WHERE b.ClientID = ? AND b.Status = 'active'
+                   ORDER BY b.BookingDate DESC, b.StartTime";
             
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("i", $clientId);
@@ -103,108 +54,129 @@ class BookingService {
 
     public function createBooking($data) {
         try {
-            error_log("Received booking data: " . print_r($data, true));
-
-            $validation = $this->validateSchema($data);
-            if (!$validation['valid']) {
-                http_response_code(400);
-                return json_encode([
-                    'status' => 'error',
-                    'message' => 'Invalid booking data',
-                    'errors' => $validation['errors']
-                ]);
+            // Validate required fields
+            $requiredFields = ['client_id', 'class_id', 'booking_date'];
+            foreach ($requiredFields as $field) {
+                if (!isset($data[$field]) || empty($data[$field])) {
+                    throw new Exception("Missing required field: $field");
+                }
             }
 
-            // Check for time slot availability
+            // Get class schedule
+            $classSql = "SELECT Schedule, StartTime, EndTime, Capacity, CurrentEnrollment 
+                        FROM class WHERE ClassID = ? AND Status = 'active'";
+            $classStmt = $this->conn->prepare($classSql);
+            $classStmt->bind_param("i", $data['class_id']);
+            $classStmt->execute();
+            $classResult = $classStmt->get_result();
+            $class = $classResult->fetch_assoc();
+            
+            if (!$class) {
+                throw new Exception("Class not found or inactive");
+            }
+
+            // Check if class is full
+            if ($class['CurrentEnrollment'] >= $class['Capacity']) {
+                throw new Exception("Class is full");
+            }
+
+            // Check if booking date is valid for class schedule
+            $bookingDay = date('l', strtotime($data['booking_date']));
+            $scheduleDays = explode(',', $class['Schedule']);
+            if (!in_array($bookingDay, $scheduleDays)) {
+                throw new Exception("Invalid booking date - class not scheduled for this day");
+            }
+
+            // Check for existing booking on same date
             $checkSql = "SELECT COUNT(*) as count FROM booking 
-                        WHERE ClassID = ? AND BookingDate = ? 
-                        AND ((StartTime <= ? AND EndTime > ?) 
-                        OR (StartTime < ? AND EndTime >= ?))";
-            
+                        WHERE ClientID = ? AND ClassID = ? AND BookingDate = ? AND Status = 'active'";
             $checkStmt = $this->conn->prepare($checkSql);
-            $checkStmt->bind_param("isssss", 
-                $data['class_id'],
-                $data['booking_date'],
-                $data['start_time'],
-                $data['start_time'],
-                $data['end_time'],
-                $data['end_time']
-            );
+            $checkStmt->bind_param("iis", $data['client_id'], $data['class_id'], $data['booking_date']);
             $checkStmt->execute();
-            $result = $checkStmt->get_result();
-            $row = $result->fetch_assoc();
+            $checkResult = $checkStmt->get_result();
+            $check = $checkResult->fetch_assoc();
             
-            if ($row['count'] > 0) {
-                $checkStmt->close();
-                return json_encode([
-                    'status' => 'error',
-                    'message' => 'Time slot already booked'
-                ]);
+            if ($check['count'] > 0) {
+                throw new Exception("You already have a booking for this class on this date");
             }
-            $checkStmt->close();
 
-            // Create new booking
-            $insertSql = "INSERT INTO booking (ClientID, ClassID, BookingDate, StartTime, EndTime) 
-                         VALUES (?, ?, ?, ?, ?)";
-            
+            // Create booking
+            $insertSql = "INSERT INTO booking (ClientID, ClassID, BookingDate, StartTime, EndTime, Status) 
+                         VALUES (?, ?, ?, ?, ?, 'active')";
             $insertStmt = $this->conn->prepare($insertSql);
             $insertStmt->bind_param("iisss", 
-                $data['client_id'],
-                $data['class_id'],
+                $data['client_id'], 
+                $data['class_id'], 
                 $data['booking_date'],
-                $data['start_time'],
-                $data['end_time']
+                $class['StartTime'],
+                $class['EndTime']
             );
             
-            if ($insertStmt->execute()) {
-                $bookingId = $this->conn->insert_id;
-                $insertStmt->close();
-                
-                return json_encode([
-                    'status' => 'success',
-                    'message' => 'Booking created successfully',
-                    'booking_id' => $bookingId
-                ]);
-            } else {
-                $error = $insertStmt->error;
-                $insertStmt->close();
-                throw new Exception("Database error: " . $error);
+            if (!$insertStmt->execute()) {
+                throw new Exception("Failed to create booking");
             }
+
+            // Update class enrollment
+            $updateSql = "UPDATE class SET CurrentEnrollment = CurrentEnrollment + 1 
+                         WHERE ClassID = ?";
+            $updateStmt = $this->conn->prepare($updateSql);
+            $updateStmt->bind_param("i", $data['class_id']);
+            $updateStmt->execute();
+
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Booking created successfully',
+                'booking_id' => $insertStmt->insert_id
+            ]);
         } catch (Exception $e) {
             error_log("Error in createBooking: " . $e->getMessage());
-            http_response_code(500);
+            http_response_code(400);
             return json_encode([
                 'status' => 'error',
-                'message' => 'Error creating booking',
-                'error' => $e->getMessage()
+                'message' => $e->getMessage()
             ]);
         }
     }
 
     public function cancelBooking($bookingId, $clientId) {
         try {
-            $sql = "DELETE FROM booking WHERE BookingID = ? AND ClientID = ?";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("ii", $bookingId, $clientId);
+            // Get booking details
+            $getSql = "SELECT ClassID FROM booking WHERE BookingID = ? AND ClientID = ? AND Status = 'active'";
+            $getStmt = $this->conn->prepare($getSql);
+            $getStmt->bind_param("ii", $bookingId, $clientId);
+            $getStmt->execute();
+            $booking = $getStmt->get_result()->fetch_assoc();
             
-            if ($stmt->execute()) {
-                $stmt->close();
-                return json_encode([
-                    'status' => 'success',
-                    'message' => 'Booking cancelled successfully'
-                ]);
-            } else {
-                $error = $stmt->error;
-                $stmt->close();
-                throw new Exception("Database error: " . $error);
+            if (!$booking) {
+                throw new Exception("Booking not found or already cancelled");
             }
+
+            // Cancel booking
+            $cancelSql = "UPDATE booking SET Status = 'cancelled' WHERE BookingID = ?";
+            $cancelStmt = $this->conn->prepare($cancelSql);
+            $cancelStmt->bind_param("i", $bookingId);
+            
+            if (!$cancelStmt->execute()) {
+                throw new Exception("Failed to cancel booking");
+            }
+
+            // Update class enrollment
+            $updateSql = "UPDATE class SET CurrentEnrollment = CurrentEnrollment - 1 
+                         WHERE ClassID = ?";
+            $updateStmt = $this->conn->prepare($updateSql);
+            $updateStmt->bind_param("i", $booking['ClassID']);
+            $updateStmt->execute();
+
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Booking cancelled successfully'
+            ]);
         } catch (Exception $e) {
             error_log("Error in cancelBooking: " . $e->getMessage());
-            http_response_code(500);
+            http_response_code(400);
             return json_encode([
                 'status' => 'error',
-                'message' => 'Error cancelling booking',
-                'error' => $e->getMessage()
+                'message' => $e->getMessage()
             ]);
         }
     }
@@ -212,19 +184,20 @@ class BookingService {
 
 // Handle the request
 try {
+    // Create a connection using mysqli
     $conn = new mysqli('localhost', 'root', '', 'gymwebapp');
     
+    // Check connection
     if ($conn->connect_error) {
         throw new Exception("Connection failed: " . $conn->connect_error);
     }
     
     $service = new BookingService($conn);
 
-    // Check if user is logged in
+    // Get client ID from session
     if (!isset($_SESSION['client_id'])) {
-        throw new Exception('User not logged in');
+        throw new Exception("User not authenticated");
     }
-
     $clientId = $_SESSION['client_id'];
 
     switch ($_SERVER['REQUEST_METHOD']) {
@@ -232,25 +205,15 @@ try {
             echo $service->getBookings($clientId);
             break;
         case 'POST':
-            $rawInput = file_get_contents('php://input');
-            $data = json_decode($rawInput, true);
-            
-            if (!$data) {
-                throw new Exception('Invalid JSON data received');
-            }
-            
-            // Add client_id from session to the data
+            $data = json_decode(file_get_contents('php://input'), true);
             $data['client_id'] = $clientId;
-            
             echo $service->createBooking($data);
             break;
         case 'DELETE':
-            $bookingId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-            if ($bookingId <= 0) {
-                throw new Exception('Invalid booking ID');
+            if (!isset($_GET['booking_id'])) {
+                throw new Exception("Booking ID is required");
             }
-            
-            echo $service->cancelBooking($bookingId, $clientId);
+            echo $service->cancelBooking($_GET['booking_id'], $clientId);
             break;
         default:
             http_response_code(405);
@@ -260,6 +223,7 @@ try {
             ]);
     }
     
+    // Close the connection
     $conn->close();
 } catch (Exception $e) {
     error_log("Error in booking service: " . $e->getMessage());

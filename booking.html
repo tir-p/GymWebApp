@@ -9,59 +9,176 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
       .logo-img {
-        max-width: 90px; /* You can adjust the size */
+        max-width: 90px;
         height: auto;
       }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .form-group select,
+      .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group select:focus,
+      .form-group input:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 14px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      #message-container {
+        margin: 20px 0;
+        padding: 15px;
+        border-radius: 5px;
+        display: none;
+      }
+
+      #message-container.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      #message-container.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .booking-list {
+        margin-top: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .booking-list h3 {
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .booking-list ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .booking-list li {
+        padding: 12px;
+        margin-bottom: 10px;
+        background: white;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
       .action-buttons {
         display: flex;
-        justify-content: center; /* Center buttons horizontally */
-        gap: 20px; /* Space between buttons */
-        margin-top: 20px; /* Space above the buttons */
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
       }
 
       .action-buttons button {
-        padding: 12px 20px; /* Button padding */
-        font-size: 1em; /* Font size */
-        color: white; /* Text color */
-        background-color: #007bff; /* Button background color */
-        border: none; /* Remove border */
-        border-radius: 5px; /* Rounded corners */
-        cursor: pointer; /* Pointer cursor on hover */
-        transition: background-color 0.3s ease, transform 0.3s ease; /* Transition effects */
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
       }
 
       .action-buttons button:hover {
-        background-color: #0056b3; /* Darker background on hover */
-        transform: translateY(-2px); /* Lift effect on hover */
+        background-color: #0056b3;
+        transform: translateY(-2px);
       }
 
-      .action-buttons button:focus {
-        outline: none; /* Remove outline on focus */
+      .action-buttons button:active {
+        transform: translateY(0);
       }
-      #booking-info {
-        min-height: 200px; /* Adjust the minimum height as needed */
-        padding: 15px; /* Add some padding for better spacing */
-        border: 1px solid #ccc; /* Optional: Add a border for better visibility */
-        border-radius: 8px; /* Optional: Add rounded corners */
-        background-color: rgba(
-          240,
-          240,
-          240,
-          0.8
-        ); /* Light background for contrast */
-        display: flex; /* Make it a flex container */
-        align-items: center; /* Center content vertically */
-        justify-content: center; /* Center content horizontally */
-        text-align: center; /* Center text alignment */
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+        }
+
+        .action-buttons button {
+          width: 100%;
+        }
       }
-      .action-buttons {
-        min-height: 100px; /* Adjust the minimum height as needed */
-        display: flex; /* Use flexbox for alignment */
-        justify-content: center; /* Center the buttons horizontally */
-        align-items: center; /* Center the buttons vertically */
-        gap: 20px; /* Space between the buttons */
-        margin-top: 30px; /* Optional: space above the action buttons */
-        padding: 20px; /* Optional: add some padding for spacing */
+
+      /* Loading spinner */
+      .loading {
+        display: none;
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .loading::after {
+        content: "";
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
     </style>
   </head>
@@ -79,11 +196,12 @@
       <h1>Book a Class</h1>
     </header>
     <main>
-      <h2>Select a Class</h2>
       <div class="container">
+        <h2>Select a Class</h2>
         <p>Please fill in the details below to book your class.</p>
 
-        <div id="message-container" style="display: none"></div>
+        <div id="message-container"></div>
+        <div class="loading"></div>
 
         <form id="booking-form">
           <div class="form-group">
@@ -119,21 +237,19 @@
 
           <button type="submit" class="btn">Book Now</button>
         </form>
-      </div>
 
-      <h3>Your Bookings:</h3>
-      <div id="booking-info" class="booking-list">
-        <p>Your bookings will be loaded here!</p>
-      </div>
+        <div id="booking-info" class="booking-list">
+          <p>Your bookings will be loaded here!</p>
+        </div>
 
-      <!-- Buttons for managing bookings -->
-      <div class="action-buttons">
-        <button onclick="window.location.href='booking.html'">
-          Book a New Class
-        </button>
-        <button onclick="window.location.href='manage_bookings.html'">
-          Manage Bookings
-        </button>
+        <div class="action-buttons">
+          <button onclick="window.location.href='booking.html'">
+            Book a New Class
+          </button>
+          <button onclick="window.location.href='manage_bookings.html'">
+            Manage Bookings
+          </button>
+        </div>
       </div>
     </main>
     <footer>
@@ -142,17 +258,28 @@
 
     <script>
       $(document).ready(function () {
+        // Show loading spinner
+        function showLoading() {
+          $('.loading').show();
+        }
+
+        // Hide loading spinner
+        function hideLoading() {
+          $('.loading').hide();
+        }
+
         // Load classes
+        showLoading();
         $.ajax({
           url: "get_classes.php",
           type: "GET",
           dataType: "json",
           success: function (response) {
+            hideLoading();
             if (response.success) {
               const classSelect = $("#class");
               if (response.data && response.data.length > 0) {
                 response.data.forEach(function (classItem) {
-                  // Format the class information for display
                   const classInfo = `${classItem.name} (${classItem.class_type}) - ${classItem.schedule_date} ${classItem.start_time}-${classItem.end_time}`;
                   classSelect.append(
                     `<option value="${classItem.id}" 
@@ -178,34 +305,31 @@
                   $("#date").val(selectedOption.data("schedule-date"));
                   $("#start_time").val(selectedOption.data("start-time"));
                   $("#end_time").val(selectedOption.data("end-time"));
-                  // Update trainer dropdown to show only available trainers for this class
                   updateTrainerDropdown(selectedOption.data("trainer-id"));
                 }
               });
             } else {
-              $("#class").append(
-                '<option value="" disabled>Error loading classes</option>'
-              );
+              showMessage("error", "Error loading classes");
             }
           },
           error: function () {
-            $("#class").append(
-              '<option value="" disabled>Error loading classes</option>'
-            );
+            hideLoading();
+            showMessage("error", "Error loading classes");
           },
         });
 
         // Load trainers
+        showLoading();
         $.ajax({
           url: "get_trainers.php",
           type: "GET",
           dataType: "json",
           success: function (response) {
+            hideLoading();
             if (response.success) {
               const trainerSelect = $("#trainer");
               if (response.data && response.data.length > 0) {
                 response.data.forEach(function (trainer) {
-                  // Format the trainer information for display
                   const trainerInfo = `${trainer.name} (${trainer.expertise}) - Available Slots: ${trainer.available_slots}`;
                   trainerSelect.append(
                     `<option value="${trainer.id}" 
@@ -221,23 +345,20 @@
                 );
               }
             } else {
-              $("#trainer").append(
-                '<option value="" disabled>Error loading trainers</option>'
-              );
+              showMessage("error", "Error loading trainers");
             }
           },
           error: function () {
-            $("#trainer").append(
-              '<option value="" disabled>Error loading trainers</option>'
-            );
+            hideLoading();
+            showMessage("error", "Error loading trainers");
           },
         });
 
         // Function to update trainer dropdown based on selected class
         function updateTrainerDropdown(trainerId) {
           const trainerSelect = $("#trainer");
-          trainerSelect.val(trainerId); // Select the trainer assigned to this class
-          trainerSelect.prop("disabled", true); // Disable trainer selection as it's pre-assigned
+          trainerSelect.val(trainerId);
+          trainerSelect.prop("disabled", true);
         }
 
         // Reset trainer dropdown when form is reset
@@ -252,6 +373,7 @@
         // Form submission
         $("#booking-form").submit(function (e) {
           e.preventDefault();
+          showLoading();
 
           // Validate form inputs
           const classId = $("#class").val();
@@ -261,6 +383,7 @@
           const endTime = $("#end_time").val();
 
           if (!classId || !trainerId || !date || !startTime || !endTime) {
+            hideLoading();
             showMessage("error", "Please fill in all required fields");
             return;
           }
@@ -271,12 +394,14 @@
           today.setHours(0, 0, 0, 0);
 
           if (selectedDate < today) {
+            hideLoading();
             showMessage("error", "Please select a future date");
             return;
           }
 
           // Validate time slots
           if (startTime >= endTime) {
+            hideLoading();
             showMessage("error", "End time must be after start time");
             return;
           }
@@ -298,6 +423,7 @@
             data: JSON.stringify(bookingData),
             dataType: "json",
             success: function (response) {
+              hideLoading();
               if (response.success) {
                 showMessage(
                   "success",
@@ -311,12 +437,10 @@
                   "error",
                   response.message || "Failed to create booking"
                 );
-                if (response.errors) {
-                  console.error("Validation errors:", response.errors);
-                }
               }
             },
             error: function (xhr, status, error) {
+              hideLoading();
               showMessage(
                 "error",
                 "An error occurred. Please try again later."
@@ -341,11 +465,13 @@
 
         // Load existing bookings
         function loadBookings() {
+          showLoading();
           $.ajax({
             url: "fetch_booking.php",
             type: "GET",
             dataType: "json",
             success: function (response) {
+              hideLoading();
               const bookingInfo = $("#booking-info");
               if (response.length > 0) {
                 let html = "<h3>Your Current Bookings:</h3><ul>";
@@ -359,6 +485,7 @@
               }
             },
             error: function (xhr, status, error) {
+              hideLoading();
               console.error("Error loading bookings:", error);
               $("#booking-info").html(
                 "<p>Error loading bookings. Please try again later.</p>"

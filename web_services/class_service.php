@@ -16,8 +16,9 @@ class ClassService {
 
     public function getClasses() {
         try {
-            $sql = "SELECT c.ClassID, c.ClassName, c.ClassType, 
-                   t.Name AS TrainerName, t.TrainerID
+            $sql = "SELECT c.ClassID, c.ClassName, c.ClassType, c.Schedule, 
+                   c.StartTime, c.EndTime, c.Capacity, c.CurrentEnrollment,
+                   t.Name AS TrainerName, t.TrainerID, t.Specialization
                    FROM class c 
                    JOIN trainer t ON c.TrainerID = t.TrainerID
                    WHERE c.Status = 'active'
@@ -30,6 +31,8 @@ class ClassService {
             $classes = [];
             
             while ($row = $result->fetch_assoc()) {
+                // Convert schedule string to array of days
+                $row['Schedule'] = explode(',', $row['Schedule']);
                 $classes[] = $row;
             }
             
@@ -41,6 +44,42 @@ class ClassService {
             ]);
         } catch (Exception $e) {
             error_log("Error in getClasses: " . $e->getMessage());
+            http_response_code(500);
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Database error',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getClassSchedule($classId) {
+        try {
+            $sql = "SELECT c.ClassID, c.ClassName, c.Schedule, 
+                   c.StartTime, c.EndTime, c.Capacity, c.CurrentEnrollment
+                   FROM class c
+                   WHERE c.ClassID = ? AND c.Status = 'active'";
+            
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $classId);
+            $stmt->execute();
+            
+            $result = $stmt->get_result();
+            $class = $result->fetch_assoc();
+            
+            if ($class) {
+                // Convert schedule string to array of days
+                $class['Schedule'] = explode(',', $class['Schedule']);
+            }
+            
+            $stmt->close();
+
+            return json_encode([
+                'status' => 'success',
+                'class' => $class
+            ]);
+        } catch (Exception $e) {
+            error_log("Error in getClassSchedule: " . $e->getMessage());
             http_response_code(500);
             return json_encode([
                 'status' => 'error',
@@ -65,7 +104,11 @@ try {
 
     switch ($_SERVER['REQUEST_METHOD']) {
         case 'GET':
-            echo $service->getClasses();
+            if (isset($_GET['class_id'])) {
+                echo $service->getClassSchedule($_GET['class_id']);
+            } else {
+                echo $service->getClasses();
+            }
             break;
         default:
             http_response_code(405);
