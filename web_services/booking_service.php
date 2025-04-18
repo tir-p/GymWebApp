@@ -21,7 +21,7 @@ class BookingService {
                    FROM booking b
                    JOIN class c ON b.ClassID = c.ClassID
                    JOIN trainer t ON c.TrainerID = t.TrainerID
-                   WHERE b.ClientID = ? AND b.Status = 'active'
+                   WHERE b.ClientID = ?
                    ORDER BY b.BookingDate DESC, b.StartTime";
             
             $stmt = $this->conn->prepare($sql);
@@ -140,32 +140,33 @@ class BookingService {
 
     public function cancelBooking($bookingId, $clientId) {
         try {
-            // Get booking details
-            $getSql = "SELECT ClassID FROM booking WHERE BookingID = ? AND ClientID = ? AND Status = 'active'";
-            $getStmt = $this->conn->prepare($getSql);
-            $getStmt->bind_param("ii", $bookingId, $clientId);
-            $getStmt->execute();
-            $booking = $getStmt->get_result()->fetch_assoc();
+            // First verify the booking exists and belongs to the client
+            $checkSql = "SELECT BookingID, ClientID FROM booking WHERE BookingID = ?";
+            $checkStmt = $this->conn->prepare($checkSql);
+            $checkStmt->bind_param("i", $bookingId);
+            $checkStmt->execute();
+            $result = $checkStmt->get_result();
             
-            if (!$booking) {
-                throw new Exception("Booking not found or already cancelled");
+            if ($result->num_rows === 0) {
+                error_log("Booking not found for ID: " . $bookingId);
+                throw new Exception("Booking not found");
+            }
+            
+            $booking = $result->fetch_assoc();
+            if ($booking['ClientID'] != $clientId) {
+                error_log("Booking " . $bookingId . " does not belong to client " . $clientId);
+                throw new Exception("You do not have permission to cancel this booking");
             }
 
-            // Cancel booking
-            $cancelSql = "UPDATE booking SET Status = 'cancelled' WHERE BookingID = ?";
-            $cancelStmt = $this->conn->prepare($cancelSql);
-            $cancelStmt->bind_param("i", $bookingId);
+            // Delete the booking
+            $deleteSql = "DELETE FROM booking WHERE BookingID = ? AND ClientID = ?";
+            $deleteStmt = $this->conn->prepare($deleteSql);
+            $deleteStmt->bind_param("ii", $bookingId, $clientId);
             
-            if (!$cancelStmt->execute()) {
+            if (!$deleteStmt->execute()) {
+                error_log("Failed to delete booking: " . $deleteStmt->error);
                 throw new Exception("Failed to cancel booking");
             }
-
-            // Update class enrollment
-            $updateSql = "UPDATE class SET CurrentEnrollment = CurrentEnrollment - 1 
-                         WHERE ClassID = ?";
-            $updateStmt = $this->conn->prepare($updateSql);
-            $updateStmt->bind_param("i", $booking['ClassID']);
-            $updateStmt->execute();
 
             return json_encode([
                 'status' => 'success',

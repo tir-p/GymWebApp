@@ -114,6 +114,32 @@
         background: white;
         border-radius: 5px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .booking-list .booking-details {
+        flex: 1;
+      }
+
+      .booking-list .cancel-btn {
+        padding: 8px 12px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .booking-list .cancel-btn:hover {
+        background-color: #c82333;
+      }
+
+      .booking-list .cancel-btn:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
       }
 
       .action-buttons {
@@ -257,16 +283,110 @@
     </footer>
 
     <script>
-      $(document).ready(function () {
-        // Show loading spinner
-        function showLoading() {
-          $('.loading').show();
+      // Show loading spinner
+      function showLoading() {
+        $('.loading').show();
+      }
+
+      // Hide loading spinner
+      function hideLoading() {
+        $('.loading').hide();
+      }
+
+      // Function to show messages
+      function showMessage(type, message) {
+        const messageContainer = $("#message-container");
+        messageContainer.removeClass("success error").addClass(type);
+        messageContainer.html(`<p>${message}</p>`).show();
+
+        // Hide message after 5 seconds
+        setTimeout(() => {
+          messageContainer.fadeOut();
+        }, 5000);
+      }
+
+      // Function to load bookings
+      function loadBookings() {
+        showLoading();
+        $.ajax({
+          url: "fetch_booking.php",
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            hideLoading();
+            const bookingInfo = $("#booking-info");
+            if (response.length > 0) {
+              let html = "<h3>Your Current Bookings:</h3><ul>";
+              response.forEach((booking) => {
+                html += `
+                  <li>
+                    <div class="booking-details">
+                      ${booking.ClassName} with ${booking.TrainerName} on ${booking.BookingDate} 
+                      (${booking.StartTime} - ${booking.EndTime})
+                    </div>
+                    <button class="cancel-btn" onclick="cancelBooking(${booking.BookingID})">
+                      Cancel Booking
+                    </button>
+                  </li>`;
+              });
+              html += "</ul>";
+              bookingInfo.html(html);
+            } else {
+              bookingInfo.html("<p>You have no current bookings.</p>");
+            }
+          },
+          error: function (xhr, status, error) {
+            hideLoading();
+            console.error("Error loading bookings:", error);
+            $("#booking-info").html(
+              "<p>Error loading bookings. Please try again later.</p>"
+            );
+          },
+        });
+      }
+
+      // Function to cancel a booking
+      function cancelBooking(bookingId) {
+        if (!confirm("Are you sure you want to cancel this booking?")) {
+          return;
         }
 
-        // Hide loading spinner
-        function hideLoading() {
-          $('.loading').hide();
-        }
+        showLoading();
+        $.ajax({
+          url: "web_services/booking_service.php?booking_id=" + bookingId,
+          type: "DELETE",
+          dataType: 'json',
+          success: function (response) {
+            hideLoading();
+            console.log("Cancel booking response:", response);
+            
+            try {
+              const result = typeof response === 'string' ? JSON.parse(response) : response;
+              
+              if (result.status === 'success') {
+                showMessage("success", "Booking cancelled successfully");
+                loadBookings(); // Reload the bookings list
+              } else {
+                showMessage("error", result.message || "Failed to cancel booking");
+              }
+            } catch (e) {
+              console.error("Error parsing response:", e);
+              showMessage("error", "Error processing the response");
+            }
+          },
+          error: function (xhr, status, error) {
+            hideLoading();
+            console.error("Error cancelling booking:", error);
+            console.error("Status:", status);
+            console.error("Response:", xhr.responseText);
+            showMessage("error", "An error occurred while cancelling the booking");
+          }
+        });
+      }
+
+      $(document).ready(function () {
+        // Load bookings when page loads
+        loadBookings();
 
         // Load classes
         showLoading();
@@ -450,52 +570,6 @@
             },
           });
         });
-
-        // Function to show messages
-        function showMessage(type, message) {
-          const messageContainer = $("#message-container");
-          messageContainer.removeClass("success error").addClass(type);
-          messageContainer.html(`<p>${message}</p>`).show();
-
-          // Hide message after 5 seconds
-          setTimeout(() => {
-            messageContainer.fadeOut();
-          }, 5000);
-        }
-
-        // Load existing bookings
-        function loadBookings() {
-          showLoading();
-          $.ajax({
-            url: "fetch_booking.php",
-            type: "GET",
-            dataType: "json",
-            success: function (response) {
-              hideLoading();
-              const bookingInfo = $("#booking-info");
-              if (response.length > 0) {
-                let html = "<h3>Your Current Bookings:</h3><ul>";
-                response.forEach((booking) => {
-                  html += `<li>${booking.ClassName} with ${booking.TrainerName} on ${booking.BookingDate} (${booking.StartTime} - ${booking.EndTime})</li>`;
-                });
-                html += "</ul>";
-                bookingInfo.html(html);
-              } else {
-                bookingInfo.html("<p>You have no current bookings.</p>");
-              }
-            },
-            error: function (xhr, status, error) {
-              hideLoading();
-              console.error("Error loading bookings:", error);
-              $("#booking-info").html(
-                "<p>Error loading bookings. Please try again later.</p>"
-              );
-            },
-          });
-        }
-
-        // Load bookings when page loads
-        loadBookings();
       });
     </script>
   </body>
