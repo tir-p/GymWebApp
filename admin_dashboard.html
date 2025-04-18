@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
     <style>
-      /* General Styles */
+      /* (Your original CSS, unchanged) */
       body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
         background-color: #f5f5f5;
       }
-
-      /* Navbar Styles (Same as Client Dashboard) */
       .navbar {
         display: flex;
         justify-content: space-between;
@@ -22,35 +20,28 @@
         padding: 10px 20px;
         color: white;
       }
-
       .navbar .logo {
         max-width: 150px;
       }
-
       .navbar ul {
         list-style-type: none;
         display: flex;
         margin: 0;
         padding: 0;
       }
-
       .navbar ul li {
         margin-left: 20px;
       }
-
       .navbar ul li a {
         text-decoration: none;
         color: white;
         padding: 8px 16px;
         transition: background-color 0.3s;
       }
-
       .navbar ul li a:hover {
         background-color: #575757;
         border-radius: 4px;
       }
-
-      /* Logout Button */
       .navbar .logout-btn {
         background-color: #dc3545;
         padding: 10px 20px;
@@ -60,12 +51,9 @@
         cursor: pointer;
         transition: background-color 0.3s ease;
       }
-
       .navbar .logout-btn:hover {
         background-color: #c82333;
       }
-
-      /* Dashboard Container */
       .admin-dashboard {
         max-width: 1200px;
         margin: 20px auto;
@@ -75,53 +63,41 @@
         border-radius: 10px;
         position: relative;
       }
-
-      /* Section Styles */
       section {
         margin-bottom: 40px;
       }
-
       section h2 {
         font-size: 1.8em;
         margin-bottom: 20px;
         border-bottom: 2px solid #f0f0f0;
         padding-bottom: 10px;
       }
-
-      /* Table Styles */
       table {
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
         background-color: #fff;
       }
-
       table th,
       table td {
         padding: 12px;
         text-align: left;
         border: 1px solid #ddd;
       }
-
       table th {
         background-color: #f7f7f7;
         color: #333;
       }
-
       table td {
         background-color: #fcfcfc;
         color: #555;
       }
-
       table tr:nth-child(even) {
         background-color: #f9f9f9;
       }
-
       table tr:hover {
         background-color: #f1f1f1;
       }
-
-      /* Button Styles */
       button {
         padding: 10px 20px;
         background-color: #007bff;
@@ -131,12 +107,9 @@
         cursor: pointer;
         transition: background-color 0.3s ease;
       }
-
       button:hover {
         background-color: #0056b3;
       }
-
-      /* Action Button Styles */
       button[onclick*="edit"],
       button[onclick*="delete"],
       button[onclick*="resetPassword"],
@@ -144,141 +117,419 @@
         margin-right: 10px;
         background-color: #28a745;
       }
-
       button[onclick*="edit"]:hover,
       button[onclick*="delete"]:hover,
       button[onclick*="resetPassword"]:hover,
       button[onclick*="verifyAccount"]:hover {
         background-color: #218838;
       }
-
-      /* Delete Button */
       button[onclick*="delete"] {
         background-color: #dc3545;
       }
-
       button[onclick*="delete"]:hover {
         background-color: #c82333;
       }
-
-      /* View Feedback Button */
       button[onclick*="viewFeedback"] {
         background-color: #17a2b8;
       }
-
       button[onclick*="viewFeedback"]:hover {
         background-color: #138496;
       }
       footer {
-        background-color: #000000; /* Black background for the footer */
-        color: white; /* White text color */
-        text-align: center; /* Center-align text */
-        padding: 15px 0; /* Padding above and below the text */
-        position: relative; /* Position relative for better placement */
-        bottom: 0; /* Stick to the bottom of the page */
-        width: 100%; /* Full width of the page */
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted look */
-        font-size: 1em; /* Slightly smaller font size */
+        background-color: #000000;
+        color: white;
+        text-align: center;
+        padding: 15px 0;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        font-size: 1em;
       }
-
       footer p {
-        margin: 0; /* Remove default margin */
+        margin: 0;
       }
     </style>
-
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Fetch data from the PHP script
-        fetch("admin_dashboard.php")
-          .then((response) => response.json())
+      // --- Button handlers (must be global) ---
+      function adminAction(action, data, callback) {
+        const formData = new FormData();
+        formData.append("action", action);
+        for (const key in data) formData.append(key, data[key]);
+        fetch("admindashboard.php", {
+          method: "POST",
+          credentials: "same-origin",
+          body: formData,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
           .then((data) => {
+            if (data.status === "error") {
+              throw new Error(data.message);
+            }
+            callback(data);
+          })
+          .catch((err) => {
+            console.error("Error in admin action:", err);
+            alert("Error: " + err.message);
+          });
+      }
+
+      function verifyAccount(clientId) {
+        adminAction("verify_user", { client_id: clientId }, (data) => {
+          alert(data.message);
+          location.reload();
+        });
+      }
+
+      function resetPassword(clientId) {
+        adminAction("reset_password", { client_id: clientId }, (data) => {
+          alert(data.message);
+        });
+      }
+
+      function editUser(clientId, currentName, currentEmail, currentPhone) {
+        const name = prompt("New name:", currentName);
+        const email = prompt("New email:", currentEmail);
+        const phone = prompt("New phone:", currentPhone);
+        if (name && email) {
+          adminAction(
+            "edit_user",
+            { client_id: clientId, name, email, phone },
+            (data) => {
+              alert(data.message);
+              location.reload();
+            }
+          );
+        }
+      }
+
+      function deleteUser(clientId) {
+        if (confirm("Are you sure?")) {
+          adminAction("delete_user", { client_id: clientId }, (data) => {
+            alert(data.message);
+            location.reload();
+          });
+        }
+      }
+
+      function editPlan(planId, currentName, currentPrice) {
+        const plan_name = prompt("New plan name:", currentName);
+        const price = prompt("New price:", currentPrice);
+        if (plan_name && price) {
+          adminAction(
+            "edit_plan",
+            { plan_type_id: planId, plan_name, price },
+            (data) => {
+              alert(data.message);
+              location.reload();
+            }
+          );
+        }
+      }
+
+      function deletePlan(planId) {
+        if (confirm("Delete this plan?")) {
+          adminAction("delete_plan", { plan_type_id: planId }, (data) => {
+            alert(data.message);
+            location.reload();
+          });
+        }
+      }
+
+      function editClass(
+        classId,
+        currentName,
+        currentTrainerId,
+        currentStartTime,
+        currentEndTime,
+        currentScheduleDate,
+        currentClassType
+      ) {
+        const class_name = prompt("New class name:", currentName);
+        const trainer_id = prompt("New trainer ID:", currentTrainerId);
+        const start_time = prompt(
+          "New start time (HH:MM:SS):",
+          currentStartTime
+        );
+        const end_time = prompt("New end time (HH:MM:SS):", currentEndTime);
+        const schedule_date = prompt(
+          "New schedule date (YYYY-MM-DD):",
+          currentScheduleDate
+        );
+        const class_type = prompt("New class type:", currentClassType);
+
+        if (
+          class_name &&
+          trainer_id &&
+          start_time &&
+          end_time &&
+          schedule_date &&
+          class_type
+        ) {
+          adminAction(
+            "edit_class",
+            {
+              class_id: classId,
+              class_name,
+              trainer_id,
+              start_time,
+              end_time,
+              schedule_date,
+              class_type,
+            },
+            (data) => {
+              alert(data.message);
+              location.reload();
+            }
+          );
+        }
+      }
+
+      function addClass() {
+        const class_name = prompt("Class name:");
+        const trainer_id = prompt("Trainer ID:");
+        const start_time = prompt("Start time (HH:MM:SS):");
+        const end_time = prompt("End time (HH:MM:SS):");
+        const schedule_date = prompt("Schedule date (YYYY-MM-DD):");
+        const class_type = prompt("Class type:");
+
+        if (
+          class_name &&
+          trainer_id &&
+          start_time &&
+          end_time &&
+          schedule_date &&
+          class_type
+        ) {
+          adminAction(
+            "add_class",
+            {
+              class_name,
+              trainer_id,
+              start_time,
+              end_time,
+              schedule_date,
+              class_type,
+            },
+            (data) => {
+              alert(data.message);
+              location.reload();
+            }
+          );
+        }
+      }
+
+      function editTrainer(
+        trainerId,
+        currentName,
+        currentExpertise,
+        currentAvailableSlots
+      ) {
+        const name = prompt("New trainer name:", currentName);
+        const expertise = prompt("New expertise:", currentExpertise);
+        const available_slots = prompt(
+          "New available slots:",
+          currentAvailableSlots
+        );
+
+        if (name && expertise && available_slots) {
+          adminAction(
+            "edit_trainer",
+            {
+              trainer_id: trainerId,
+              name,
+              expertise,
+              available_slots,
+            },
+            (data) => {
+              alert(data.message);
+              location.reload();
+            }
+          );
+        }
+      }
+
+      function addTrainer() {
+        const name = prompt("Trainer name:");
+        const expertise = prompt("Expertise:");
+        const available_slots = prompt("Available slots:");
+
+        if (name && expertise && available_slots) {
+          adminAction(
+            "add_trainer",
+            {
+              name,
+              expertise,
+              available_slots,
+            },
+            (data) => {
+              alert(data.message);
+              location.reload();
+            }
+          );
+        }
+      }
+
+      function viewFeedback(trainerId) {
+        adminAction("view_feedback", { trainer_id: trainerId }, (data) => {
+          if (data.status === "success") {
+            let msg = "Feedback:\n";
+            data.feedback.forEach((fb) => {
+              msg += `Client: ${fb.ClientName}, Rating: ${fb.Rating}, Comments: ${fb.Comments}\n`;
+            });
+            alert(msg);
+          } else {
+            alert(data.message);
+          }
+        });
+      }
+
+      // Helper to escape HTML
+      window.escapeHtml = function (text) {
+        return text.replace(/[&<>"']/g, function (m) {
+          return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          }[m];
+        });
+      };
+
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("admindashboard.php")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status === "error") {
+              throw new Error(data.message);
+            }
             populateUserManagement(data.users);
             populateMembershipManagement(data.plans);
             populateClassScheduleManagement(data.classes);
             populateTrainerManagement(data.trainers);
           })
-          .catch((error) => console.error("Error fetching data:", error));
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            alert("Error loading dashboard data: " + error.message);
+          });
 
-        // Populate User Management table
         function populateUserManagement(users) {
           const tbody = document.querySelector("#user-management tbody");
+          tbody.innerHTML = "";
           users.forEach((user) => {
             const row = `
-              <tr>
-                <td>${user.ClientID}</td>
-                <td>${user.Name}</td>
-                <td>${user.Email}</td>
-                <td>${user.Role}</td>
-                <td>
-                  <button onclick="verifyAccount(${user.ClientID})">Verify</button>
-                  <button onclick="resetPassword(${user.ClientID})">Reset Password</button>
-                </td>
-              </tr>`;
+            <tr>
+              <td>${user.ClientID}</td>
+              <td>${user.Name}</td>
+              <td>${user.Email}</td>
+              <td>${user.Role}</td>
+              <td>
+                <button onclick="verifyAccount(${
+                  user.ClientID
+                })">Verify</button>
+                <button onclick="resetPassword(${
+                  user.ClientID
+                })">Reset Password</button>
+                <button onclick="editUser(${user.ClientID}, '${escapeHtml(
+              user.Name
+            )}', '${escapeHtml(user.Email)}', '${escapeHtml(
+              user.Phone || ""
+            )}')">Edit</button>
+                <button onclick="deleteUser(${user.ClientID})">Delete</button>
+              </td>
+            </tr>`;
             tbody.innerHTML += row;
           });
         }
 
-        // Populate Membership Management table
         function populateMembershipManagement(plans) {
           const tbody = document.querySelector("#membership-management tbody");
+          tbody.innerHTML = "";
           plans.forEach((plan) => {
             const row = `
-              <tr>
-                <td>${plan.PlanTypeID}</td>
-                <td>${plan.PlanName}</td>
-                <td>$${plan.Price}</td>
-                <td>
-                  <button onclick="editPlan(${plan.PlanTypeID})">Edit</button>
-                  <button onclick="deletePlan(${plan.PlanTypeID})">Delete</button>
-                </td>
-              </tr>`;
+            <tr>
+              <td>${plan.PlanTypeID}</td>
+              <td>${plan.PlanName}</td>
+              <td>$${plan.Price}</td>
+              <td>
+                <button onclick="editPlan(${plan.PlanTypeID}, '${escapeHtml(
+              plan.PlanName
+            )}', '${plan.Price}')">Edit</button>
+                <button onclick="deletePlan(${plan.PlanTypeID})">Delete</button>
+              </td>
+            </tr>`;
             tbody.innerHTML += row;
           });
         }
 
-        // Populate Class Schedule Management table
         function populateClassScheduleManagement(classes) {
           const tbody = document.querySelector(
             "#class-schedule-management tbody"
           );
+          tbody.innerHTML = "";
           classes.forEach((classItem) => {
             const row = `
-              <tr>
-                <td>${classItem.ClassID}</td>
-                <td>${classItem.ClassName}</td>
-                <td>${classItem.TrainerName}</td>
-                <td>${classItem.StartTime}</td>
-                <td>
-                  <button onclick="editSchedule(${classItem.ClassID})">Edit</button>
-                </td>
-              </tr>`;
+            <tr>
+              <td>${classItem.ClassID}</td>
+              <td>${classItem.ClassName}</td>
+              <td>${classItem.TrainerName}</td>
+              <td>${classItem.StartTime}</td>
+              <td>${classItem.EndTime}</td>
+              <td>${classItem.ScheduleDate}</td>
+              <td>${classItem.ClassType}</td>
+              <td>
+                <button onclick="editClass(${classItem.ClassID}, '${escapeHtml(
+              classItem.ClassName
+            )}', '${classItem.TrainerID}', '${classItem.StartTime}', '${
+              classItem.EndTime
+            }', '${classItem.ScheduleDate}', '${
+              classItem.ClassType
+            }')">Edit</button>
+                <button onclick="deleteClass(${
+                  classItem.ClassID
+                })">Delete</button>
+              </td>
+            </tr>`;
             tbody.innerHTML += row;
           });
         }
 
-        // Populate Trainer Management table
         function populateTrainerManagement(trainers) {
           const tbody = document.querySelector("#trainer-management tbody");
+          tbody.innerHTML = "";
           trainers.forEach((trainer) => {
             const row = `
-              <tr>
-                <td>${trainer.TrainerID}</td>
-                <td>${trainer.Name}</td>
-                <td>${trainer.Expertise}</td>
-                <td>
-                  <button onclick="editTrainer(${trainer.TrainerID})">Edit</button>
-                  <button onclick="viewFeedback(${trainer.TrainerID})">View Feedback</button>
-                </td>
-              </tr>`;
+            <tr>
+              <td>${trainer.TrainerID}</td>
+              <td>${trainer.Name}</td>
+              <td>${trainer.Expertise}</td>
+              <td>${trainer.AvailableSlots}</td>
+              <td>
+                <button onclick="editTrainer(${
+                  trainer.TrainerID
+                }, '${escapeHtml(trainer.Name)}', '${escapeHtml(
+              trainer.Expertise
+            )}', '${trainer.AvailableSlots}')">Edit</button>
+                <button onclick="deleteTrainer(${
+                  trainer.TrainerID
+                })">Delete</button>
+              </td>
+            </tr>`;
             tbody.innerHTML += row;
           });
         }
       });
-
-      // Function for logging out
-      function logout() {
-        window.location.href = "index.html";
-      }
     </script>
   </head>
   <body>
@@ -329,6 +580,9 @@
       <!-- Class Schedule Management -->
       <section id="class-schedule-management">
         <h2>Class Schedule Management</h2>
+        <button onclick="addClass()" style="margin-bottom: 20px">
+          Add New Class
+        </button>
         <table>
           <thead>
             <tr>
@@ -336,6 +590,9 @@
               <th>Class Name</th>
               <th>Trainer</th>
               <th>Start Time</th>
+              <th>End Time</th>
+              <th>Schedule Date</th>
+              <th>Class Type</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -346,12 +603,16 @@
       <!-- Trainer Management -->
       <section id="trainer-management">
         <h2>Trainer Management</h2>
+        <button onclick="addTrainer()" style="margin-bottom: 20px">
+          Add New Trainer
+        </button>
         <table>
           <thead>
             <tr>
               <th>Trainer ID</th>
               <th>Name</th>
               <th>Expertise</th>
+              <th>Available Slots</th>
               <th>Actions</th>
             </tr>
           </thead>

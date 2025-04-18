@@ -1,18 +1,5 @@
 <?php
 session_start();
-// Include the JSON validator
-require_once 'json_validator.php';
-
-// Verify that client is logged in
-if (!isset($_SESSION['client_id'])) {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => false,
-        'message' => 'Authentication required',
-        'data' => null
-    ]);
-    exit();
-}
 
 // Database connection parameters
 $host = 'localhost';
@@ -28,19 +15,7 @@ if ($conn->connect_error) {
     header('Content-Type: application/json');
     echo json_encode([
         'success' => false,
-        'message' => "Connection failed: " . $conn->connect_error,
-        'data' => null
-    ]);
-    exit();
-}
-
-// Only accept POST requests with JSON content type
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => false,
-        'message' => 'Only POST method is allowed',
-        'data' => null
+        'message' => "Connection failed: " . $conn->connect_error
     ]);
     exit();
 }
@@ -54,93 +29,127 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     header('Content-Type: application/json');
     echo json_encode([
         'success' => false,
-        'message' => 'Invalid JSON: ' . json_last_error_msg(),
-        'data' => null
+        'message' => 'Invalid JSON: ' . json_last_error_msg()
     ]);
     exit();
 }
 
-// Define the booking schema
-$bookingSchema = [
-    'type' => 'object',
-    'properties' => [
-        'class_id' => ['type' => 'integer'],
-        'trainer_id' => ['type' => 'integer'],
-        'booking_date' => ['type' => 'string'],
-        'notes' => ['type' => 'string']
-    ],
-    'required' => ['class_id', 'trainer_id', 'booking_date']
-];
-
-// Validate the JSON against the schema
-$validationResult = JSONValidator::validate($booking, $bookingSchema);
-
-if (!$validationResult['valid']) {
+// Validate required fields
+if (!isset($booking['class_id']) || !isset($booking['trainer_id']) || 
+    !isset($booking['booking_date']) || !isset($booking['start_time']) || 
+    !isset($booking['end_time'])) {
     header('Content-Type: application/json');
     echo json_encode([
         'success' => false,
-        'message' => 'Invalid booking data format',
-        'errors' => $validationResult['errors']
+        'message' => 'Missing required fields'
     ]);
     exit();
 }
 
-// If validation passed, insert the booking into database
+// Start transaction
+$conn->begin_transaction();
+
 try {
-    // Prepare statement
-    $stmt = $conn->prepare("INSERT INTO booking (ClientID, ClassID, TrainerID, BookingDate, Notes) VALUES (?, ?, ?, ?, ?)");
+    // Check if the class exists and is available
+    $classCheck = $conn->prepare("SELECT ClassID FROM class WHERE ClassID = ?");
+    $classCheck->bind_param("i", $booking['class_id']);
+    $classCheck->execute();
+    $classResult = $classCheck->get_result();
     
-    // Get client ID from session
-    $clientID = $_SESSION['client_id'];
+    if ($classResult->num_rows === 0) {
+        throw new Exception("Class not found");
+    }
+    
+    // Check if the trainer exists
+    $trainerCheck = $conn->prepare("SELECT TrainerID FROM trainer WHERE TrainerID = ?");
+    $trainerCheck->bind_param("i", $booking['trainer_id']);
+    $trainerCheck->execute();
+    $trainerResult = $trainerCheck->get_result();
+    
+    if ($trainerResult->num_rows === 0) {
+        throw new Exception("Trainer not found");
+    }
+    
+    // Check for existing bookings at the same time
+    $timeCheck = $conn->prepare("
+        SELECT BookingID FROM booking 
+        WHERE BookingDate = ? 
+        AND ((StartTime <= ? AND EndTime > ?) OR (StartTime < ? AND EndTime >= ?))
+    ");
+    $timeCheck->bind_param("sssss", 
+        $booking['booking_date'],
+        $booking['end_time'],
+        $booking['start_time'],
+        $booking['end_time'],
+        $booking['start_time']
+    );
+    $timeCheck->execute();
+    $timeResult = $timeCheck->get_result();
+    
+    if ($timeResult->num_rows > 0) {
+        throw new Exception("Time slot already booked");
+    }
+    
+    // Insert the booking
+    $stmt = $conn->prepare("
+        INSERT INTO booking (
+            ClientID, 
+            ClassID, 
+            TrainerID, 
+            BookingDate, 
+            StartTime, 
+            EndTime
+        ) VALUES (?, ?, ?, ?, ?, ?)
+    ");
+    
+    // Get client ID from session or use a default for testing
+    $clientID = isset($_SESSION['client_id']) ? $_SESSION['client_id'] : 1;
     
     // Bind parameters
-    $stmt->bind_param("iiiss", 
-        $clientID, 
-        $booking['class_id'], 
-        $booking['trainer_id'], 
-        $booking['booking_date'], 
-        $booking['notes'] ?? '');
+    $stmt->bind_param("iiisss", 
+        $clientID,
+        $booking['class_id'],
+        $booking['trainer_id'],
+        $booking['booking_date'],
+        $booking['start_time'],
+        $booking['end_time']
+    );
     
     // Execute the statement
     $stmt->execute();
     
-    // Check if successful
-    if ($stmt->affected_rows > 0) {
-        $bookingId = $stmt->insert_id;
-        
-        // Prepare success response
-        $response = [
-            'success' => true,
-            'message' => 'Booking created successfully',
-            'data' => [
-                'booking_id' => $bookingId,
-                'client_id' => $clientID,
-                'class_id' => $booking['class_id'],
-                'trainer_id' => $booking['trainer_id'],
-                'booking_date' => $booking['booking_date']
-            ]
-        ];
-    } else {
-        // Insertion failed
-        $response = [
-            'success' => false,
-            'message' => 'Failed to create booking',
-            'data' => null
-        ];
+    if ($stmt->affected_rows === 0) {
+        throw new Exception("Failed to create booking");
     }
     
-    // Close statement
-    $stmt->close();
+    // Update trainer's available slots
+    $updateSlots = $conn->prepare("
+        UPDATE trainer 
+        SET AvailableSlots = AvailableSlots - 1 
+        WHERE TrainerID = ?
+    ");
+    $updateSlots->bind_param("i", $booking['trainer_id']);
+    $updateSlots->execute();
+    
+    // Commit transaction
+    $conn->commit();
+    
+    $response = [
+        'success' => true,
+        'message' => 'Booking created successfully'
+    ];
+    
 } catch (Exception $e) {
-    // Handle any exceptions
+    // Rollback transaction on error
+    $conn->rollback();
+    
     $response = [
         'success' => false,
-        'message' => 'Error: ' . $e->getMessage(),
-        'data' => null
+        'message' => $e->getMessage()
     ];
 }
 
-// Close connection
+// Close connections
 $conn->close();
 
 // Output the response

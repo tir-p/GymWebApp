@@ -4,66 +4,56 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class RegisterService {
     private $db;
-    private $schema;
 
     public function __construct($db) {
         $this->db = $db;
-        $this->schema = json_decode(file_get_contents(__DIR__ . '/../schemas/user_schema.json'), true);
-    }
-
-    private function validateSchema($data) {
-        $validator = new JsonSchema\Validator();
-        $validator->validate($data, $this->schema);
-        
-        if (!$validator->isValid()) {
-            $errors = array_map(function($error) {
-                return $error['message'];
-            }, $validator->getErrors());
-            return ['valid' => false, 'errors' => $errors];
-        }
-        return ['valid' => true];
     }
 
     public function register($data) {
-        $validation = $this->validateSchema($data);
-        if (!$validation['valid']) {
-            http_response_code(400);
+        // Validate required fields
+        $required = ['email', 'password', 'full_name', 'phone', 'address'];
+        foreach ($required as $field) {
+            if (empty($data[$field])) {
+                http_response_code(400);
+                return json_encode([
+                    'status' => 'error',
+                    'message' => "Missing required field: $field"
+                ]);
+            }
+        }
+
+        // Check for duplicate email
+        $stmt = $this->db->prepare("SELECT 1 FROM client WHERE Email = ?");
+        $stmt->execute([$data['email']]);
+        if ($stmt->fetch()) {
+            http_response_code(409);
             return json_encode([
                 'status' => 'error',
-                'message' => 'Invalid input data',
-                'errors' => $validation['errors']
+                'message' => 'Email already exists'
             ]);
         }
 
-        try {
-            // Hash password
-            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-            
-            // Insert into database
-            $stmt = $this->db->prepare("INSERT INTO users (username, email, password, full_name, phone, role) 
-                                      VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->execute([
-                $data['username'],
-                $data['email'],
-                $data['password'],
-                $data['full_name'],
-                $data['phone'],
-                $data['role'] ?? 'client'
-            ]);
+        // Hash password
+        $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
 
-            return json_encode([
-                'status' => 'success',
-                'message' => 'User registered successfully',
-                'user_id' => $this->db->lastInsertId()
-            ]);
-        } catch (PDOException $e) {
-            http_response_code(500);
-            return json_encode([
-                'status' => 'error',
-                'message' => 'Database error',
-                'error' => $e->getMessage()
-            ]);
-        }
+        // Insert into client table
+        $stmt = $this->db->prepare(
+            "INSERT INTO client (Name, Email, Password, Phone, Address, Role) VALUES (?, ?, ?, ?, ?, ?)"
+        );
+        $stmt->execute([
+            $data['full_name'],
+            $data['email'],
+            $hashedPassword,
+            $data['phone'],
+            $data['address'],
+            'Member' // Default role
+        ]);
+
+        return json_encode([
+            'status' => 'success',
+            'message' => 'Registration successful',
+            'client_id' => $this->db->lastInsertId()
+        ]);
     }
 }
 
@@ -71,12 +61,10 @@ class RegisterService {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     $db = new PDO('mysql:host=localhost;dbname=gymwebapp', 'root', '');
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $service = new RegisterService($db);
     echo $service->register($data);
 } else {
     http_response_code(405);
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Method not allowed'
-    ]);
-} 
+    echo json_encode(['status' => 'error', 'message' => 'Method not allowed']);
+}

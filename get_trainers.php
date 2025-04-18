@@ -20,7 +20,14 @@ if ($conn->connect_error) {
 }
 
 // Query to fetch trainers
-$sql = "SELECT TrainerID as id, Name as name, Specialization as specialization FROM trainer";
+$sql = "SELECT 
+    t.TrainerID as id, 
+    t.Name as name, 
+    t.Expertise as expertise,
+    t.AvailableSlots as available_slots
+FROM trainer t
+WHERE t.AvailableSlots > 0
+ORDER BY t.Name";
 $result = $conn->query($sql);
 
 // Process results

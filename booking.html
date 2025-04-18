@@ -108,8 +108,13 @@
           </div>
 
           <div class="form-group">
-            <label for="notes">Notes (optional):</label>
-            <textarea id="notes" name="notes" rows="3"></textarea>
+            <label for="start_time">Start Time:</label>
+            <input type="time" id="start_time" name="start_time" required />
+          </div>
+
+          <div class="form-group">
+            <label for="end_time">End Time:</label>
+            <input type="time" id="end_time" name="end_time" required />
           </div>
 
           <button type="submit" class="btn">Book Now</button>
@@ -145,12 +150,48 @@
           success: function (response) {
             if (response.success) {
               const classSelect = $("#class");
-              response.data.forEach(function (classItem) {
+              if (response.data && response.data.length > 0) {
+                response.data.forEach(function (classItem) {
+                  // Format the class information for display
+                  const classInfo = `${classItem.name} (${classItem.class_type}) - ${classItem.schedule_date} ${classItem.start_time}-${classItem.end_time}`;
+                  classSelect.append(
+                    `<option value="${classItem.id}" 
+                      data-start-time="${classItem.start_time}"
+                      data-end-time="${classItem.end_time}"
+                      data-schedule-date="${classItem.schedule_date}"
+                      data-class-type="${classItem.class_type}"
+                      data-trainer-id="${classItem.trainer_id}">
+                      ${classInfo}
+                    </option>`
+                  );
+                });
+              } else {
                 classSelect.append(
-                  `<option value="${classItem.id}">${classItem.name}</option>`
+                  '<option value="" disabled>No classes available</option>'
                 );
+              }
+
+              // When a class is selected, update the date and time fields
+              $("#class").change(function () {
+                const selectedOption = $(this).find("option:selected");
+                if (selectedOption.val()) {
+                  $("#date").val(selectedOption.data("schedule-date"));
+                  $("#start_time").val(selectedOption.data("start-time"));
+                  $("#end_time").val(selectedOption.data("end-time"));
+                  // Update trainer dropdown to show only available trainers for this class
+                  updateTrainerDropdown(selectedOption.data("trainer-id"));
+                }
               });
+            } else {
+              $("#class").append(
+                '<option value="" disabled>Error loading classes</option>'
+              );
             }
+          },
+          error: function () {
+            $("#class").append(
+              '<option value="" disabled>Error loading classes</option>'
+            );
           },
         });
 
@@ -162,13 +203,46 @@
           success: function (response) {
             if (response.success) {
               const trainerSelect = $("#trainer");
-              response.data.forEach(function (trainer) {
+              if (response.data && response.data.length > 0) {
+                response.data.forEach(function (trainer) {
+                  // Format the trainer information for display
+                  const trainerInfo = `${trainer.name} (${trainer.expertise}) - Available Slots: ${trainer.available_slots}`;
+                  trainerSelect.append(
+                    `<option value="${trainer.id}" 
+                      data-expertise="${trainer.expertise}"
+                      data-available-slots="${trainer.available_slots}">
+                      ${trainerInfo}
+                    </option>`
+                  );
+                });
+              } else {
                 trainerSelect.append(
-                  `<option value="${trainer.id}">${trainer.name}</option>`
+                  '<option value="" disabled>No trainers available</option>'
                 );
-              });
+              }
+            } else {
+              $("#trainer").append(
+                '<option value="" disabled>Error loading trainers</option>'
+              );
             }
           },
+          error: function () {
+            $("#trainer").append(
+              '<option value="" disabled>Error loading trainers</option>'
+            );
+          },
+        });
+
+        // Function to update trainer dropdown based on selected class
+        function updateTrainerDropdown(trainerId) {
+          const trainerSelect = $("#trainer");
+          trainerSelect.val(trainerId); // Select the trainer assigned to this class
+          trainerSelect.prop("disabled", true); // Disable trainer selection as it's pre-assigned
+        }
+
+        // Reset trainer dropdown when form is reset
+        $("#booking-form").on("reset", function () {
+          $("#trainer").prop("disabled", false);
         });
 
         // Set minimum date to today
@@ -179,12 +253,41 @@
         $("#booking-form").submit(function (e) {
           e.preventDefault();
 
+          // Validate form inputs
+          const classId = $("#class").val();
+          const trainerId = $("#trainer").val();
+          const date = $("#date").val();
+          const startTime = $("#start_time").val();
+          const endTime = $("#end_time").val();
+
+          if (!classId || !trainerId || !date || !startTime || !endTime) {
+            showMessage("error", "Please fill in all required fields");
+            return;
+          }
+
+          // Validate date is not in the past
+          const selectedDate = new Date(date);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          if (selectedDate < today) {
+            showMessage("error", "Please select a future date");
+            return;
+          }
+
+          // Validate time slots
+          if (startTime >= endTime) {
+            showMessage("error", "End time must be after start time");
+            return;
+          }
+
           // Create booking data object
           const bookingData = {
-            class_id: parseInt($("#class").val()),
-            trainer_id: parseInt($("#trainer").val()),
-            booking_date: $("#date").val(),
-            notes: $("#notes").val(),
+            class_id: parseInt(classId),
+            trainer_id: parseInt(trainerId),
+            booking_date: date,
+            start_time: startTime,
+            end_time: endTime,
           };
 
           // Send AJAX request
@@ -198,13 +301,16 @@
               if (response.success) {
                 showMessage(
                   "success",
-                  "Booking created successfully! You will be redirected to your bookings page."
+                  "Booking created successfully! Redirecting to dashboard..."
                 );
                 setTimeout(function () {
-                  window.location.href = "clientdashboard.php";
+                  window.location.href = "client_dashboard.html";
                 }, 2000);
               } else {
-                showMessage("error", response.message);
+                showMessage(
+                  "error",
+                  response.message || "Failed to create booking"
+                );
                 if (response.errors) {
                   console.error("Validation errors:", response.errors);
                 }
@@ -215,7 +321,8 @@
                 "error",
                 "An error occurred. Please try again later."
               );
-              console.error(xhr.responseText);
+              console.error("Error:", error);
+              console.error("Response:", xhr.responseText);
             },
           });
         });
@@ -225,7 +332,43 @@
           const messageContainer = $("#message-container");
           messageContainer.removeClass("success error").addClass(type);
           messageContainer.html(`<p>${message}</p>`).show();
+
+          // Hide message after 5 seconds
+          setTimeout(() => {
+            messageContainer.fadeOut();
+          }, 5000);
         }
+
+        // Load existing bookings
+        function loadBookings() {
+          $.ajax({
+            url: "fetch_booking.php",
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+              const bookingInfo = $("#booking-info");
+              if (response.length > 0) {
+                let html = "<h3>Your Current Bookings:</h3><ul>";
+                response.forEach((booking) => {
+                  html += `<li>${booking.ClassName} with ${booking.TrainerName} on ${booking.BookingDate} (${booking.StartTime} - ${booking.EndTime})</li>`;
+                });
+                html += "</ul>";
+                bookingInfo.html(html);
+              } else {
+                bookingInfo.html("<p>You have no current bookings.</p>");
+              }
+            },
+            error: function (xhr, status, error) {
+              console.error("Error loading bookings:", error);
+              $("#booking-info").html(
+                "<p>Error loading bookings. Please try again later.</p>"
+              );
+            },
+          });
+        }
+
+        // Load bookings when page loads
+        loadBookings();
       });
     </script>
   </body>

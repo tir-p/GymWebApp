@@ -1,111 +1,87 @@
 <?php
 header('Content-Type: application/json');
 require_once __DIR__ . '/../vendor/autoload.php';
+session_start();
+
+if (!isset($_SESSION['client_id'])) {
+    http_response_code(401);
+    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+    exit;
+}
 
 class BookingService {
     private $db;
-    private $schema;
 
     public function __construct($db) {
         $this->db = $db;
-        $this->schema = json_decode(file_get_contents(__DIR__ . '/../schemas/booking_schema.json'), true);
     }
 
-    private function validateSchema($data) {
-        $validator = new JsonSchema\Validator();
-        $validator->validate($data, $this->schema);
-        
-        if (!$validator->isValid()) {
-            $errors = array_map(function($error) {
-                return $error['message'];
-            }, $validator->getErrors());
-            return ['valid' => false, 'errors' => $errors];
-        }
-        return ['valid' => true];
-    }
-
-    public function createBooking($data) {
-        $validation = $this->validateSchema($data);
-        if (!$validation['valid']) {
-            http_response_code(400);
-            return json_encode([
-                'status' => 'error',
-                'message' => 'Invalid booking data',
-                'errors' => $validation['errors']
-            ]);
-        }
-
-        try {
-            $stmt = $this->db->prepare("INSERT INTO bookings (user_id, class_id, booking_date, time_slot, status, notes) 
-                                      VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->execute([
-                $data['user_id'],
-                $data['class_id'],
-                $data['booking_date'],
-                $data['time_slot'],
-                $data['status'] ?? 'pending',
-                $data['notes'] ?? null
-            ]);
-
-            return json_encode([
-                'status' => 'success',
-                'message' => 'Booking created successfully',
-                'booking_id' => $this->db->lastInsertId()
-            ]);
-        } catch (PDOException $e) {
-            http_response_code(500);
-            return json_encode([
-                'status' => 'error',
-                'message' => 'Database error',
-                'error' => $e->getMessage()
-            ]);
-        }
-    }
-
-    public function getBookings($userId) {
-        try {
-            $stmt = $this->db->prepare("SELECT * FROM bookings WHERE user_id = ?");
-            $stmt->execute([$userId]);
-            $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return json_encode([
-                'status' => 'success',
-                'bookings' => $bookings
-            ]);
-        } catch (PDOException $e) {
-            http_response_code(500);
-            return json_encode([
-                'status' => 'error',
-                'message' => 'Database error',
-                'error' => $e->getMessage()
-            ]);
-        }
-    }
-
-    public function cancelBooking($bookingId, $userId) {
-        try {
-            $stmt = $this->db->prepare("UPDATE bookings SET status = 'cancelled' 
-                                      WHERE id = ? AND user_id = ?");
-            $stmt->execute([$bookingId, $userId]);
-
-            if ($stmt->rowCount() > 0) {
-                return json_encode([
-                    'status' => 'success',
-                    'message' => 'Booking cancelled successfully'
-                ]);
-            } else {
-                http_response_code(404);
+    public function createBooking($data, $clientId) {
+        // Validate required fields
+        $required = ['class_id', 'trainer_id', 'booking_date', 'start_time', 'end_time'];
+        foreach ($required as $field) {
+            if (empty($data[$field])) {
+                http_response_code(400);
                 return json_encode([
                     'status' => 'error',
-                    'message' => 'Booking not found or unauthorized'
+                    'message' => "Missing required field: $field"
                 ]);
             }
-        } catch (PDOException $e) {
-            http_response_code(500);
+        }
+
+        // Prevent double booking (same client, class, date, time)
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM booking WHERE ClientID = ? AND ClassID = ? AND BookingDate = ? AND StartTime = ?");
+        $stmt->execute([$clientId, $data['class_id'], $data['booking_date'], $data['start_time']]);
+        if ($stmt->fetchColumn() > 0) {
+            http_response_code(409);
             return json_encode([
                 'status' => 'error',
-                'message' => 'Database error',
-                'error' => $e->getMessage()
+                'message' => 'You have already booked this class at this time.'
+            ]);
+        }
+
+        // Insert booking
+        $stmt = $this->db->prepare("INSERT INTO booking (BookingDate, StartTime, EndTime, ClientID, ClassID, TrainerID) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $data['booking_date'],
+            $data['start_time'],
+            $data['end_time'],
+            $clientId,
+            $data['class_id'],
+            $data['trainer_id']
+        ]);
+
+        return json_encode([
+            'status' => 'success',
+            'message' => 'Booking created successfully',
+            'booking_id' => $this->db->lastInsertId()
+        ]);
+    }
+
+    public function getBookings($clientId) {
+        $stmt = $this->db->prepare("SELECT * FROM booking WHERE ClientID = ?");
+        $stmt->execute([$clientId]);
+        $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return json_encode([
+            'status' => 'success',
+            'bookings' => $bookings
+        ]);
+    }
+
+    public function cancelBooking($bookingId, $clientId) {
+        $stmt = $this->db->prepare("DELETE FROM booking WHERE BookingID = ? AND ClientID = ?");
+        $stmt->execute([$bookingId, $clientId]);
+        if ($stmt->rowCount() > 0) {
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Booking cancelled successfully'
+            ]);
+        } else {
+            http_response_code(404);
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Booking not found or unauthorized'
             ]);
         }
     }
@@ -113,42 +89,28 @@ class BookingService {
 
 // Handle the request
 $db = new PDO('mysql:host=localhost;dbname=gymwebapp', 'root', '');
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $service = new BookingService($db);
+$clientId = $_SESSION['client_id'];
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST':
         $data = json_decode(file_get_contents('php://input'), true);
-        echo $service->createBooking($data);
+        echo $service->createBooking($data, $clientId);
         break;
     case 'GET':
-        $userId = $_GET['user_id'] ?? null;
-        if ($userId) {
-            echo $service->getBookings($userId);
-        } else {
-            http_response_code(400);
-            echo json_encode([
-                'status' => 'error',
-                'message' => 'User ID is required'
-            ]);
-        }
+        echo $service->getBookings($clientId);
         break;
     case 'DELETE':
         $bookingId = $_GET['booking_id'] ?? null;
-        $userId = $_GET['user_id'] ?? null;
-        if ($bookingId && $userId) {
-            echo $service->cancelBooking($bookingId, $userId);
+        if ($bookingId) {
+            echo $service->cancelBooking($bookingId, $clientId);
         } else {
             http_response_code(400);
-            echo json_encode([
-                'status' => 'error',
-                'message' => 'Booking ID and User ID are required'
-            ]);
+            echo json_encode(['status' => 'error', 'message' => 'Booking ID is required']);
         }
         break;
     default:
         http_response_code(405);
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Method not allowed'
-        ]);
-} 
+        echo json_encode(['status' => 'error', 'message' => 'Method not allowed']);
+}

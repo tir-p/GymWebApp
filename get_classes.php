@@ -20,8 +20,30 @@ if ($conn->connect_error) {
 }
 
 // Query to fetch classes
-$sql = "SELECT ClassID as id, ClassName as name, Description as description FROM class";
+$sql = "SELECT 
+    c.ClassID as id, 
+    c.ClassName as name, 
+    c.ClassType as class_type,
+    DATE_FORMAT(c.ScheduleDate, '%Y-%m-%d') as schedule_date,
+    TIME_FORMAT(c.StartTime, '%H:%i') as start_time,
+    TIME_FORMAT(c.EndTime, '%H:%i') as end_time,
+    c.TrainerID as trainer_id,
+    t.Name as trainer_name
+FROM class c
+LEFT JOIN trainer t ON c.TrainerID = t.TrainerID
+ORDER BY c.ScheduleDate, c.StartTime";
+
 $result = $conn->query($sql);
+
+if (!$result) {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'message' => "Query failed: " . $conn->error,
+        'data' => null
+    ]);
+    exit();
+}
 
 // Process results
 $classes = [];

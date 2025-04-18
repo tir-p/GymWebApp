@@ -1,4 +1,4 @@
-<?php return array(
+    <?php return array(
     'root' => array(
         'name' => 'gymwebapp/gymwebapp',
         'pretty_version' => 'dev-main',
