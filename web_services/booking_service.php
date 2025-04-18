@@ -141,7 +141,9 @@ class BookingService {
     public function cancelBooking($bookingId, $clientId) {
         try {
             // First verify the booking exists and belongs to the client
-            $checkSql = "SELECT BookingID, ClientID FROM booking WHERE BookingID = ?";
+            $checkSql = "SELECT b.BookingID, b.ClientID, b.TrainerID 
+                        FROM booking b 
+                        WHERE b.BookingID = ?";
             $checkStmt = $this->conn->prepare($checkSql);
             $checkStmt->bind_param("i", $bookingId);
             $checkStmt->execute();
@@ -158,20 +160,40 @@ class BookingService {
                 throw new Exception("You do not have permission to cancel this booking");
             }
 
-            // Delete the booking
-            $deleteSql = "DELETE FROM booking WHERE BookingID = ? AND ClientID = ?";
-            $deleteStmt = $this->conn->prepare($deleteSql);
-            $deleteStmt->bind_param("ii", $bookingId, $clientId);
-            
-            if (!$deleteStmt->execute()) {
-                error_log("Failed to delete booking: " . $deleteStmt->error);
-                throw new Exception("Failed to cancel booking");
-            }
+            // Start transaction
+            $this->conn->begin_transaction();
 
-            return json_encode([
-                'status' => 'success',
-                'message' => 'Booking cancelled successfully'
-            ]);
+            try {
+                // Delete the booking
+                $deleteSql = "DELETE FROM booking WHERE BookingID = ? AND ClientID = ?";
+                $deleteStmt = $this->conn->prepare($deleteSql);
+                $deleteStmt->bind_param("ii", $bookingId, $clientId);
+                
+                if (!$deleteStmt->execute()) {
+                    throw new Exception("Failed to cancel booking");
+                }
+
+                // Update trainer's available slots
+                $updateSql = "UPDATE trainer SET AvailableSlots = AvailableSlots + 1 WHERE TrainerID = ?";
+                $updateStmt = $this->conn->prepare($updateSql);
+                $updateStmt->bind_param("i", $booking['TrainerID']);
+                
+                if (!$updateStmt->execute()) {
+                    throw new Exception("Failed to update trainer slots");
+                }
+
+                // Commit transaction
+                $this->conn->commit();
+
+                return json_encode([
+                    'status' => 'success',
+                    'message' => 'Booking cancelled successfully'
+                ]);
+            } catch (Exception $e) {
+                // Rollback transaction on error
+                $this->conn->rollback();
+                throw $e;
+            }
         } catch (Exception $e) {
             error_log("Error in cancelBooking: " . $e->getMessage());
             http_response_code(400);

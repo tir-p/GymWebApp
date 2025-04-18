@@ -545,26 +545,18 @@
             success: function (response) {
               hideLoading();
               if (response.success) {
-                showMessage(
-                  "success",
-                  "Booking created successfully! Redirecting to dashboard..."
-                );
-                setTimeout(function () {
-                  window.location.href = "client_dashboard.html";
-                }, 2000);
+                showMessage("success", "Booking created successfully!");
+                // Reset the form
+                $("#booking-form")[0].reset();
+                // Reload the bookings list
+                loadBookings();
               } else {
-                showMessage(
-                  "error",
-                  response.message || "Failed to create booking"
-                );
+                showMessage("error", response.message || "Failed to create booking");
               }
             },
             error: function (xhr, status, error) {
               hideLoading();
-              showMessage(
-                "error",
-                "An error occurred. Please try again later."
-              );
+              showMessage("error", "An error occurred. Please try again later.");
               console.error("Error:", error);
               console.error("Response:", xhr.responseText);
             },
