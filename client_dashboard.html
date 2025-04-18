@@ -101,12 +101,9 @@
     </section>
 
     <section id="reviews">
-      <h2>Latest Reviews</h2>
+      <h2>Reviews</h2>
       <div id="reviews-list">
         <p>Loading reviews...</p>
-      </div>
-      <div class="view-all-reviews">
-        <a href="all_reviews.html" class="cta-btn">View All Reviews</a>
       </div>
     </section>
 
@@ -315,10 +312,8 @@
             if (data.status === "success") {
               const reviewsList = document.getElementById("reviews-list");
               if (data.reviews && data.reviews.length > 0) {
-                // Get only the latest 6 reviews
-                const latestReviews = data.reviews.slice(0, 6);
                 let html = '<div class="review-cards">';
-                latestReviews.forEach((review) => {
+                data.reviews.forEach((review) => {
                   html += `
                     <div class="review-card">
                       <h3>${review.TrainerName}</h3>
@@ -743,26 +738,6 @@
 
       #client-info .detail-label {
         font-weight: bold;
-      }
-
-      /* View All Reviews Button */
-      .view-all-reviews {
-        text-align: center;
-        margin-top: 20px;
-      }
-
-      .view-all-reviews .cta-btn {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-      }
-
-      .view-all-reviews .cta-btn:hover {
-        background-color: #0056b3;
       }
     </style>
   </body>

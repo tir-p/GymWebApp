@@ -3,19 +3,14 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../vendor/autoload.php';
 session_start();
 
-if (!isset($_SESSION['client_id'])) {
-    http_response_code(401);
-    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
-    exit;
-}
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 class SubscriptionService {
-    private $db;
+    private $conn;
+    private $schema;
 
-<<<<<<< Updated upstream
-    public function __construct($db) {
-        $this->db = $db;
-=======
     public function __construct($conn) {
         $this->conn = $conn;
         $this->schema = json_decode(file_get_contents(__DIR__ . '/../schemas/subscription_schema.json'), true);
@@ -70,37 +65,77 @@ class SubscriptionService {
         }
         
         return ['valid' => true];
->>>>>>> Stashed changes
     }
 
     public function getSubscriptions($clientId) {
-        $stmt = $this->db->prepare("SELECT s.SubscriptionID, c.Name AS ClientName, pt.PlanName AS PlanTypeName, s.StartDate, s.EndDate, s.Status
-                                    FROM subscription s
-                                    JOIN client c ON s.ClientID = c.ClientID
-                                    JOIN plantype pt ON s.PlanTypeID = pt.PlanTypeID
-                                    WHERE s.ClientID = ?");
-        $stmt->execute([$clientId]);
-        $subscriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $sql = "SELECT s.SubscriptionID, c.Name AS ClientName, 
+                   pt.PlanName AS PlanTypeName, s.StartDate, s.EndDate, s.Status
+                   FROM subscription s 
+                   JOIN client c ON s.ClientID = c.ClientID 
+                   JOIN plantype pt ON s.PlanTypeID = pt.PlanTypeID 
+                   WHERE s.ClientID = ?";
+            
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $clientId);
+            $stmt->execute();
+            
+            $result = $stmt->get_result();
+            $subscriptions = [];
+            
+            while ($row = $result->fetch_assoc()) {
+                $subscriptions[] = $row;
+            }
+            
+            $stmt->close();
 
-        return json_encode([
-            'status' => 'success',
-            'subscriptions' => $subscriptions
-        ]);
+            return json_encode([
+                'status' => 'success',
+                'subscriptions' => $subscriptions
+            ]);
+        } catch (Exception $e) {
+            http_response_code(500);
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Database error',
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 
-    public function createSubscription($data, $clientId) {
-        // Validate required fields
-        $required = ['plan_type_id', 'start_date'];
-        foreach ($required as $field) {
-            if (empty($data[$field])) {
+    public function createSubscription($data) {
+        try {
+            // Debug input data with more detail
+            error_log("Received subscription data (raw): " . file_get_contents('php://input'));
+            error_log("Received subscription data (parsed): " . print_r($data, true));
+
+            // Ensure IDs are integers
+            if (isset($data['client_id'])) {
+                $data['client_id'] = (int)$data['client_id'];
+            } else {
+                throw new Exception('client_id is missing');
+            }
+            
+            if (isset($data['plan_type_id'])) {
+                $data['plan_type_id'] = (int)$data['plan_type_id'];
+            } else {
+                throw new Exception('plan_type_id is missing');
+            }
+            
+            if (!isset($data['start_date'])) {
+                throw new Exception('start_date is missing');
+            }
+
+            $validation = $this->validateSchema($data);
+            if (!$validation['valid']) {
                 http_response_code(400);
                 return json_encode([
                     'status' => 'error',
-                    'message' => "Missing required field: $field"
+                    'message' => 'Invalid subscription data',
+                    'errors' => $validation['errors'],
+                    'received_data' => $data
                 ]);
             }
-<<<<<<< Updated upstream
-=======
 
             // Calculate end date (30 days from start date)
             $endDate = date('Y-m-d', strtotime($data['start_date'] . ' + 30 days'));
@@ -180,50 +215,74 @@ class SubscriptionService {
                 'message' => 'Error creating subscription: ' . $e->getMessage(),
                 'error' => $e->getMessage()
             ]);
->>>>>>> Stashed changes
         }
-
-        // Cancel existing active subscriptions
-        $stmt = $this->db->prepare("UPDATE subscription SET Status = 'inactive' WHERE ClientID = ? AND Status = 'active'");
-        $stmt->execute([$clientId]);
-
-        // Calculate end date (30 days from start)
-        $endDate = date('Y-m-d', strtotime($data['start_date'] . ' + 30 days'));
-        $status = 'active';
-
-        // Insert new subscription
-        $stmt = $this->db->prepare("INSERT INTO subscription (ClientID, PlanTypeID, StartDate, EndDate, Status) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $clientId,
-            $data['plan_type_id'],
-            $data['start_date'],
-            $endDate,
-            $status
-        ]);
-
-        return json_encode([
-            'status' => 'success',
-            'message' => 'Subscription created successfully',
-            'subscription_id' => $this->db->lastInsertId()
-        ]);
     }
 }
 
 // Handle the request
-$db = new PDO('mysql:host=localhost;dbname=gymwebapp', 'root', '');
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$service = new SubscriptionService($db);
-$clientId = $_SESSION['client_id'];
+try {
+    // Create a connection using mysqli
+    $conn = new mysqli('localhost', 'root', '', 'gymwebapp');
+    
+    // Check connection
+    if ($conn->connect_error) {
+        throw new Exception("Connection failed: " . $conn->connect_error);
+    }
+    
+    $service = new SubscriptionService($conn);
 
-switch ($_SERVER['REQUEST_METHOD']) {
-    case 'GET':
-        echo $service->getSubscriptions($clientId);
-        break;
-    case 'POST':
-        $data = json_decode(file_get_contents('php://input'), true);
-        echo $service->createSubscription($data, $clientId);
-        break;
-    default:
-        http_response_code(405);
-        echo json_encode(['status' => 'error', 'message' => 'Method not allowed']);
-}
+    switch ($_SERVER['REQUEST_METHOD']) {
+        case 'GET':
+            if (!isset($_SESSION['client_id'])) {
+                throw new Exception('User not logged in');
+            }
+            echo $service->getSubscriptions($_SESSION['client_id']);
+            break;
+        case 'POST':
+            $rawInput = file_get_contents('php://input');
+            error_log("Raw POST input: " . $rawInput);
+            
+            $data = json_decode($rawInput, true);
+            if (!$data) {
+                $jsonError = json_last_error_msg();
+                error_log("JSON decode error: " . $jsonError);
+                throw new Exception('Invalid JSON data received: ' . $jsonError);
+            }
+            
+            error_log("Decoded JSON data: " . print_r($data, true));
+            
+            // Prioritize session client_id for security, but allow directly provided client_id for testing
+            if (isset($_SESSION['client_id'])) {
+                $data['client_id'] = (int)$_SESSION['client_id'];
+                error_log("Using client_id from session: " . $_SESSION['client_id']);
+            } else if (!isset($data['client_id'])) {
+                // For testing only - in production, always require session login
+                error_log("No client_id in session or request data");
+                throw new Exception('User not logged in and no client_id provided');
+            } else {
+                error_log("Using client_id from request: " . $data['client_id']);
+                // Make sure it's an integer
+                $data['client_id'] = (int)$data['client_id'];
+            }
+            
+            echo $service->createSubscription($data);
+            break;
+        default:
+            http_response_code(405);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Method not allowed'
+            ]);
+    }
+    
+    // Close the connection
+    $conn->close();
+} catch (Exception $e) {
+    error_log("Error in subscription service: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Server error: ' . $e->getMessage(),
+        'error' => $e->getMessage()
+    ]);
+} 
