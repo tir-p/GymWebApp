@@ -62,8 +62,8 @@ header {
 }
 
 .nav-links a:hover {
-  color: #ffa200; /* Change link color on hover */
-  border-bottom: 2px solid #ffa200; /* Underline effect on hover */
+  color: #ffa200;
+  border-bottom: 2px solid #ffa200;
 }
 
 /* Header Content Styles */
@@ -76,28 +76,6 @@ header {
   margin-bottom: 15px;
 }
 
-.cta-btn,
-.login-btn,
-.booking-btn,
-.logout-btn,
-form button {
-  background: #033703;
-  color: #4CAF50;
-  padding: 10px 15px;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: padding 0.2s ease;
-}
-
-.cta-btn:hover,
-.login-btn:hover,
-.booking-btn:hover,
-form button:hover {
-  padding: 12px 17px;
-  background: #4CAF50;
-  color: white;
-}
-
 /* Trainers Section */
 #trainers {
   padding: 60px 20px;
@@ -108,7 +86,7 @@ form button:hover {
 #trainers h2 {
   font-size: 2.5rem;
   margin-bottom: 40px;
-  color: #ffffff; /* Matches your site's color scheme */
+  color: #ffffff;
 }
 
 .trainer-cards {
@@ -141,7 +119,7 @@ form button:hover {
 .card:hover {
   transform: translateY(-10px);
   box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2);
-  border: 2px solid #FFA500; /* Orange border on hover */
+  border: 2px solid #FFA500;
 }
 
 .card img {
@@ -162,12 +140,10 @@ form button:hover {
   padding: 0 10px 20px 10px;
 }
 
-/* Add some padding and background to the trainer section */
 #trainers {
   padding: 60px 20px;
-  background-color: #000000; /* Light background color for contrast */
+  background-color: #000000;
 }
-
 
 /* Footer Styles */
 footer {
@@ -180,51 +156,13 @@ footer {
   width: 100%;
 }
 
-/* Form Styles */
-form {
-  max-width: 400px;
-  margin: 20px auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background: #f9f9f9;
-}
-
-form label {
-  display: block;
-  margin: 10px 0 5px;
-}
-
-form input,
-form select,
-form button {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-form button {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-form button:hover {
-  padding: 12px 17px;
-  background: #45a049;
-}
-
 /* Plan Styling */
-/* Pricing Plan Section */
 #pricing-plan {
-  background-image: url('img/BACKGROUND2.jpg'); /* Keep background image */
+  background-image: url('img/BACKGROUND2.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: rgba(230, 247, 255, 0.5); /* Light overlay */
+  background-color: rgba(230, 247, 255, 0.5);
   padding: 50px 20px;
   min-height: 800px;
   position: relative;
@@ -238,7 +176,7 @@ form button:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3); /* Dark overlay */
+  background-color: rgba(0, 0, 0, 0.3);
   z-index: -1;
 }
 
@@ -249,7 +187,6 @@ form button:hover {
   text-align: center;
 }
 
-/* Plan Styling */
 .pricing-container {
   display: flex;
   justify-content: space-around;
@@ -276,14 +213,14 @@ form button:hover {
 
 .plan:hover {
   transform: scale(1.05);
-  border-color: #ffa500; /* Orange border on hover */
-  box-shadow: 0 6px 12px rgba(255, 165, 0, 0.5); /* Orange shadow on hover */
+  border-color: #ffa500;
+  box-shadow: 0 6px 12px rgba(255, 165, 0, 0.5);
 }
 
 .plan h3 {
   font-size: 1.8rem;
   margin-bottom: 10px;
-  color: #000000;;
+  color: #000000;
 }
 
 .plan p {
@@ -305,7 +242,6 @@ form button:hover {
 .plan button:hover {
   background-color: #218838;
 }
-
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -376,19 +312,18 @@ form button:hover {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .service-cards .card p {
-  color: #f0f0f0; /* Change the paragraph text color to light grey */
+  color: #f0f0f0;
   font-size: 1.1em;
   line-height: 1.6;
 }
 
 /* Why Join Us Section */
-
 #why-join-us {
   background-image: url('IMG/JOIN%20US.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: rgba(51, 51, 51, 0.8); /* Keep the overlay effect */
+  background-color: rgba(51, 51, 51, 0.8);
   padding: 100px 20px;
   color: white;
   text-align: center;
@@ -401,7 +336,6 @@ form button:hover {
   color: #ffffff;
 }
 
-/* Features Container: Card layout for features */
 .features-container {
   display: grid;
   grid-template-columns: 1fr;
@@ -421,14 +355,13 @@ form button:hover {
   }
 }
 
-/* Card Design for Each Feature with transparency */
 .feature {
-  background-color: rgba(91, 70, 70, 0.348); /* Transparent background */
+  background-color: rgba(91, 70, 70, 0.348);
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Shadow for card effect */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  color: white; /* Keep the text white for readability on transparency */
+  color: white;
   text-align: left;
 }
 
@@ -444,79 +377,32 @@ form button:hover {
   margin-bottom: 0;
 }
 
-/* Hover effect for the card */
 .feature:hover {
-  transform: translateY(-10px); /* Lift the card */
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Increase shadow on hover */
-  border: 2px solid #ffa200; /* Orange border on hover */
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  border: 2px solid #ffa200;
 }
 
-/* Join Now button styling */
 .join-now {
   margin-top: 60px;
+  text-align: center;
 }
 
 .join-now-btn {
+  display: inline-block;
   background-color: #28a745;
   color: white;
-  padding: 14px 28px;
-  font-size: 18px;
+  padding: 12px 24px;
+  font-size: 16px;
   font-weight: bold;
   border-radius: 5px;
   text-decoration: none;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
 .join-now-btn:hover {
   background-color: #218838;
 }
-
-
-/* Join Now button styling */
-.join-now {
-  margin-top: 60px;
-}
-
-.join-now-btn {
-  background-color: #28a745;
-  color: white;
-  padding: 14px 28px;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-}
-
-.join-now-btn:hover {
-  background-color: #218838;
-}
-
-
-
-/* Join Now Button Styles */
-.join-now {
-  text-align: center; /* Center the button horizontally */
-  margin-top: 20px;  /* Add some space above the button */
-}
-
-.join-now-btn {
-  display: inline-block;          /* Make the link behave like a button */
-  background-color: #28a745;     /* Green background color */
-  color: white;                   /* White text color */
-  padding: 12px 24px;             /* Add padding for size */
-  font-size: 16px;                /* Font size */
-  font-weight: bold;              /* Bold text */
-  text-decoration: none;          /* Remove underline from the link */
-  border-radius: 5px;            /* Rounded corners */
-  transition: background-color 0.3s; /* Smooth transition for hover effect */
-}
-
-/* Hover effect */
-.join-now-btn:hover {
-  background-color: #218838;      /* Darker green on hover */
-}
-
 
 .service-cards .card:hover {
   transform: scale(1.05);
@@ -535,24 +421,22 @@ form button:hover {
 }
 
 .services-description {
-  color: white;                     /* Set text color to white */
-  animation: flash 10s infinite;    /* Slow down the flashing animation to 10 seconds */
-  font-size: 18px;                 /* Adjust font size if necessary */
-  text-align: center;              /* Center text if needed */
-  margin-top: 20px;    
+  color: white;
+  animation: flash 10s infinite;
+  font-size: 18px;
+  text-align: center;
+  margin-top: 20px;
 }
 
-
-
-/* General Styles for Client Review Section */
+/* Client Review Section */
 #client-review {
-  background-color: #f8f9fa; /* Fallback background color */
-  background-image: url('img/feedbackBackground.jpg'); /* Replace with your background image URL */
+  background-color: #f8f9fa;
+  background-image: url('img/feedbackBackground.jpg');
   background-size: cover;
   background-position: center;
   padding: 40px 20px;
   text-align: center;
-  border-top: 2px solid #000000; /* Accent color */
+  border-top: 2px solid #000000;
   position: relative;
   z-index: 1;
   min-height: 900px;
@@ -565,29 +449,25 @@ form button:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay for better readability */
+  background: rgba(0, 0, 0, 0.5);
   z-index: -1;
 }
 
-/* Header Style for Reviews */
 #client-review h2 {
   font-size: 2.8rem;
   font-family: 'Arial', sans-serif;
-  color: #fff; /* Light text color */
+  color: #fff;
   margin-bottom: 30px;
 }
 
-/* Feedback Grid Container */
 #feedback {
-  display: grid; /* Use grid layout for cards */
-  grid-template-columns: repeat(3, 1fr); /* Set to 3 equal columns */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 80px;
- /* Spacing between the cards */
-  justify-items: center; /* Center the cards */
+  justify-items: center;
   padding: 0 10px;
 }
 
-/* Reviews Card Grid Layout */
 .review-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -598,7 +478,6 @@ form button:hover {
   padding: 0 15px;
 }
 
-/* Individual Review Card Style */
 .review-c {
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
@@ -614,28 +493,24 @@ form button:hover {
   color: black;
 }
 
-/* Review Card Hover Effect */
 .review-c:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
   border: 2px solid orange;
 }
 
-/* Review Name Style */
 .review-c h3 {
   font-family: 'Verdana', sans-serif;
   color: #007bff;
   margin-bottom: 10px;
 }
 
-/* Stars styling */
 .stars {
   color: #ffc107;
   margin-bottom: 10px;
   letter-spacing: 2px;
 }
 
-/* Responsive adjustments for review cards */
 @media (max-width: 992px) {
   .review-cards {
     grid-template-columns: repeat(2, 1fr);
@@ -648,7 +523,6 @@ form button:hover {
   }
 }
 
-/* Error Message Style */
 .error-message {
   color: red;
   font-weight: bold;
@@ -657,106 +531,101 @@ form button:hover {
 }
 
 /* Contact Section Styles */
-/* Contact Section Styles */
 #contact {
-  background-image: url('img/RECEPTION.jpeg'); /* Add your image path here */
-  background-size: cover; /* Cover the entire section */
-  background-position: center; /* Center the background image */
-  color: white; /* Text color for readability */
-  padding: 40px 20px; /* Padding around the section */
-  text-align: center; /* Center align text */
-  position: relative; /* Position relative for overlay */
-  min-height: 800px; 
+  background-image: url('img/RECEPTION.jpeg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  position: relative;
+  min-height: 800px;
 }
 
-/* Overlay for better readability */
 #contact::before {
   content: '';
-  position: absolute; /* Position overlay */
-  top: 0; /* Align to the top */
-  left: 0; /* Align to the left */
-  right: 0; /* Align to the right */
-  bottom: 0; /* Align to the bottom */
-  background-color: rgba(0, 0, 0, 0.5); /* Black with 50% opacity */
-  z-index: 1; /* Place overlay above the background */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 
 #contact h2 {
-  margin-bottom: 30px; /* Space below the heading */
-  font-size: 2em; /* Increase the font size */
-  position: relative; /* Position relative for text stacking */
-  z-index: 2; /* Place text above the overlay */
+  margin-bottom: 30px;
+  font-size: 2em;
+  position: relative;
+  z-index: 2;
 }
 
 #contact form {
-  background-color: rgba(68, 68, 68, 0.8); /* Darker background for the form with transparency */
-  padding: 20px; /* Padding inside the form */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Optional shadow effect */
-  display: flex; /* Use flexbox for layout */
-  flex-direction: column; /* Stack items vertically */
-  align-items: center; /* Center items */
-  position: relative; /* Position relative for stacking */
-  z-index: 2; /* Place form above the overlay */
+  background-color: rgba(68, 68, 68, 0.8);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
 }
 
 #contact label {
-  margin-top: 10px; /* Space above labels */
-  font-weight: bold; /* Bold font for labels */
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 #contact input,
 #contact textarea {
-  width: 100%; /* Full width for input and textarea */
-  padding: 10px; /* Padding inside inputs */
-  margin-top: 5px; /* Space above inputs */
-  border: none; /* Remove default border */
-  border-radius: 4px; /* Rounded corners */
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 4px;
 }
 
 #contact button {
-  background-color: #007bff; /* Button background color */
-  color: white; /* Button text color */
-  padding: 10px 15px; /* Padding inside button */
-  border: none; /* Remove default border */
-  border-radius: 4px; /* Rounded corners */
-  cursor: pointer; /* Change cursor on hover */
-  margin-top: 15px; /* Space above button */
-  transition: background-color 0.3s; /* Smooth transition */
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s;
 }
 
 #contact button:hover {
-  background-color: #0056b3; /* Darker color on hover */
+  background-color: #0056b3;
 }
 
-/* Responsive Design */
 @media (max-width: 600px) {
   #contact {
-    padding: 20px; /* Reduced padding on small screens */
+    padding: 20px;
   }
 
   #contact h2 {
-    font-size: 1.5em; /* Smaller heading on small screens */
+    font-size: 1.5em;
   }
 
   #contact form {
-    padding: 15px; /* Reduced padding for form */
+    padding: 15px;
   }
 }
 
-/* Style for input fields and textarea to make the text black */
 input[type="text"],
 input[type="email"],
 textarea {
-  color: black; /* Text color inside the input fields */
-  background-color: white; /* Optional: make the background white */
-  border: 1px solid #ccc; /* Optional: add a light border */
-  padding: 10px; /* Optional: add some padding for better spacing */
-  width: 100%; /* Make the input take full width of the form */
-  margin-bottom: 15px; /* Add space between input fields */
+  color: black;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 15px;
 }
 
-/* Review description text style */
 .review-description {
   font-family: 'Arial', sans-serif;
   color: #ffffff;
@@ -769,13 +638,11 @@ textarea {
   margin-bottom: 80px;
 }
 
-/* Container for the Read More button */
 .read-more-container {
   text-align: center;
   margin-top: 80px;
 }
 
-/* Read More Reviews Button Style */
 .read-more-btn {
   background-color: #007bff;
   color: white;
@@ -788,16 +655,8 @@ textarea {
   transition: background-color 0.3s, transform 0.3s;
 }
 
-/* Hover Effect for Read More Button */
 .read-more-btn:hover {
   background-color: #0056b3;
   transform: translateY(-2px);
 }
-
-/* Focus Style for Accessibility */
-.read-more-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
-}
-
 
