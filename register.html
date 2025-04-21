@@ -4,203 +4,134 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register - Gym10</title>
-    <style>
-      /* General Reset */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      /* Body Styles */
-      body {
-        font-family: Arial, sans-serif; /* Font style for body */
-        line-height: 1.6; /* Line height for readability */
-        background-color: #f4f4f4; /* Light background color */
-      }
-
-      /* Navbar Styles */
-      .navbar {
-        display: flex;
-        flex-direction: column; /* Stack items vertically */
-        align-items: center; /* Center items horizontally */
-        padding: 20px;
-        background-color: black; /* Dark background for navbar */
-      }
-
-      .nav-links {
-        list-style: none; /* Remove default list styling */
-        display: flex; /* Flexbox for horizontal layout */
-        margin: 0; /* Remove default margin */
-        padding: 0; /* Remove default padding */
-        justify-content: center; /* Center the nav items */
-        flex: 1; /* Allow the nav links to take up available space */
-      }
-
-      .nav-links li {
-        margin: 0 20px; /* Space between links */
-      }
-
-      .nav-links a {
-        text-decoration: none; /* Remove underline */
-        color: green; /* Change link color to green */
-        font-size: 20px; /* Adjust font size */
-        transition: color 0.3s; /* Smooth color transition */
-        padding: 5px; /* Add padding for hover effect */
-      }
-
-      .nav-links a:hover {
-        color: #ffa200; /* Change link color on hover */
-        border-bottom: 2px solid #ffa200; /* Underline effect on hover */
-      }
-
-      .logo {
-        margin-top: 10px; /* Space above the logo */
-      }
-
-      .logo-img {
-        max-width: 90px; /* Adjust logo size */
-        height: auto;
-      }
-
-      .login-btn {
-        color: white; /* Text color for the button */
-        padding: 10px 20px; /* Padding for the button */
-        border-radius: 5px; /* Rounded corners */
-        transition: background-color 0.3s; /* Smooth transition */
-        border: none; /* Remove border */
-      }
-
-      .login-btn:hover {
-        background-color: darkgreen; /* Change button background on hover */
-      }
-
-      /* Header Content Styles */
-      .header-content {
-        text-align: center; /* Center text in header */
-        margin-top: 20px; /* Space above header content */
-      }
-
-      .header-content h1 {
-        font-size: 2.5rem; /* Increase header size */
-        color: #333; /* Dark text color */
-      }
-
-      .header-content p {
-        color: #666; /* Gray text color */
-        font-size: 1.2rem; /* Font size for paragraph */
-        margin-bottom: 20px; /* Space below paragraph */
-      }
-
-      /* Registration Form Styles */
-      #registration-form {
-        max-width: 500px; /* Max width for the form */
-        margin: 30px auto; /* Center form on page */
-        padding: 20px; /* Padding inside form */
-        background-color: white; /* White background for form */
-        border-radius: 8px; /* Rounded corners */
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
-      }
-
-      #registration-form label {
-        display: block; /* Block display for labels */
-        margin-bottom: 5px; /* Space below labels */
-        font-weight: bold; /* Bold font for labels */
-      }
-
-      #registration-form input {
-        width: 100%; /* Full width for input */
-        padding: 10px; /* Padding inside inputs */
-        margin-bottom: 15px; /* Space below inputs */
-        border: 1px solid #ccc; /* Light border */
-        border-radius: 4px; /* Rounded corners */
-      }
-
-      #registration-form button {
-        width: 100%; /* Full width for button */
-        padding: 10px; /* Padding inside button */
-        background-color: #007bff; /* Button background color */
-        color: white; /* Button text color */
-        border: none; /* Remove default border */
-        border-radius: 4px; /* Rounded corners */
-        cursor: pointer; /* Change cursor on hover */
-        transition: background-color 0.3s; /* Smooth transition */
-      }
-
-      #registration-form button:hover {
-        background-color: #0056b3; /* Darker blue on hover */
-      }
-
-      /* Footer Styles */
-      footer {
-        text-align: center; /* Center text in footer */
-        padding: 20px; /* Padding around footer */
-        background-color: black; /* Dark background for footer */
-        color: white; /* White text color */
-        position: relative;
-        bottom: 0;
-        width: 100%;
-      }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <!-- Header with Navigation Bar -->
-    <header>
-      <nav class="navbar">
-        <ul class="nav-links">
-          <li><a href="index.html#home">Home</a></li>
-          <li><a href="index.html#services">Services</a></li>
-          <li><a href="index.html#trainers">Trainers</a></li>
-          <li><a href="index.html#pricing-plan">Membership Plan</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="index.html#contact">Contact Us</a></li>
-          <li><a href="register.html" class="cta-btn">Register</a></li>
-          <li><a href="login.html" class="login-btn">Login</a></li>
-        </ul>
-        <div class="logo">
-          <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
-        </div>
-      </nav>
-      <div class="header-content">
-        <h1>Join Gym10 Today</h1>
-        <p>Take the first step towards a healthier lifestyle.</p>
-      </div>
-    </header>
-
-    <!-- Registration Form Section -->
-    <div id="registration-form">
-      <h2>Register</h2>
-      <form action="register.php" method="POST">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" required />
-
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required />
-
-        <label for="phone">Phone</label>
-        <input type="tel" id="phone" name="phone" required />
-
-        <label for="address">Address</label>
-        <input type="text" id="address" name="address" required />
-
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required />
-
-        <label for="confirm-password">Confirm Password</label>
-        <input
-          type="password"
-          id="confirm-password"
-          name="confirm_password"
-          required
+  <body class="bg-gray-50 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+      <div class="flex flex-col items-center mb-6">
+        <img
+          src="img/logo.jpg"
+          alt="Gym10 Logo"
+          class="h-16 w-16 rounded-full mb-2"
         />
-
-        <button type="submit">Register</button>
+        <h1 class="text-2xl font-bold text-green-600">Register for Gym10</h1>
+      </div>
+      <div
+        id="error-message"
+        class="hidden text-red-600 mb-4 text-center"
+      ></div>
+      <form
+        id="registration-form"
+        action="register.php"
+        method="POST"
+        class="space-y-4"
+      >
+        <div>
+          <label for="name" class="block font-semibold mb-1">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+        <div>
+          <label for="email" class="block font-semibold mb-1">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+        <div>
+          <label for="phone" class="block font-semibold mb-1">Phone</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+        <div>
+          <label for="address" class="block font-semibold mb-1">Address</label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+        <div>
+          <label for="password" class="block font-semibold mb-1"
+            >Password</label
+          >
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+        <div>
+          <label for="confirm-password" class="block font-semibold mb-1"
+            >Confirm Password</label
+          >
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm_password"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+        <button
+          type="submit"
+          class="w-full bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600 transition"
+        >
+          Register
+        </button>
       </form>
+      <p class="mt-4 text-center text-gray-600">
+        Already have an account?
+        <a href="login.html" class="text-green-600 hover:underline"
+          >Login here</a
+        >
+      </p>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $("#registration-form").on("submit", function (e) {
+        let errors = [];
+        const name = $("#name").val();
+        const email = $("#email").val();
+        const phone = $("#phone").val();
+        const password = $("#password").val();
+        const confirmPassword = $("#confirm-password").val();
 
-    <!-- Footer Section -->
-    <footer>
-      <p>&copy; 2024 Gym10 - All Rights Reserved</p>
-    </footer>
+        if (/\d/.test(name)) errors.push("Name should not contain numbers.");
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email))
+          errors.push("Please enter a valid email address.");
+        if (!/^\d{8}$/.test(phone))
+          errors.push("Please enter a valid 8-digit phone number.");
+        if (password.length < 6)
+          errors.push("Password must be at least 6 characters long.");
+        if (password !== confirmPassword)
+          errors.push("Passwords do not match.");
+
+        if (errors.length > 0) {
+          e.preventDefault();
+          $("#error-message")
+            .html(errors.join("<br>"))
+            .removeClass("hidden")
+            .show();
+        }
+      });
+    </script>
   </body>
 </html>

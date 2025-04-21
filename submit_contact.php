@@ -10,36 +10,24 @@ $conn = new mysqli($host, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("<div class='bg-red-100 text-red-700 p-4 rounded mt-4 max-w-md mx-auto mt-10'>Connection failed: " . $conn->connect_error . "</div>");
 }
 
-// Check if the form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get form data and sanitize
     $name = $conn->real_escape_string($_POST['name']);
     $email = $conn->real_escape_string($_POST['email']);
     $message = $conn->real_escape_string($_POST['message']);
-    
-    // Prepare SQL statement
+
     $sql = "INSERT INTO contact (name, email, message) VALUES (?, ?, ?)";
-    
-    // Create a prepared statement
     $stmt = $conn->prepare($sql);
-    
-    // Bind parameters
     $stmt->bind_param("sss", $name, $email, $message);
-    
-    // Execute the statement
+
     if ($stmt->execute()) {
-        echo "Thank you for reaching out! We will get back to you shortly.";
+        echo "<div class='bg-green-100 text-green-700 p-4 rounded mt-4 max-w-md mx-auto mt-10'>Thank you for reaching out! We will get back to you shortly.</div>";
     } else {
-        echo "There was an error submitting your message. Please try again later.";
+        echo "<div class='bg-red-100 text-red-700 p-4 rounded mt-4 max-w-md mx-auto mt-10'>There was an error submitting your message. Please try again later.</div>";
     }
-    
-    // Close statement
     $stmt->close();
 }
-
-// Close connection
 $conn->close();
 ?>
