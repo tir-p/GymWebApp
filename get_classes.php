@@ -8,6 +8,11 @@ $password = '';
 // Create connection
 $conn = new mysqli($host, $username, $password, $dbname);
 
+// Set all ScheduleDates to today
+$updateSql = "UPDATE class SET ScheduleDate = CURDATE()";
+$conn->query($updateSql);
+
+
 // Check connection
 if ($conn->connect_error) {
     header('Content-Type: application/json');
