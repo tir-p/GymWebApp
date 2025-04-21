@@ -1,156 +1,358 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trainer Dashboard - Gym10</title>
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* Reset some default styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      /* Navbar Styles for Trainer Dashboard */
+      /* Trainer Dashboard Navbar */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #111;
+        padding: 0 32px;
+        height: 64px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
 
-        /* Set the body to use flexbox */
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh; /* Ensures the body takes at least full height */
-        }
+      .logo-img {
+        height: 44px;
+        width: auto;
+        max-width: 120px;
+        display: block;
+        object-fit: contain;
+        border-radius: 8px;
+        background: #fff;
+        padding: 4px 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
 
-        /* Customize the logo size */
-        .logo-img {
-            max-width: 90px; /* Adjust the max-width as needed */
-            height: auto;
-        }
+      .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 24px;
+        margin: 0;
+        padding: 0;
+      }
 
-        /* Navbar styling */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background-color: #000000; /*  background for the navbar */
-        }
+      .nav-links a {
+        color: #4caf50;
+        text-decoration: none;
+        font-size: 18px;
+        padding: 8px 18px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: color 0.2s, background 0.2s;
+      }
 
-        /* Dashboard styling */
+      .nav-links a:hover,
+      .nav-links .logout-btn:hover {
+        color: #fff;
+        background: #4caf50;
+      }
+
+      .logout-btn {
+        color: #fff;
+        background: #dc3545;
+        padding: 8px 18px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: background 0.2s, color 0.2s;
+        border: none;
+      }
+
+      .logout-btn:hover {
+        background: #b71c1c;
+        color: #fff;
+      }
+
+      /* Dashboard Container */
+      .dashboard-container {
+        max-width: 1100px;
+        margin: 40px auto 0 auto;
+        padding: 32px 24px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 6px 32px rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-header {
+        text-align: center;
+        margin-bottom: 36px;
+      }
+
+      .dashboard-header h1 {
+        color: #007bff;
+        font-size: 2.2rem;
+        margin-bottom: 0;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+
+      .dashboard-section {
+        margin-bottom: 40px;
+      }
+
+      .dashboard-section h2 {
+        color: #007bff;
+        font-size: 1.3rem;
+        margin-bottom: 16px;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 6px;
+        font-weight: 600;
+      }
+
+      .dashboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 12px;
+        background: #fafbfc;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+
+      .dashboard-table th,
+      .dashboard-table td {
+        border: 1px solid #e0e0e0;
+        padding: 12px 14px;
+        text-align: left;
+        font-size: 1rem;
+      }
+
+      .dashboard-table th {
+        background: #f0f0f0;
+        color: #333;
+        font-weight: 600;
+      }
+
+      .dashboard-table tr:nth-child(even) {
+        background: #f7f7f7;
+      }
+
+      .dashboard-table tr:hover {
+        background: #eaf6ff;
+      }
+
+      .edit-btn {
+        color: #007bff;
+        background: #e3f0ff;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        padding: 7px 16px;
+        border-radius: 5px;
+        transition: background 0.2s, color 0.2s;
+      }
+
+      .edit-btn:hover {
+        background: #007bff;
+        color: #fff;
+      }
+
+      #profile-info {
+        margin-bottom: 10px;
+        font-size: 1.08rem;
+        color: #333;
+        line-height: 1.7;
+        background: #f8f9fa;
+        padding: 16px;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      }
+
+      @media (max-width: 900px) {
         .dashboard-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px;
-            flex: 1; /* Allows the dashboard to grow and fill the space */
+          padding: 12px;
         }
-
-        .dashboard-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
         .dashboard-header h1 {
-            color: #333;
-            font-size: 28px;
+          font-size: 1.5rem;
         }
+        .dashboard-section h2 {
+          font-size: 1.1rem;
+        }
+        .dashboard-table th,
+        .dashboard-table td {
+          font-size: 0.95rem;
+          padding: 7px 6px;
+        }
+      }
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            max-width: 1200px;
-            width: 100%;
+      @media (max-width: 600px) {
+        .dashboard-container {
+          padding: 2px;
+          border-radius: 0;
+          box-shadow: none;
         }
+        .dashboard-header h1 {
+          font-size: 1.1rem;
+        }
+        .dashboard-section h2 {
+          font-size: 1rem;
+        }
+        .dashboard-table th,
+        .dashboard-table td {
+          font-size: 0.9rem;
+          padding: 5px 3px;
+        }
+        .navbar {
+          flex-direction: column;
+          gap: 10px;
+          padding: 10px 5px;
+          height: auto;
+        }
+        .nav-links {
+          flex-direction: column;
+          gap: 8px;
+        }
+        .logo-img {
+          margin-bottom: 8px;
+        }
+      }
 
-        .dashboard-card {
-            background-color: #f1f1f1;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .dashboard-card h3 {
-            color: #333;
-        }
-
-        .dashboard-card p {
-            color: #777;
-        }
-
-        .dashboard-card a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        /* Footer styling */
-        footer {
-            background-color: #000000; /* Same as navbar for consistency */
-            text-align: center;
-            padding: 10px;
-            margin-top: auto; /* Pushes the footer to the bottom */
-        }
+      footer {
+        background: #000;
+        color: #fff;
+        text-align: center;
+        padding: 14px 0;
+        margin-top: auto;
+        font-size: 1rem;
+        letter-spacing: 1px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <nav class="navbar">
-            <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
-            <ul class="nav-links">
-                <li><a href="#dashboard">Dashboard</a></li>
-                <li><a href="logout.php" class="logout-btn">Logout</a></li>
-            </ul>
-        </nav>
+      <nav class="navbar">
+        <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
+        <ul class="nav-links">
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="logout.php" class="logout-btn">Logout</a></li>
+        </ul>
+      </nav>
     </header>
-
     <main>
-        <section class="dashboard-container">
-            <div class="dashboard-header">
-                <h1>Welcome to the Trainer Dashboard, TrainerName</h1>
-            </div>
-
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <h3>Manage Clients</h3>
-                    <p>View, add, or manage your assigned clients.</p>
-                    <a href="manage_clients.html">Go to Clients</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>Trainer Schedule</h3>
-                    <p>Check your schedule for upcoming training sessions.</p>
-                    <a href="trainer_schedule.html">View Schedule</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>Workouts & Plans</h3>
-                    <p>Create and assign workout plans to your clients.</p>
-                    <a href="workout_plans.html">Manage Workouts</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>Attendance</h3>
-                    <p>Track and monitor client attendance.</p>
-                    <a href="attendance.html">View Attendance</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>Trainer Profile</h3>
-                    <p>Update your profile information and credentials.</p>
-                    <a href="trainer_profile.html">Edit Profile</a>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>Contact Admin</h3>
-                    <p>Get in touch with the gym's admin for any assistance.</p>
-                    <a href="contact_admin.html">Contact Admin</a>
-                </div>
-            </div>
-        </section>
+      <section class="dashboard-container">
+        <div class="dashboard-header">
+          <h1 id="trainer-welcome">Welcome, Trainer</h1>
+        </div>
+        <div class="dashboard-section" id="clients-section">
+          <h2>Your Clients</h2>
+          <div id="clients-list">Loading...</div>
+        </div>
+        <div class="dashboard-section" id="schedule-section">
+          <h2>Your Schedule</h2>
+          <div id="schedule-list">Loading...</div>
+        </div>
+        <div class="dashboard-section" id="workouts-section">
+          <h2>Workout Plans</h2>
+          <div id="workouts-list">Loading...</div>
+        </div>
+        <div class="dashboard-section" id="attendance-section">
+          <h2>Attendance</h2>
+          <div id="attendance-list">Loading...</div>
+        </div>
+        <div class="dashboard-section" id="profile-section">
+          <h2>Your Profile</h2>
+          <div id="profile-info">Loading...</div>
+          <button id="edit-profile-btn" class="edit-btn">Edit Profile</button>
+        </div>
+      </section>
     </main>
-
     <footer>
-        <p>&copy; 2024 Gym10 - All Rights Reserved</p>
+      <p>&copy; 2024 Gym10 - All Rights Reserved</p>
     </footer>
-</body>
+    <script>
+      $(document).ready(function () {
+        // Fetch all dashboard data
+        $.getJSON("trainer_dashboard_service.php", function (data) {
+          if (data.success) {
+            // Welcome
+            $("#trainer-welcome").text("Welcome, " + data.trainer.Name);
+
+            // Clients
+            if (data.clients.length) {
+              let html =
+                '<table class="dashboard-table"><tr><th>Name</th><th>Email</th><th>Phone</th></tr>';
+              data.clients.forEach((c) => {
+                html += `<tr><td>${c.Name}</td><td>${c.Email}</td><td>${c.Phone}</td></tr>`;
+              });
+              html += "</table>";
+              $("#clients-list").html(html);
+            } else {
+              $("#clients-list").html("<p>No clients assigned.</p>");
+            }
+
+            // Schedule
+            if (data.schedule.length) {
+              let html =
+                '<table class="dashboard-table"><tr><th>Class</th><th>Date</th><th>Start</th><th>End</th></tr>';
+              data.schedule.forEach((s) => {
+                html += `<tr><td>${s.ClassName}</td><td>${s.ScheduleDate}</td><td>${s.StartTime}</td><td>${s.EndTime}</td></tr>`;
+              });
+              html += "</table>";
+              $("#schedule-list").html(html);
+            } else {
+              $("#schedule-list").html("<p>No upcoming classes.</p>");
+            }
+
+            // Workouts (dummy for now)
+            $("#workouts-list").html("<p>Feature coming soon.</p>");
+
+            // Attendance
+            if (data.attendance.length) {
+              let html =
+                '<table class="dashboard-table"><tr><th>Client</th><th>Class</th><th>Date</th><th>Status</th></tr>';
+              data.attendance.forEach((a) => {
+                html += `<tr><td>${a.ClientName}</td><td>${a.ClassName}</td><td>${a.AttendanceDate}</td><td>${a.AttendanceStatus}</td></tr>`;
+              });
+              html += "</table>";
+              $("#attendance-list").html(html);
+            } else {
+              $("#attendance-list").html("<p>No attendance records.</p>");
+            }
+
+            // Profile
+            let t = data.trainer;
+            $("#profile-info").html(`
+            <b>Name:</b> ${t.Name}<br>
+            <b>Expertise:</b> ${t.Expertise}<br>
+            <b>Username:</b> ${t.Username}<br>
+            <b>Available Slots:</b> ${t.AvailableSlots}
+          `);
+          } else {
+            $(".dashboard-section").html("<p>Error loading dashboard.</p>");
+          }
+        });
+
+        // Edit profile (simple prompt, you can make a modal)
+        $("#edit-profile-btn").click(function () {
+          let newName = prompt("Enter new name:");
+          let newExpertise = prompt("Enter new expertise:");
+          if (newName && newExpertise) {
+            $.post(
+              "trainer_dashboard_service.php",
+              {
+                action: "edit_profile",
+                name: newName,
+                expertise: newExpertise,
+              },
+              function (resp) {
+                alert(resp.message);
+                location.reload();
+              },
+              "json"
+            );
+          }
+        });
+      });
+    </script>
+  </body>
 </html>

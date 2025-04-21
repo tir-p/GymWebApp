@@ -32,10 +32,17 @@ header {
   padding: 5px;
 }
 
-.logo img {
-  max-width: 150px;
-  height: auto;
+.logo-img {
+  height: 48px;      /* or 40px, 50px, etc. */
+  width: auto;
+  max-width: 100px;  /* prevents it from being too wide */
+  display: block;
+  object-fit: contain;
+  margin: 0;
+  padding: 0;
 }
+
+
 
 .logo-text {
   margin-top: 5px;
@@ -77,7 +84,7 @@ header {
 }
 
 /* Trainers Section */
-#trainers {
+#trainers {`
   padding: 60px 20px;
   background-color: #f4f4f4;
   text-align: center;
