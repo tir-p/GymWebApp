@@ -18,11 +18,12 @@ if ($conn->connect_error) {
 $clientID = 1; // Replace with actual logged-in client ID
 
 // Fetch bookings for the client
-$bookingQuery = $conn->query("SELECT b.BookingID, b.BookingDate, c.ClassName, t.Name AS TrainerName 
-                               FROM booking b 
-                               JOIN class c ON b.ClassID = c.ClassID 
-                               JOIN trainer t ON b.TrainerID = t.TrainerID 
-                               WHERE b.ClientID = $clientID");
+$bookingQuery = $conn->query("SELECT b.BookingID, b.BookingDate, b.StartTime, b.EndTime, 
+                             c.ClassName, t.Name AS TrainerName 
+                             FROM booking b 
+                             JOIN class c ON b.ClassID = c.ClassID 
+                             JOIN trainer t ON b.TrainerID = t.TrainerID 
+                             WHERE b.ClientID = $clientID");
 
 $bookings = [];
 while ($row = $bookingQuery->fetch_assoc()) {

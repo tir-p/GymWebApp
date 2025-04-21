@@ -318,11 +318,15 @@
             if (response.length > 0) {
               let html = "<h3>Your Current Bookings:</h3><ul>";
               response.forEach((booking) => {
+                // Format the time values
+                const startTime = booking.StartTime ? booking.StartTime.split(':').slice(0, 2).join(':') : 'N/A';
+                const endTime = booking.EndTime ? booking.EndTime.split(':').slice(0, 2).join(':') : 'N/A';
+                
                 html += `
                   <li>
                     <div class="booking-details">
                       ${booking.ClassName} with ${booking.TrainerName} on ${booking.BookingDate} 
-                      (${booking.StartTime} - ${booking.EndTime})
+                      (${startTime} - ${endTime})
                     </div>
                     <button class="cancel-btn" onclick="cancelBooking(${booking.BookingID})">
                       Cancel Booking
