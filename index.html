@@ -1,191 +1,375 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gym10 - Fitness Center</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 text-gray-900">
-  <!-- Navbar -->
-  <nav class="bg-black">
-    <div class="container mx-auto flex items-center justify-between py-4 px-6">
-      <div class="flex items-center gap-3">
-        <img src="img/logo.jpg" alt="Gym10 Logo" class="h-12 w-12 rounded-full" />
-        <span class="text-2xl font-bold text-green-400">Gym10</span>
-      </div>
-      <ul class="flex gap-6">
-        <li><a href="#home" class="text-white hover:text-green-400 transition">Home</a></li>
-        <li><a href="#services" class="text-white hover:text-green-400 transition">Services</a></li>
-        <li><a href="#pricing-plan" class="text-white hover:text-green-400 transition">Membership</a></li>
-        <li><a href="#trainers" class="text-white hover:text-green-400 transition">Trainers</a></li>
-        <li><a href="about.html" class="text-white hover:text-green-400 transition">About</a></li>
-        <li><a href="#contact" class="text-white hover:text-green-400 transition">Contact</a></li>
-        <li><a href="login.html" class="ml-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">Login</a></li>
-      </ul>
-    </div>
-  </nav>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gym10 - Fitness Center</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Header Section -->
+    <header>
+      <nav class="navbar">
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#pricing-plan">Membership Plan</a></li>
+          <li><a href="#trainers">Trainers</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#contact">Contact Us</a></li>
 
-  <!-- Hero Section -->
-  <section class="bg-gradient-to-r from-green-400 to-blue-500 py-20 text-center">
-    <h1 class="text-5xl font-extrabold text-white mb-4">Welcome to Gym10</h1>
-    <p class="text-xl text-white mb-8">Your journey to a healthier lifestyle starts here.</p>
-    <a href="#services" class="inline-block px-8 py-3 bg-white text-green-600 font-semibold rounded shadow hover:bg-green-100 transition">Explore Our Services</a>
-  </section>
-
-  <!-- Services Section -->
-  <section id="services" class="py-16 bg-white">
-    <div class="container mx-auto">
-      <h2 class="text-3xl font-bold text-center mb-10 text-gray-800">Our Services</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="bg-gray-100 rounded-lg p-6 shadow hover:shadow-lg transition">
-          <h3 class="text-xl font-semibold mb-2 text-green-600">Strength</h3>
-          <p>Embrace the essence of strength as we delve into its various dimensions: physical, mental, and emotional.</p>
+          <li><a href="login.html" class="login-btn">Login</a></li>
+        </ul>
+      </nav>
+      <div class="header-content">
+        <div class="logo">
+          <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
         </div>
-        <div class="bg-gray-100 rounded-lg p-6 shadow hover:shadow-lg transition">
-          <h3 class="text-xl font-semibold mb-2 text-green-600">Physical Fitness</h3>
-          <p>Activities that improve health, strength, flexibility, and overall well-being.</p>
-        </div>
-        <div class="bg-gray-100 rounded-lg p-6 shadow hover:shadow-lg transition">
-          <h3 class="text-xl font-semibold mb-2 text-green-600">Fat Loss</h3>
-          <p>Workout routines and expert guidance to help you reach your goals.</p>
-        </div>
+        <h1>Welcome to Gym10</h1>
+        <p style="margin-bottom: 20px">
+          Your journey to a healthier lifestyle starts here.
+        </p>
+        <a href="#services" class="cta-btn">Explore Our Services</a>
       </div>
-      <div class="text-center mt-10">
-        <a href="register.html" class="px-8 py-3 bg-green-500 text-white rounded font-semibold hover:bg-green-600 transition">Join Now</a>
-      </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- Pricing Plan Section -->
-  <section id="pricing-plan" class="py-16 bg-gray-50">
-    <div class="container mx-auto">
-      <h2 class="text-3xl font-bold text-center mb-10 text-gray-800">Membership Plans</h2>
-      <div class="flex flex-col md:flex-row gap-8 justify-center">
-        <div class="bg-white rounded-lg shadow p-8 flex-1 text-center">
-          <h3 class="text-xl font-bold mb-2">Basic</h3>
-          <p class="mb-4">Access to gym facilities.</p>
-          <p class="text-2xl font-bold text-green-600 mb-6">Rs 800/month</p>
-          <a href="register.html" class="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">Subscribe</a>
+    <!-- Services Section -->
+    <section id="services">
+      <h2>Our Services</h2>
+
+      <div class="service-cards">
+        <div class="card">
+          <h3>Strength</h3>
+          <p>
+            Embrace the essence of strength as we delve into its various
+            dimensions: physical, mental, and emotional.
+          </p>
         </div>
-        <div class="bg-white rounded-lg shadow p-8 flex-1 text-center border-2 border-green-500">
-          <h3 class="text-xl font-bold mb-2">Standard</h3>
-          <p class="mb-4">Gym + group classes.</p>
-          <p class="text-2xl font-bold text-green-600 mb-6">Rs 1000/month</p>
-          <a href="register.html" class="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">Subscribe</a>
+        <div class="card">
+          <h3>Physical Fitness</h3>
+          <p>
+            It encompasses a range of activities that improve health, strength,
+            flexibility, and overall well-being.
+          </p>
         </div>
-        <div class="bg-white rounded-lg shadow p-8 flex-1 text-center">
-          <h3 class="text-xl font-bold mb-2">Premium</h3>
-          <p class="mb-4">All Standard benefits + personal training.</p>
-          <p class="text-2xl font-bold text-green-600 mb-6">Rs 1500/month</p>
-          <a href="register.html" class="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">Subscribe</a>
+        <div class="card">
+          <h3>Fat Loss</h3>
+          <p>
+            Through a combination of workout routines and expert guidance, we'll
+            empower you to reach your goals.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Weight Gain</h3>
+          <p>
+            Designed for individuals, our program offers an effective approach
+            to gaining weight in a sustainable manner.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Personal Training</h3>
+          <p>Work with certified trainers to meet your fitness goals.</p>
+        </div>
+        <div class="card">
+          <h3>Group Classes</h3>
+          <p>Join classes like Yoga, Pilates, Cardio, and more.</p>
         </div>
       </div>
-    </div>
-  </section>
+      <p class="services-description">
+        Discover a wide range of services tailored to meet your fitness needs
+        and help you achieve your personal goals.
+      </p>
+      <!-- Join Now Button -->
+      <div class="join-now">
+        <a href="register.html" class="join-now-btn">Join Now ➔</a>
+      </div>
+    </section>
 
-  <!-- Trainers Section -->
-  <section id="trainers" class="py-16 bg-white">
-    <div class="container mx-auto">
-      <h2 class="text-3xl font-bold text-center mb-10 text-gray-800">Meet Our Trainers</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="bg-gray-100 rounded-lg p-6 shadow text-center">
-          <img src="img/trainer1.jpg" alt="Trainer John Doe" class="mx-auto rounded-full h-24 w-24 mb-4 object-cover" />
-          <h3 class="text-lg font-semibold text-green-600">John Doe</h3>
+    <section id="pricing-plan">
+      <h2>Our Pricing Plan</h2>
+      <div class="pricing-container">
+        <div class="plan">
+          <h3>Basic Plan</h3>
+          <p>Access to gym facilities.</p>
+          <p>Price: Rs 800/month</p>
+          <button onclick="subscribe('Basic Plan', 20)">Subscribe</button>
+        </div>
+        <div class="plan">
+          <h3>Standard Plan</h3>
+          <p>Access to gym facilities + group classes.</p>
+          <p>Price: Rs 1000/month</p>
+          <button onclick="subscribe('Standard Plan', 30)">Subscribe</button>
+        </div>
+        <div class="plan">
+          <h3>Premium Plan</h3>
+          <p>All Standard benefits + personal training sessions.</p>
+          <p>Price: Rs 1500/month</p>
+          <button onclick="subscribe('Premium Plan', 50)">Subscribe</button>
+        </div>
+        <p
+          style="
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            margin-top: 60px;
+          "
+        >
+          Our pricing plan comes with various membership tiers, each tailored to
+          cater to different preferences and fitness aspirations.<br />Choose
+          the perfect fit and take the first step toward achieving your
+          aspirations today!
+        </p>
+      </div>
+    </section>
+
+    <script>
+      // Simulate login status; replace this with actual login check
+      var isLoggedIn = false; // Change this based on actual login status
+
+      function subscribe(planName, price) {
+        if (isLoggedIn) {
+          // Redirect to the subscription process with selected plan details
+          window.location.href = `subscribe.php?plan=${encodeURIComponent(
+            planName
+          )}&price=${price}`;
+        } else {
+          // Redirect to the login page if not logged in
+          alert("You must log in to subscribe to a membership.");
+          window.location.href = "login.html";
+        }
+      }
+    </script>
+
+    <section id="why-join-us">
+      <h2>Why Join Us?</h2>
+
+      <p>
+        At our gym, we are committed to helping you achieve your fitness goals
+        with personalized support and world-class facilities. Here's what sets
+        us apart:
+      </p>
+
+      <div class="features-container">
+        <!-- Feature 1 -->
+        <div class="feature">
+          <h3>Expert Trainers</h3>
+          <p>
+            Our certified trainers are dedicated to guiding you every step of
+            the way, offering customized workout plans tailored to your needs.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature">
+          <h3>State-of-the-art Equipment</h3>
+          <p>
+            We offer top-of-the-line equipment to ensure you have access to the
+            best tools to maximize your fitness potential.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature">
+          <h3>Flexible Memberships</h3>
+          <p>
+            Our pricing plans are designed to be flexible and affordable, giving
+            you the freedom to choose the plan that best suits your lifestyle.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature">
+          <h3>Supportive Community</h3>
+          <p>
+            Join a community of like-minded individuals who are equally
+            committed to their fitness journey and inspire each other to stay
+            motivated.
+          </p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature">
+          <h3>Personalized Nutrition Plans</h3>
+          <p>
+            Our in-house nutritionists will provide you with personalized meal
+            plans that complement your fitness routine, helping you achieve your
+            goals faster.
+          </p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature">
+          <h3>Group Fitness Classes</h3>
+          <p>
+            From yoga to high-intensity interval training (HIIT), we offer a
+            wide range of group fitness classes to keep your workouts exciting
+            and challenging.
+          </p>
+        </div>
+      </div>
+
+      <div class="join-now">
+        <a href="register.html" class="join-now-btn">Join Now ➔</a>
+      </div>
+    </section>
+
+    <!-- Trainers Section -->
+    <section id="trainers">
+      <h2>Meet Our Trainers</h2>
+      <div class="trainer-cards">
+        <div class="card">
+          <img src="img/trainer1.jpg" alt="Trainer John Doe" />
+          <h3>John Doe</h3>
           <p>Certified Personal Trainer</p>
         </div>
-        <div class="bg-gray-100 rounded-lg p-6 shadow text-center">
-          <img src="img/trainer2.jpg" alt="Trainer Jane Smith" class="mx-auto rounded-full h-24 w-24 mb-4 object-cover" />
-          <h3 class="text-lg font-semibold text-green-600">Jane Smith</h3>
+        <div class="card">
+          <img src="img/trainer2.jpg" alt="Trainer Jane Smith" />
+          <h3>Jane Smith</h3>
           <p>Yoga & Pilates Instructor</p>
         </div>
-        <div class="bg-gray-100 rounded-lg p-6 shadow text-center">
-          <img src="img/trainer3.jpg" alt="Trainer Chris Lee" class="mx-auto rounded-full h-24 w-24 mb-4 object-cover" />
-          <h3 class="text-lg font-semibold text-green-600">Chris Lee</h3>
+        <div class="card">
+          <img src="img/trainer3.jpg" alt="Trainer Chris Lee" />
+          <h3>Chris Lee</h3>
           <p>Strength & Conditioning Coach</p>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Client Reviews Section (AJAX loaded) -->
-  <section id="client-review" class="py-16 bg-gray-50">
-    <div class="container mx-auto">
-      <h2 class="text-3xl font-bold text-center mb-10 text-gray-800">Clients Review</h2>
-      <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <p class="col-span-3 text-center">Loading reviews...</p>
+    <section id="client-review">
+      <h2>Clients Review</h2>
+      <!-- Text description below the heading -->
+      <p class="review-description">
+        See what our clients are saying about their experience with us!
+      </p>
+
+      <div class="container">
+        <div id="reviews-container">
+          <p>Loading reviews...</p>
+        </div>
       </div>
-      <div class="text-center mt-8">
-        <a href="all_reviews.html" class="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">Read More Reviews</a>
+
+      <!-- "Read More Reviews" button -->
+      <div class="read-more-container">
+        <a href="reviews.html" class="read-more-btn">Read More Reviews</a>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Contact Section -->
-  <section id="contact" class="py-16 bg-gray-50">
-    <div class="container mx-auto max-w-xl">
-      <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Contact Us</h2>
-      <form id="contact-form" action="submit_contact.php" method="POST" class="bg-white rounded-lg shadow p-8 space-y-6">
-        <div>
-          <label for="name" class="block font-semibold mb-1">Name</label>
-          <input type="text" id="name" name="name" required class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
-        </div>
-        <div>
-          <label for="email" class="block font-semibold mb-1">Email</label>
-          <input type="email" id="email" name="email" required class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
-        </div>
-        <div>
-          <label for="message" class="block font-semibold mb-1">Message</label>
-          <textarea id="message" name="message" rows="4" required class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"></textarea>
-        </div>
-        <button type="submit" class="w-full bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600 transition">Submit</button>
-      </form>
-    </div>
-  </section>
+    <!-- Fix for horizontal reviews display -->
+    <style>
+      /* Ensure horizontal layout for reviews on index page */
+      #client-review .review-cards {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 20px !important;
+      }
 
-  <!-- Footer -->
-  <footer class="bg-black text-white py-6 mt-10">
-    <div class="container mx-auto text-center">
-      &copy; 2024 Gym10 - All Rights Reserved
-    </div>
-  </footer>
+      @media (max-width: 992px) {
+        #client-review .review-cards {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+      }
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    // Load reviews via AJAX
-    $(document).ready(function () {
-      $.ajax({
-        url: "all_reviews.php",
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-          if (response.success && response.data.length > 0) {
-            let html = '';
-            response.data.slice(0, 3).forEach(function (review) {
-              let stars = '';
-              for (let i = 1; i <= 5; i++) {
-                stars += i <= review.rating
-                  ? '<span class="text-yellow-400">&#9733;</span>'
-                  : '<span class="text-gray-300">&#9733;</span>';
-              }
-              html += `
-                <div class="bg-white rounded-lg p-6 shadow">
-                  <h3 class="font-semibold text-green-600 mb-2">${review.name}</h3>
-                  <div class="mb-2">${stars}</div>
-                  <p>${review.comments}</p>
-                </div>
-              `;
-            });
-            $("#reviews-container").html(html);
-          } else {
-            $("#reviews-container").html('<p class="col-span-3 text-center">No reviews available yet.</p>');
+      @media (max-width: 576px) {
+        #client-review .review-cards {
+          grid-template-columns: 1fr !important;
+        }
+      }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Fetch reviews from the API
+        $.ajax({
+          url: "all_reviews.php",
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            if (response.success) {
+              displayReviews(response.data);
+            } else {
+              showError(response.message);
+            }
+          },
+          error: function (xhr, status, error) {
+            showError("Failed to load reviews. Please try again later.");
+            console.error("Error: " + xhr.responseText);
+          },
+        });
+
+        // Function to display reviews (limiting to just 3 for homepage)
+        function displayReviews(reviews) {
+          if (!reviews || reviews.length === 0) {
+            $("#reviews-container").html("<p>No reviews available yet.</p>");
+            return;
           }
-        },
-        error: function () {
-          $("#reviews-container").html('<p class="col-span-3 text-center text-red-600">Failed to load reviews. Please try again later.</p>');
+
+          // Only show the first 3 reviews on the homepage
+          const displayReviews = reviews.slice(0, 3);
+
+          let html = '<div class="review-cards">';
+
+          // Loop through each review and create HTML
+          displayReviews.forEach(function (review) {
+            let stars = "";
+            for (let i = 1; i <= 5; i++) {
+              if (i <= review.rating) {
+                stars += '<i class="fas fa-star"></i>';
+              } else {
+                stars += '<i class="far fa-star"></i>';
+              }
+            }
+
+            html += `
+              <div class="review-c">
+                <h3>${review.name}</h3>
+                <div class="stars">${stars}</div>
+                <p>${review.comments}</p>
+              </div>
+            `;
+          });
+
+          html += "</div>";
+          $("#reviews-container").html(html);
+        }
+
+        // Function to show error message
+        function showError(message) {
+          $("#reviews-container").html(`
+            <div class="error-message">
+              <p>${message}</p>
+            </div>
+          `);
         }
       });
-    });
-  </script>
-</body>
+
+      // Function to view membership
+      function viewMembership() {
+        // Redirect to membership plans page without login requirement
+        window.location.href = "membership.html";
+      }
+    </script>
+
+    <!-- Contact Section -->
+    <section id="contact">
+      <h2>Contact Us</h2>
+      <form id="contact-form" action="submit_contact.php" method="POST">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+    <footer>
+      <p>&copy; 2024 Gym10 - All Rights Reserved</p>
+    </footer>
+  </body>
 </html>

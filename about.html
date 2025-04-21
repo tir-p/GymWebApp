@@ -1,113 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - Gym10</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-gray-50 min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-black">
-      <div
-        class="container mx-auto flex items-center justify-between py-4 px-6"
-      >
-        <div class="flex items-center gap-3">
-          <img
-            src="img/logo.jpg"
-            alt="Gym10 Logo"
-            class="h-10 w-10 rounded-full"
-          />
-          <span class="text-xl font-bold text-green-400">Gym10</span>
-        </div>
-        <ul class="flex gap-6">
-          <li>
-            <a
-              href="index.html#home"
-              class="text-white hover:text-green-400 transition"
-              >Home</a
-            >
-          </li>
-          <li>
-            <a
-              href="index.html#services"
-              class="text-white hover:text-green-400 transition"
-              >Services</a
-            >
-          </li>
-          <li>
-            <a
-              href="index.html#pricing-plan"
-              class="text-white hover:text-green-400 transition"
-              >Membership</a
-            >
-          </li>
-          <li>
-            <a
-              href="index.html#trainers"
-              class="text-white hover:text-green-400 transition"
-              >Trainers</a
-            >
-          </li>
-          <li>
-            <a
-              href="about.html"
-              class="text-white hover:text-green-400 transition"
-              >About</a
-            >
-          </li>
-          <li>
-            <a
-              href="index.html#contact"
-              class="text-white hover:text-green-400 transition"
-              >Contact</a
-            >
-          </li>
-          <li>
-            <a
-              href="login.html"
-              class="ml-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
-              >Login</a
-            >
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <main class="container mx-auto py-16">
-      <div class="max-w-2xl mx-auto bg-white rounded-lg shadow p-8">
-        <h1 class="text-3xl font-bold mb-6 text-green-600">About Gym10</h1>
-        <p class="mb-4">
-          Gym10 is a premier fitness centre situated in the lively town of
-          Curepipe, dedicated to promoting health and wellness among its
-          members. Gym10 offers a variety of membership options to cater to
-          fitness enthusiasts at every level.
-        </p>
-        <p class="mb-4">
-          The gym provides state-of-the-art facilities and services, including
-          personal training sessions with certified trainers, a wide array of
-          group fitness classes, and class schedules tailored to individual
-          fitness goals.
-        </p>
-        <p class="mb-4">
-          In addition to its physical services, Gym10 features a robust web
-          application that extends the gym’s offerings into the digital realm.
-          This platform includes streamlined access to class schedules, trainer
-          bookings, and comprehensive membership management.
-        </p>
-        <p>
-          Gym10 is committed to providing a personalized fitness experience
-          through cutting-edge technology and top-notch service, making it the
-          ultimate destination for achieving a healthier lifestyle, both
-          in-person and online.
-        </p>
-      </div>
-    </main>
+        /* Body Styles */
+        body {
+            font-family: Arial, sans-serif; /* Font style for body */
+            line-height: 1.6; /* Line height for readability */
+            background-color: #f4f4f4; /* Light background color */
+        }
 
-    <footer class="bg-black text-white py-6 mt-10">
-      <div class="container mx-auto text-center">
-        &copy; 2024 Gym10 - All Rights Reserved
-      </div>
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            flex-direction: column; /* Stack items vertically */
+            align-items: center; /* Center items horizontally */
+            padding: 20px;
+            background-color: black; /* Dark background for navbar */
+        }
+
+        .nav-links {
+            list-style: none; /* Remove default list styling */
+            display: flex; /* Flexbox for horizontal layout */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            justify-content: center; /* Center the nav items */
+            flex: 1; /* Allow the nav links to take up available space */
+        }
+
+        .nav-links li {
+            margin: 0 20px; /* Space between links */
+        }
+
+        .nav-links a {
+            text-decoration: none; /* Remove underline */
+            color: green; /* Change link color to green */
+            font-size: 22px; /* Increased font size for buttons */
+            padding: 10px 20px; /* Increased padding for larger buttons */
+            transition: color 0.3s; /* Smooth color transition */
+            border-radius: 5px; /* Add border radius for rounded corners */
+        }
+
+        .nav-links a:hover {
+            color: #ffa200; /* Change link color on hover */
+          border-bottom: 2px solid #ffa200; /* Underline effect on hover */
+        }
+
+        .logo {
+            margin-bottom: 10px; /* Space below the logo */
+        }
+
+        .logo-img {
+            max-width: 90px; /* Adjust logo size */
+            height: auto;
+        }
+
+        /* About Section Styles */
+        .about-section {
+            max-width: 800px; /* Max width for the about section */
+            margin: 30px auto; /* Center the section */
+            padding: 20px; /* Padding inside section */
+            background-color: white; /* White background for section */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        }
+
+        .about-section h1 {
+            font-size: 2.5rem; /* Increase header size */
+            color: #333; /* Dark text color */
+            margin-bottom: 20px; /* Space below header */
+        }
+
+        .about-section p {
+            color: #666; /* Gray text color */
+            font-size: 1.2rem; /* Font size for paragraph */
+            margin-bottom: 15px; /* Space below paragraph */
+        }
+
+        /* Footer Styles */
+        footer {
+            text-align: center; /* Center text in footer */
+            padding: 20px; /* Padding around footer */
+            background-color: black; /* Dark background for footer */
+            color: white; /* White text color */
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Logo and Navigation Bar -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#trainers">Trainers</a></li>
+                <li><a href="index.html#pricing-plan">Membership Plan</a></li>
+                <li><a href="index.html#contact">Contact Us</a></li>
+                <li><a href="login.html" class="login-btn">Login</a></li>
+                <li><a href="register.html" class="cta-btn">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- About Section -->
+    <div class="about-section">
+        <h1>About Gym10</h1>
+        <p>Gym10 is a premier fitness centre situated in the lively town of Curepipe, dedicated to promoting health and wellness among its members. Gym10 offers a variety of membership options to cater to fitness enthusiasts at every level.</p>
+        <p>The gym provides state-of-the-art facilities and services, including personal training sessions with certified trainers, a wide array of group fitness classes, and class schedules tailored to individual fitness goals.</p>
+        <p>In addition to its physical services, Gym10 features a robust web application that extends the gym’s offerings into the digital realm. This platform includes streamlined access to class schedules, trainer bookings, and comprehensive membership management.</p>
+        <p>Gym10 is committed to providing a personalized fitness experience through cutting-edge technology and top-notch service, making it the ultimate destination for achieving a healthier lifestyle, both in-person and online.</p>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Gym10 - All Rights Reserved</p>
     </footer>
-  </body>
+</body>
 </html>

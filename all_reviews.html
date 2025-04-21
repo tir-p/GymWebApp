@@ -4,92 +4,149 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>All Reviews - Gym10</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
-  <body class="bg-gray-50 min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-black">
-      <div
-        class="container mx-auto flex items-center justify-between py-4 px-6"
-      >
-        <div class="flex items-center gap-3">
-          <img
-            src="img/logo.jpg"
-            alt="Gym10 Logo"
-            class="h-10 w-10 rounded-full"
-          />
-          <span class="text-xl font-bold text-green-400">Gym10</span>
-        </div>
-        <ul class="flex gap-6">
-          <li>
-            <a
-              href="client_dashboard.html"
-              class="text-white hover:text-green-400 transition"
-              >Dashboard</a
-            >
-          </li>
-          <li>
-            <a
-              href="logout.php"
-              class="ml-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
-              >Logout</a
-            >
-          </li>
+  <body>
+    <header>
+      <nav class="navbar">
+        <ul class="nav-links">
+          <li><a href="client_dashboard.html">Back to Dashboard</a></li>
         </ul>
+      </nav>
+      <div class="header-content">
+        <div class="logo">
+          <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
+        </div>
+        <h1>All Reviews</h1>
+        <p>View all reviews from our members.</p>
       </div>
-    </nav>
+    </header>
 
-    <main class="container mx-auto py-10">
-      <h1 class="text-3xl font-bold mb-8 text-center text-green-600">
-        All Reviews
-      </h1>
-      <div id="reviews-list" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <p class="col-span-3 text-center">Loading reviews...</p>
+    <section id="all-reviews">
+      <h2>All Reviews</h2>
+      <div id="reviews-list">
+        <p>Loading reviews...</p>
       </div>
-    </main>
+    </section>
 
-    <footer class="bg-black text-white py-6 mt-10">
-      <div class="container mx-auto text-center">
-        &copy; 2024 Gym10 - All Rights Reserved
-      </div>
+    <footer>
+      <p>&copy; 2024 Gym10 - All Rights Reserved</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      // Load all reviews via AJAX
-      $(function () {
-        $.get(
-          "web_services/review_service.php",
-          function (data) {
-            if (data.status === "success" && data.reviews.length > 0) {
-              let html = "";
-              data.reviews.forEach(function (review) {
-                let stars = "";
-                for (let i = 1; i <= 5; i++) {
-                  stars +=
-                    i <= review.Rating
-                      ? '<span class="text-yellow-400">&#9733;</span>'
-                      : '<span class="text-gray-300">&#9733;</span>';
-                }
-                html += `
-              <div class="bg-white rounded-lg p-6 shadow">
-                <h3 class="font-semibold text-green-600 mb-2">${review.TrainerName}</h3>
-                <div class="mb-2">${stars}</div>
-                <p>${review.Comments}</p>
-                <p class="text-sm text-gray-500 mt-2">- ${review.ClientName}</p>
-              </div>
-            `;
-              });
-              $("#reviews-list").html(html);
+      // Function to load all reviews
+      function loadAllReviews() {
+        fetch("web_services/review_service.php")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              const reviewsList = document.getElementById("reviews-list");
+              if (data.reviews && data.reviews.length > 0) {
+                let html = '<div class="review-cards">';
+                data.reviews.forEach((review) => {
+                  html += `
+                    <div class="review-card">
+                      <h3>${review.TrainerName}</h3>
+                      <div class="rating">
+                        ${generateStars(review.Rating)}
+                      </div>
+                      <p>${review.Comments}</p>
+                      <p class="reviewer">- ${review.ClientName}</p>
+                    </div>
+                  `;
+                });
+                html += "</div>";
+                reviewsList.innerHTML = html;
+              } else {
+                reviewsList.innerHTML = "<p>No reviews found.</p>";
+              }
             } else {
-              $("#reviews-list").html(
-                '<p class="col-span-3 text-center">No reviews found.</p>'
-              );
+              document.getElementById("reviews-list").innerHTML =
+                "<p>Error loading reviews. Please try again later.</p>";
             }
-          },
-          "json"
-        );
-      });
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            document.getElementById("reviews-list").innerHTML =
+              "<p>Error loading reviews. Please try again later.</p>";
+          });
+      }
+
+      // Function to generate star rating display
+      function generateStars(rating) {
+        let stars = "";
+        for (let i = 1; i <= 5; i++) {
+          if (i <= rating) {
+            stars += "★";
+          } else {
+            stars += "☆";
+          }
+        }
+        return stars;
+      }
+
+      // Load reviews when the page loads
+      window.onload = function () {
+        loadAllReviews();
+      };
     </script>
+
+    <style>
+      /* Reviews Section */
+      #all-reviews {
+        background-color: #ffffff;
+        padding: 30px;
+        margin: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #all-reviews h2 {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      /* Review Cards Styles */
+      .review-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+
+      .review-card {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        flex: 1 1 300px;
+        max-width: 350px;
+        transition: transform 0.2s;
+      }
+
+      .review-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .review-card h3 {
+        margin-top: 0;
+        color: #007bff;
+      }
+
+      .rating {
+        color: #ffc107;
+        font-size: 1.2em;
+        margin: 10px 0;
+      }
+
+      .reviewer {
+        font-weight: bold;
+        color: #333;
+        margin-top: 10px;
+      }
+    </style>
   </body>
-</html>
+</html> 

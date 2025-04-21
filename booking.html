@@ -4,265 +4,498 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Book a Class - Gym10</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      .logo-img {
+        max-width: 90px;
+        height: auto;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .form-group select,
+      .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group select:focus,
+      .form-group input:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 14px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      #message-container {
+        margin: 20px 0;
+        padding: 15px;
+        border-radius: 5px;
+        display: none;
+      }
+
+      #message-container.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      #message-container.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .booking-list {
+        margin-top: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .booking-list h3 {
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .booking-list ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .booking-list li {
+        padding: 12px;
+        margin-bottom: 10px;
+        background: white;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .booking-list .booking-details {
+        flex: 1;
+      }
+
+      .booking-list .cancel-btn {
+        padding: 8px 12px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .booking-list .cancel-btn:hover {
+        background-color: #c82333;
+      }
+
+      .booking-list .cancel-btn:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+      }
+
+      .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .action-buttons button {
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .action-buttons button:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      .action-buttons button:active {
+        transform: translateY(0);
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+        }
+
+        .action-buttons button {
+          width: 100%;
+        }
+      }
+
+      /* Loading spinner */
+      .loading {
+        display: none;
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .loading::after {
+        content: "";
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
   </head>
-  <body class="bg-gray-50 min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-black">
-      <div
-        class="container mx-auto flex items-center justify-between py-4 px-6"
-      >
-        <div class="flex items-center gap-3">
-          <img
-            src="img/logo.jpg"
-            alt="Gym10 Logo"
-            class="h-10 w-10 rounded-full"
-          />
-          <span class="text-xl font-bold text-green-400">Gym10</span>
-        </div>
-        <ul class="flex gap-6">
+  <body>
+    <header>
+      <nav class="navbar">
+        <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
+        <ul class="nav-links">
+          <li><a href="client_dashboard.html">Back To Dashboard</a></li>
           <li>
-            <a
-              href="client_dashboard.html"
-              class="text-white hover:text-green-400 transition"
-              >Dashboard</a
-            >
-          </li>
-          <li>
-            <a
-              href="account.html"
-              class="text-white hover:text-green-400 transition"
-              >Account</a
-            >
-          </li>
-          <li>
-            <a
-              href="logout.php"
-              class="ml-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
-              >Logout</a
-            >
+            <a href="account.html" class="booking-btn active">Manage Account</a>
           </li>
         </ul>
-      </div>
-    </nav>
+      </nav>
+      <h1>Book a Class</h1>
+    </header>
+    <main>
+      <div class="container">
+        <h2>Select a Class</h2>
+        <p>Please fill in the details below to book your class.</p>
 
-    <main class="container mx-auto py-10">
-      <h1 class="text-3xl font-bold mb-8 text-center text-green-600">
-        Book a Class
-      </h1>
-      <div id="message-container" class="hidden mb-4"></div>
-      <form
-        id="booking-form"
-        class="bg-white rounded-lg shadow p-8 max-w-lg mx-auto space-y-6"
-      >
-        <div>
-          <label for="class" class="block font-semibold mb-1">Class</label>
-          <select
-            id="class"
-            name="class"
-            required
-            class="w-full border border-gray-300 rounded px-3 py-2"
-          ></select>
+        <div id="message-container"></div>
+        <div class="loading"></div>
+
+        <form id="booking-form">
+          <div class="form-group">
+            <label for="class">Class:</label>
+            <select id="class" name="class" required>
+              <option value="">Select a class</option>
+              <!-- Classes will be loaded dynamically -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="trainer">Trainer:</label>
+            <select id="trainer" name="trainer" required>
+              <option value="">Select a trainer</option>
+              <!-- Trainers will be loaded dynamically -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required />
+          </div>
+
+          <div class="form-group">
+            <label for="start_time">Start Time:</label>
+            <input type="time" id="start_time" name="start_time" required />
+          </div>
+
+          <div class="form-group">
+            <label for="end_time">End Time:</label>
+            <input type="time" id="end_time" name="end_time" required />
+          </div>
+
+          <button type="submit" class="btn">Book Now</button>
+        </form>
+
+        <div id="booking-info" class="booking-list">
+          <p>Your bookings will be loaded here!</p>
         </div>
-        <div>
-          <label for="trainer" class="block font-semibold mb-1">Trainer</label>
-          <select
-            id="trainer"
-            name="trainer"
-            required
-            class="w-full border border-gray-300 rounded px-3 py-2"
-          ></select>
-        </div>
-        <div>
-          <label for="date" class="block font-semibold mb-1">Date</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            required
-            class="w-full border border-gray-300 rounded px-3 py-2"
-          />
-        </div>
-        <div>
-          <label for="start_time" class="block font-semibold mb-1"
-            >Start Time</label
-          >
-          <input
-            type="time"
-            id="start_time"
-            name="start_time"
-            required
-            class="w-full border border-gray-300 rounded px-3 py-2"
-          />
-        </div>
-        <div>
-          <label for="end_time" class="block font-semibold mb-1"
-            >End Time</label
-          >
-          <input
-            type="time"
-            id="end_time"
-            name="end_time"
-            required
-            class="w-full border border-gray-300 rounded px-3 py-2"
-          />
-        </div>
-        <button
-          type="submit"
-          class="w-full bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600 transition"
-        >
-          Book Now
-        </button>
-      </form>
-      <div
-        id="booking-info"
-        class="mt-10 bg-white rounded-lg shadow p-6 max-w-lg mx-auto"
-      >
-        <h3 class="text-lg font-bold mb-4 text-green-600">Your Bookings</h3>
-        <div id="booking-list">
-          <p>Loading bookings...</p>
+
+        <div class="action-buttons">
+          <button onclick="window.location.href='booking.html'">
+            Book a New Class
+          </button>
+          <button onclick="window.location.href='manage_bookings.html'">
+            Manage Bookings
+          </button>
         </div>
       </div>
     </main>
-
-    <footer class="bg-black text-white py-6 mt-10">
-      <div class="container mx-auto text-center">
-        &copy; 2024 Gym10 - All Rights Reserved
-      </div>
+    <footer>
+      <p>&copy; 2024 Gym10 - All Rights Reserved</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      // Show message
+      // Show loading spinner
+      function showLoading() {
+        $('.loading').show();
+      }
+
+      // Hide loading spinner
+      function hideLoading() {
+        $('.loading').hide();
+      }
+
+      // Function to show messages
       function showMessage(type, message) {
-        const msg = $("#message-container");
-        msg
-          .removeClass()
-          .addClass(
-            type === "success"
-              ? "bg-green-100 text-green-700 p-4 rounded mb-4"
-              : "bg-red-100 text-red-700 p-4 rounded mb-4"
-          );
-        msg.html(message).show();
-        setTimeout(() => msg.fadeOut(), 4000);
+        const messageContainer = $("#message-container");
+        messageContainer.removeClass("success error").addClass(type);
+        messageContainer.html(`<p>${message}</p>`).show();
+
+        // Hide message after 5 seconds
+        setTimeout(() => {
+          messageContainer.fadeOut();
+        }, 5000);
       }
 
-      // Load classes
-      function loadClasses() {
-        $.get(
-          "get_classes.php",
-          function (response) {
-            const classSelect = $("#class");
-            classSelect.html('<option value="">Select a class</option>');
-            if (response.success && response.data.length > 0) {
-              response.data.forEach(function (classItem) {
-                classSelect.append(
-                  `<option value="${classItem.id}" data-trainer-id="${classItem.trainer_id}" data-schedule-date="${classItem.schedule_date}" data-start-time="${classItem.start_time}" data-end-time="${classItem.end_time}">${classItem.name} (${classItem.class_type}) - ${classItem.schedule_date} ${classItem.start_time}-${classItem.end_time}</option>`
-                );
-              });
-            } else {
-              classSelect.append(
-                '<option value="" disabled>No classes available</option>'
-              );
-            }
-          },
-          "json"
-        );
-      }
-
-      // Load trainers
-      function loadTrainers() {
-        $.get(
-          "get_trainers.php",
-          function (response) {
-            const trainerSelect = $("#trainer");
-            trainerSelect.html('<option value="">Select a trainer</option>');
-            if (response.success && response.data.length > 0) {
-              response.data.forEach(function (trainer) {
-                trainerSelect.append(
-                  `<option value="${trainer.id}">${trainer.name} (${trainer.expertise})</option>`
-                );
-              });
-            } else {
-              trainerSelect.append(
-                '<option value="" disabled>No trainers available</option>'
-              );
-            }
-          },
-          "json"
-        );
-      }
-
-      // Load bookings
+      // Function to load bookings
       function loadBookings() {
-        $.get(
-          "fetch_booking.php",
-          function (bookings) {
-            if (bookings.length > 0) {
-              let html = '<ul class="space-y-2">';
-              bookings.forEach(function (booking) {
-                html += `<li class="flex justify-between items-center">
-              <span>${booking.ClassName} with ${booking.TrainerName} on ${booking.BookingDate} (${booking.StartTime} - ${booking.EndTime})</span>
-              <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition" onclick="cancelBooking(${booking.BookingID})">Cancel</button>
-            </li>`;
-              });
-              html += "</ul>";
-              $("#booking-list").html(html);
-            } else {
-              $("#booking-list").html("<p>You have no current bookings.</p>");
-            }
-          },
-          "json"
-        );
-      }
-
-      // Cancel booking
-      function cancelBooking(bookingId) {
-        if (!confirm("Are you sure you want to cancel this booking?")) return;
+        showLoading();
         $.ajax({
-          url: "web_services/booking_service.php?booking_id=" + bookingId,
-          type: "DELETE",
+          url: "fetch_booking.php",
+          type: "GET",
           dataType: "json",
           success: function (response) {
-            if (response.status === "success") {
-              showMessage("success", "Booking cancelled successfully");
-              loadBookings();
+            hideLoading();
+            const bookingInfo = $("#booking-info");
+            if (response.length > 0) {
+              let html = "<h3>Your Current Bookings:</h3><ul>";
+              response.forEach((booking) => {
+                html += `
+                  <li>
+                    <div class="booking-details">
+                      ${booking.ClassName} with ${booking.TrainerName} on ${booking.BookingDate} 
+                      (${booking.StartTime} - ${booking.EndTime})
+                    </div>
+                    <button class="cancel-btn" onclick="cancelBooking(${booking.BookingID})">
+                      Cancel Booking
+                    </button>
+                  </li>`;
+              });
+              html += "</ul>";
+              bookingInfo.html(html);
             } else {
-              showMessage(
-                "error",
-                response.message || "Failed to cancel booking"
-              );
+              bookingInfo.html("<p>You have no current bookings.</p>");
             }
           },
-          error: function () {
-            showMessage(
-              "error",
-              "An error occurred while cancelling the booking"
+          error: function (xhr, status, error) {
+            hideLoading();
+            console.error("Error loading bookings:", error);
+            $("#booking-info").html(
+              "<p>Error loading bookings. Please try again later.</p>"
             );
           },
         });
       }
 
-      // On page load
-      $(function () {
-        loadClasses();
-        loadTrainers();
-        loadBookings();
+      // Function to cancel a booking
+      function cancelBooking(bookingId) {
+        if (!confirm("Are you sure you want to cancel this booking?")) {
+          return;
+        }
 
-        // When a class is selected, update the date and time fields
-        $("#class").change(function () {
-          const selected = $(this).find("option:selected");
-          if (selected.val()) {
-            $("#date").val(selected.data("schedule-date"));
-            $("#start_time").val(selected.data("start-time"));
-            $("#end_time").val(selected.data("end-time"));
-            $("#trainer").val(selected.data("trainer-id"));
+        showLoading();
+        $.ajax({
+          url: "web_services/booking_service.php?booking_id=" + bookingId,
+          type: "DELETE",
+          dataType: 'json',
+          success: function (response) {
+            hideLoading();
+            console.log("Cancel booking response:", response);
+            
+            try {
+              const result = typeof response === 'string' ? JSON.parse(response) : response;
+              
+              if (result.status === 'success') {
+                showMessage("success", "Booking cancelled successfully");
+                loadBookings(); // Reload the bookings list
+              } else {
+                showMessage("error", result.message || "Failed to cancel booking");
+              }
+            } catch (e) {
+              console.error("Error parsing response:", e);
+              showMessage("error", "Error processing the response");
+            }
+          },
+          error: function (xhr, status, error) {
+            hideLoading();
+            console.error("Error cancelling booking:", error);
+            console.error("Status:", status);
+            console.error("Response:", xhr.responseText);
+            showMessage("error", "An error occurred while cancelling the booking");
           }
         });
+      }
 
-        // Booking form submit
+      $(document).ready(function () {
+        // Load bookings when page loads
+        loadBookings();
+
+        // Load classes
+        showLoading();
+        $.ajax({
+          url: "get_classes.php",
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            hideLoading();
+            if (response.success) {
+              const classSelect = $("#class");
+              if (response.data && response.data.length > 0) {
+                response.data.forEach(function (classItem) {
+                  const classInfo = `${classItem.name} (${classItem.class_type}) - ${classItem.schedule_date} ${classItem.start_time}-${classItem.end_time}`;
+                  classSelect.append(
+                    `<option value="${classItem.id}" 
+                      data-start-time="${classItem.start_time}"
+                      data-end-time="${classItem.end_time}"
+                      data-schedule-date="${classItem.schedule_date}"
+                      data-class-type="${classItem.class_type}"
+                      data-trainer-id="${classItem.trainer_id}">
+                      ${classInfo}
+                    </option>`
+                  );
+                });
+              } else {
+                classSelect.append(
+                  '<option value="" disabled>No classes available</option>'
+                );
+              }
+
+              // When a class is selected, update the date and time fields
+              $("#class").change(function () {
+                const selectedOption = $(this).find("option:selected");
+                if (selectedOption.val()) {
+                  $("#date").val(selectedOption.data("schedule-date"));
+                  $("#start_time").val(selectedOption.data("start-time"));
+                  $("#end_time").val(selectedOption.data("end-time"));
+                  updateTrainerDropdown(selectedOption.data("trainer-id"));
+                }
+              });
+            } else {
+              showMessage("error", "Error loading classes");
+            }
+          },
+          error: function () {
+            hideLoading();
+            showMessage("error", "Error loading classes");
+          },
+        });
+
+        // Load trainers
+        showLoading();
+        $.ajax({
+          url: "get_trainers.php",
+          type: "GET",
+          dataType: "json",
+          success: function (response) {
+            hideLoading();
+            if (response.success) {
+              const trainerSelect = $("#trainer");
+              if (response.data && response.data.length > 0) {
+                response.data.forEach(function (trainer) {
+                  const trainerInfo = `${trainer.name} (${trainer.expertise}) - Available Slots: ${trainer.available_slots}`;
+                  trainerSelect.append(
+                    `<option value="${trainer.id}" 
+                      data-expertise="${trainer.expertise}"
+                      data-available-slots="${trainer.available_slots}">
+                      ${trainerInfo}
+                    </option>`
+                  );
+                });
+              } else {
+                trainerSelect.append(
+                  '<option value="" disabled>No trainers available</option>'
+                );
+              }
+            } else {
+              showMessage("error", "Error loading trainers");
+            }
+          },
+          error: function () {
+            hideLoading();
+            showMessage("error", "Error loading trainers");
+          },
+        });
+
+        // Function to update trainer dropdown based on selected class
+        function updateTrainerDropdown(trainerId) {
+          const trainerSelect = $("#trainer");
+          trainerSelect.val(trainerId);
+          trainerSelect.prop("disabled", true);
+        }
+
+        // Reset trainer dropdown when form is reset
+        $("#booking-form").on("reset", function () {
+          $("#trainer").prop("disabled", false);
+        });
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split("T")[0];
+        $("#date").attr("min", today);
+
+        // Form submission
         $("#booking-form").submit(function (e) {
           e.preventDefault();
+          showLoading();
+
+          // Validate form inputs
           const classId = $("#class").val();
           const trainerId = $("#trainer").val();
           const date = $("#date").val();
@@ -270,14 +503,30 @@
           const endTime = $("#end_time").val();
 
           if (!classId || !trainerId || !date || !startTime || !endTime) {
+            hideLoading();
             showMessage("error", "Please fill in all required fields");
             return;
           }
+
+          // Validate date is not in the past
+          const selectedDate = new Date(date);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          if (selectedDate < today) {
+            hideLoading();
+            showMessage("error", "Please select a future date");
+            return;
+          }
+
+          // Validate time slots
           if (startTime >= endTime) {
+            hideLoading();
             showMessage("error", "End time must be after start time");
             return;
           }
 
+          // Create booking data object
           const bookingData = {
             class_id: parseInt(classId),
             trainer_id: parseInt(trainerId),
@@ -286,6 +535,7 @@
             end_time: endTime,
           };
 
+          // Send AJAX request
           $.ajax({
             url: "create_booking.php",
             type: "POST",
@@ -293,22 +543,22 @@
             data: JSON.stringify(bookingData),
             dataType: "json",
             success: function (response) {
+              hideLoading();
               if (response.success) {
                 showMessage("success", "Booking created successfully!");
+                // Reset the form
                 $("#booking-form")[0].reset();
+                // Reload the bookings list
                 loadBookings();
               } else {
-                showMessage(
-                  "error",
-                  response.message || "Failed to create booking"
-                );
+                showMessage("error", response.message || "Failed to create booking");
               }
             },
-            error: function () {
-              showMessage(
-                "error",
-                "An error occurred. Please try again later."
-              );
+            error: function (xhr, status, error) {
+              hideLoading();
+              showMessage("error", "An error occurred. Please try again later.");
+              console.error("Error:", error);
+              console.error("Response:", xhr.responseText);
             },
           });
         });

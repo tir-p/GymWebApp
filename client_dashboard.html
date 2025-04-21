@@ -4,236 +4,766 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Dashboard - Gym10</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
-  <body class="bg-gray-50 min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-black">
-      <div
-        class="container mx-auto flex items-center justify-between py-4 px-6"
-      >
-        <div class="flex items-center gap-3">
-          <img
-            src="img/logo.jpg"
-            alt="Gym10 Logo"
-            class="h-10 w-10 rounded-full"
-          />
-          <span class="text-xl font-bold text-green-400">Gym10</span>
-        </div>
-        <ul class="flex gap-6">
+  <body>
+    <header>
+      <nav class="navbar">
+        <ul class="nav-links">
+          <li><a href="#dashboard">Dashboard</a></li>
           <li>
-            <a
-              href="#dashboard"
-              class="text-white hover:text-green-400 transition"
-              >Dashboard</a
+            <a href="#client-details" onclick="loadSubscriptions()"
+              >My Details</a
             >
           </li>
           <li>
-            <a
-              href="#membership"
-              class="text-white hover:text-green-400 transition"
-              >Membership</a
+            <a href="#membership" onclick="loadSubscriptions()"
+              >My Membership</a
             >
           </li>
-          <li>
-            <a
-              href="booking.html"
-              class="text-white hover:text-green-400 transition"
-              >Bookings</a
-            >
-          </li>
-          <li>
-            <a
-              href="account.html"
-              class="text-white hover:text-green-400 transition"
-              >Account</a
-            >
-          </li>
-          <li>
-            <a
-              href="logout.php"
-              class="ml-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
-              >Logout</a
-            >
-          </li>
+          <li><a href="#plans">Subscribe to New Plans</a></li>
+          <li><a href="booking.html">Manage Bookings</a></li>
+          <li><a href="account.html" class="booking-btn">Manage Account</a></li>
+          <li><a href="logout.php" class="logout-btn">Logout</a></li>
         </ul>
+      </nav>
+      <div class="header-content">
+        <div class="logo">
+          <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
+        </div>
+        <h1>Welcome to your Client Dashboard</h1>
+        <p>View your memberships, subscribe to new plans, and more.</p>
       </div>
-    </nav>
+    </header>
 
-    <main class="container mx-auto py-10">
-      <h1 class="text-3xl font-bold mb-6 text-center">
-        Welcome, <span class="text-green-600" id="client-name">Loading...</span>
-      </h1>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Membership Card -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-xl font-bold mb-4 text-green-600">Your Membership</h2>
-          <div id="membership-info">
-            <p>Loading your subscriptions...</p>
-          </div>
-          <a
-            href="membership.html"
-            class="mt-4 inline-block px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
-            >Upgrade Plan</a
-          >
-        </div>
-        <!-- Bookings Card -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-xl font-bold mb-4 text-green-600">
-            Upcoming Bookings
-          </h2>
-          <div id="bookings-container">
-            <p>Loading bookings...</p>
-          </div>
-          <a
-            href="booking.html"
-            class="mt-4 inline-block px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
-            >Book a Class</a
-          >
-        </div>
+    <section id="dashboard">
+      <h2>Your Dashboard</h2>
+      <p>
+        Manage your account, view active memberships, and explore new plans.
+      </p>
+      <div class="dashboard-actions">
+        <button
+          class="cta-btn"
+          onclick="window.location.href='#client-details'"
+        >
+          View My Details
+        </button>
+        <button class="cta-btn" onclick="window.location.href='#membership'">
+          View Memberships
+        </button>
+        <button class="cta-btn" onclick="window.location.href='#plans'">
+          Subscribe to New Plans
+        </button>
       </div>
-      <!-- Reviews Section -->
-      <div class="mt-12">
-        <h2 class="text-2xl font-bold mb-4 text-center text-green-600">
-          Latest Reviews
-        </h2>
-        <div id="reviews-list" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <p class="col-span-3 text-center">Loading reviews...</p>
-        </div>
-        <div class="text-center mt-6">
-          <a
-            href="all_reviews.html"
-            class="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
-            >View All Reviews</a
-          >
-        </div>
-      </div>
-    </main>
+    </section>
 
-    <footer class="bg-black text-white py-6 mt-10">
-      <div class="container mx-auto text-center">
-        &copy; 2024 Gym10 - All Rights Reserved
+    <section id="client-details">
+      <h2>Your Details</h2>
+      <div id="client-info">
+        <p>Loading your information...</p>
       </div>
+    </section>
+
+    <section id="membership">
+      <h2>Your Memberships</h2>
+      <div id="membership-info"></div>
+    </section>
+
+    <section id="plans">
+      <h2>Subscribe to New Plans</h2>
+      <div class="service-cards">
+        <div class="card">
+          <h3>Basic Plan</h3>
+          <p>Access to gym facilities.</p>
+          <p>Price: Rs 800/month</p>
+          <button class="cta-btn" onclick="subscribeToPlan(1, 'Basic')">
+            Subscribe
+          </button>
+        </div>
+        <div class="card">
+          <h3>Standard Plan</h3>
+          <p>Access to gym facilities + group classes.</p>
+          <p>Price: Rs 1000/month</p>
+          <button class="cta-btn" onclick="subscribeToPlan(2, 'Standard')">
+            Subscribe
+          </button>
+        </div>
+        <div class="card">
+          <h3>Premium Plan</h3>
+          <p>All Standard benefits + personal training sessions.</p>
+          <p>Price: Rs 1500/month</p>
+          <button class="cta-btn" onclick="subscribeToPlan(3, 'Premium')">
+            Subscribe
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews">
+      <h2>Latest Reviews</h2>
+      <div id="reviews-list">
+        <p>Loading reviews...</p>
+      </div>
+      <div class="view-all-reviews">
+        <a href="all_reviews.html" class="cta-btn">View All Reviews</a>
+      </div>
+    </section>
+
+    <section id="add-review">
+      <h2>Add Your Review</h2>
+      <p>
+        Your feedback helps us improve! Please share your thoughts about your
+        experience with our trainers.
+      </p>
+      <form id="review-form">
+        <div class="form-group">
+          <label for="trainer">Select Trainer</label>
+          <select id="trainer" name="trainer_id" required>
+            <option value="">Select a Trainer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rating">Rating (1-5)</label>
+          <select id="rating" name="rating" required>
+            <option value="">Select Rating</option>
+            <option value="1">1 - Poor</option>
+            <option value="2">2 - Fair</option>
+            <option value="3">3 - Good</option>
+            <option value="4">4 - Very Good</option>
+            <option value="5">5 - Excellent</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="review">Your Review</label>
+          <textarea id="review" name="review" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="cta-btn">Submit Review</button>
+      </form>
+    </section>
+
+    <footer>
+      <p>&copy; 2024 Gym10 - All Rights Reserved</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      // Load client info and subscriptions
       function loadSubscriptions() {
-        $("#membership-info").html("<p>Loading your subscriptions...</p>");
-        $.get(
-          "web_services/subscription_service.php",
-          function (data) {
-            if (data.status === "success" && data.subscriptions.length > 0) {
-              const sub = data.subscriptions[0];
-              $("#client-name").text(sub.ClientName || "Member");
-              let html = `
-            <div>
-              <div class="mb-2">Plan: <span class="font-semibold">${sub.PlanTypeName}</span></div>
-              <div class="mb-2">Status: <span class="text-green-500 font-semibold">${sub.Status}</span></div>
-              <div class="mb-2">Start: ${sub.StartDate}</div>
-              <div class="mb-2">End: ${sub.EndDate}</div>
-            </div>
-          `;
-              $("#membership-info").html(html);
+        // Show loading indicators
+        const membershipInfo = document.getElementById("membership-info");
+        const clientInfo = document.getElementById("client-info");
+
+        membershipInfo.innerHTML = "<p>Loading your subscriptions...</p>";
+        clientInfo.innerHTML = "<p>Loading your information...</p>";
+
+        fetch("web_services/subscription_service.php")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              if (data.subscriptions.length > 0) {
+                // Get client name from the first subscription
+                const clientName = data.subscriptions[0].ClientName || "Member";
+
+                // Update client info section
+                clientInfo.innerHTML = `
+                  <div class="client-name">${clientName}</div>
+                  <div class="client-detail">
+                    <span class="detail-label">Status:</span>
+                    <span>Active Member</span>
+                  </div>
+                  <div class="client-detail">
+                    <span class="detail-label">Member Since:</span>
+                    <span>${data.subscriptions[0].StartDate}</span>
+                  </div>
+                `;
+
+                // Update subscriptions section
+                let html = '<div class="subscriptions-list">';
+
+                data.subscriptions.forEach((sub) => {
+                  // Add color indicators based on status
+                  let statusClass = "status-active";
+                  if (sub.Status === "cancelled") {
+                    statusClass = "status-cancelled";
+                  } else if (sub.Status === "expired") {
+                    statusClass = "status-expired";
+                  }
+
+                  html += `
+                    <div class="subscription-card ${statusClass}">
+                      <h3>${sub.PlanTypeName}</h3>
+                      <p><strong>Status:</strong> <span class="${statusClass}">${sub.Status}</span></p>
+                      <p><strong>Start Date:</strong> ${sub.StartDate}</p>
+                      <p><strong>End Date:</strong> ${sub.EndDate}</p>
+                    </div>
+                  `;
+                });
+                html += "</div>";
+                membershipInfo.innerHTML = html;
+              } else {
+                clientInfo.innerHTML =
+                  "<p>No membership information found.</p>";
+                membershipInfo.innerHTML =
+                  "<p>No active subscriptions found. Please subscribe to a plan.</p>";
+              }
             } else {
-              $("#membership-info").html(
-                "<p>No active subscriptions found. Please subscribe to a plan.</p>"
-              );
+              clientInfo.innerHTML =
+                "<p>Error loading your information. Please try again later.</p>";
+              membershipInfo.innerHTML =
+                "<p>Error loading subscriptions. Please try again later.</p>";
             }
-          },
-          "json"
-        );
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            clientInfo.innerHTML =
+              "<p>Error loading your information. Please try again later.</p>";
+            membershipInfo.innerHTML =
+              "<p>Error loading subscriptions. Please try again later.</p>";
+          });
       }
 
-      // Load bookings
-      function loadBookings() {
-        $.get(
-          "fetch_booking.php",
-          function (bookings) {
-            if (bookings.length > 0) {
-              let html = '<ul class="space-y-2">';
-              bookings.forEach(function (booking) {
-                html += `
-              <li class="flex justify-between items-center">
-                <span>${booking.ClassName} - ${booking.BookingDate} ${booking.StartTime}</span>
-                <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition" onclick="cancelBooking(${booking.BookingID})">Cancel</button>
-              </li>
-            `;
-              });
-              html += "</ul>";
-              $("#bookings-container").html(html);
-            } else {
-              $("#bookings-container").html(
-                "<p>You have no upcoming bookings. <a href='booking.html' class='text-green-600 underline'>Book a class now</a>!</p>"
-              );
+      async function subscribeToPlan(planId, planName) {
+        try {
+          // Get client ID from session or cookie
+          const clientId = getClientId();
+
+          // Format the date as YYYY-MM-DD
+          const today = new Date();
+          const formattedDate = today.toISOString().split("T")[0];
+
+          // Create the data object with proper types
+          const subscriptionData = {
+            client_id: Number(clientId), // Ensure it's a number
+            plan_type_id: Number(planId), // Ensure it's a number
+            start_date: formattedDate,
+            // We don't send status as it's calculated on the server
+          };
+
+          console.log("Sending subscription data:", subscriptionData);
+
+          // Show loading indicators
+          document.getElementById("membership-info").innerHTML =
+            "<p>Processing your subscription request...</p>";
+          document.getElementById("client-info").innerHTML =
+            "<p>Processing your subscription request...</p>";
+
+          const response = await fetch(
+            "web_services/subscription_service.php",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(subscriptionData),
             }
-          },
-          "json"
-        );
+          );
+
+          const result = await response.json();
+          console.log("Subscription response:", result);
+
+          if (response.ok) {
+            alert("Successfully subscribed to " + planName + " Plan");
+
+            // Refresh both sections
+            loadSubscriptions();
+
+            // Scroll to client details section to show the changes
+            document
+              .getElementById("client-details")
+              .scrollIntoView({ behavior: "smooth" });
+          } else {
+            // Format error message to show validation errors if available
+            let errorMsg = result.message || "Failed to subscribe to plan";
+
+            if (result.errors && Array.isArray(result.errors)) {
+              errorMsg +=
+                "\n\nValidation errors:\n- " + result.errors.join("\n- ");
+            }
+
+            throw new Error(errorMsg);
+          }
+        } catch (error) {
+          console.error("Subscription error:", error);
+          alert(
+            "Error subscribing to plan: " +
+              error.message +
+              "\nPlease check the console for details."
+          );
+          // Refresh both sections even on error to ensure they're up to date
+          loadSubscriptions();
+        }
       }
 
-      // Cancel booking
-      function cancelBooking(bookingId) {
-        if (!confirm("Are you sure you want to cancel this booking?")) return;
-        $.ajax({
-          url: "web_services/booking_service.php?booking_id=" + bookingId,
-          type: "DELETE",
-          dataType: "json",
-          success: function (response) {
-            if (response.status === "success") {
-              alert("Booking cancelled successfully!");
-              loadBookings();
-            } else {
-              alert("Failed to cancel booking: " + response.message);
-            }
-          },
-          error: function () {
-            alert("An error occurred. Please try again later.");
-          },
-        });
+      // Function to get client ID from session
+      function getClientId() {
+        // In a real application, this would come from the session or a secure cookie
+        // Since the server uses $_SESSION['client_id'], we don't need to pass it in the JSON
+        // The server will use the session value
+        return 1; // This value isn't actually used since the server uses the session
       }
 
-      // Load reviews
-      function loadReviews() {
-        $.get(
-          "web_services/review_service.php",
-          function (data) {
-            if (data.status === "success" && data.reviews.length > 0) {
-              let html = "";
-              data.reviews.slice(0, 3).forEach(function (review) {
-                let stars = "";
-                for (let i = 1; i <= 5; i++) {
-                  stars +=
-                    i <= review.Rating
-                      ? '<span class="text-yellow-400">&#9733;</span>'
-                      : '<span class="text-gray-300">&#9733;</span>';
-                }
-                html += `
-              <div class="bg-white rounded-lg p-6 shadow">
-                <h3 class="font-semibold text-green-600 mb-2">${review.TrainerName}</h3>
-                <div class="mb-2">${stars}</div>
-                <p>${review.Comments}</p>
-                <p class="text-sm text-gray-500 mt-2">- ${review.ClientName}</p>
-              </div>
-            `;
-              });
-              $("#reviews-list").html(html);
-            } else {
-              $("#reviews-list").html(
-                '<p class="col-span-3 text-center">No reviews found.</p>'
-              );
-            }
-          },
-          "json"
-        );
-      }
-
-      $(function () {
+      // Load reviews when the page loads
+      window.onload = function () {
         loadSubscriptions();
-        loadBookings();
+        loadTrainers();
         loadReviews();
+      };
+
+      // Function to load reviews
+      function loadReviews() {
+        fetch("web_services/review_service.php")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              const reviewsList = document.getElementById("reviews-list");
+              if (data.reviews && data.reviews.length > 0) {
+                // Get only the 6 latest reviews
+                const latestReviews = data.reviews.slice(0, 6);
+                let html = '<div class="review-cards">';
+                latestReviews.forEach((review) => {
+                  html += `
+                    <div class="review-card">
+                      <h3>${review.TrainerName}</h3>
+                      <div class="rating">
+                        ${generateStars(review.Rating)}
+                      </div>
+                      <p>${review.Comments}</p>
+                      <p class="reviewer">- ${review.ClientName}</p>
+                    </div>
+                  `;
+                });
+                html += "</div>";
+                reviewsList.innerHTML = html;
+              } else {
+                reviewsList.innerHTML = "<p>No reviews found.</p>";
+              }
+            } else {
+              document.getElementById("reviews-list").innerHTML =
+                "<p>Error loading reviews. Please try again later.</p>";
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            document.getElementById("reviews-list").innerHTML =
+              "<p>Error loading reviews. Please try again later.</p>";
+          });
+      }
+
+      // Function to load trainers
+      function loadTrainers() {
+        fetch("web_services/review_service.php?action=trainers")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              const trainerSelect = document.getElementById("trainer");
+              trainerSelect.innerHTML = '<option value="">Select a Trainer</option>';
+              data.trainers.forEach((trainer) => {
+                trainerSelect.innerHTML += `<option value="${trainer.TrainerID}">${trainer.Name}</option>`;
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error loading trainers:", error);
+          });
+      }
+
+      // Function to generate star rating display
+      function generateStars(rating) {
+        let stars = "";
+        for (let i = 1; i <= 5; i++) {
+          if (i <= rating) {
+            stars += "★";
+          } else {
+            stars += "☆";
+          }
+        }
+        return stars;
+      }
+
+      // Handle review form submission
+      $(document).ready(function () {
+        // Load trainers when the page loads
+        loadTrainers();
+
+        $("#review-form").on("submit", function (e) {
+          e.preventDefault();
+          
+          const reviewData = {
+            trainer_id: parseInt($("#trainer").val()),
+            rating: parseInt($("#rating").val()),
+            review: $("#review").val()
+          };
+
+          fetch("web_services/review_service.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(reviewData),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === "success") {
+                alert("Review submitted successfully!");
+                loadReviews();
+                // Reset form
+                $("#review-form")[0].reset();
+              } else {
+                alert("Error submitting review: " + data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Error submitting review. Please try again later.");
+            });
+        });
       });
     </script>
+
+    <style>
+      /* Header Content */
+
+      /* Dashboard Section */
+      /* Dashboard Section */
+      #dashboard {
+        padding: 30px;
+        text-align: center;
+        background-color: #ffffff; /* White background for contrast */
+        margin: 20px; /* Margin around the section */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      }
+
+      #dashboard h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: #333; /* Darker color for heading */
+      }
+
+      #dashboard p {
+        font-size: 1.1em;
+        color: #555;
+      }
+
+      /* Dashboard Actions */
+      .dashboard-actions {
+        margin-top: 20px;
+      }
+
+      .dashboard-actions button {
+        margin: 0 10px;
+        margin-bottom: 10px;
+      }
+
+      .cta-btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      .cta-btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+      }
+
+      /* Membership Section */
+      #membership {
+        background-color: #f9f9f9;
+        padding: 30px;
+        margin: 20px; /* Margin around the section */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      }
+
+      #membership h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: #333; /* Darker color for heading */
+      }
+
+      #membership-info {
+        font-size: 1.1em;
+        color: #555;
+      }
+
+      /* Client greeting styling */
+      #membership-info h3:first-child {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        color: #007bff;
+        text-align: center;
+      }
+
+      /* Subscription Plans Section */
+      /* Subscription Plans Section */
+      #plans {
+        background-color: #ffffff;
+        padding: 30px;
+        margin: 20px; /* Margin around the section */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      }
+
+      #plans h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: #333; /* Darker color for heading */
+      }
+
+      .service-cards {
+        display: flex;
+        justify-content: space-between; /* Space between cards */
+        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+      }
+
+      .card {
+        background-color: #f0f4f8;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        flex: 1 1 300px; /* Flex-grow, flex-shrink, flex-basis */
+        margin: 10px; /* Margin around each card */
+        transition: transform 0.2s;
+        min-width: 250px; /* Minimum width for smaller screens */
+        max-width: 300px; /* Maximum width to maintain uniformity */
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card h3 {
+        margin-top: 0;
+      }
+
+      .price {
+        font-weight: bold;
+        font-size: 1.2em;
+        color: #007bff; /* Blue for price */
+      }
+
+      /* Reviews Section */
+      #reviews {
+        background-color: #ffffff;
+        padding: 30px;
+        margin: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #reviews h2 {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .view-all-reviews {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .view-all-reviews .cta-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+
+      .view-all-reviews .cta-btn:hover {
+        background-color: #0056b3;
+      }
+
+      /* Review Form Styles */
+      #add-review {
+        background-color: #f9f9f9;
+        padding: 30px;
+        margin: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #add-review h2 {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      #add-review p {
+        text-align: center;
+        font-size: 1.1em;
+        color: #555;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+      }
+
+      /* Review Cards Styles */
+      .review-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+
+      .review-card {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        flex: 1 1 300px;
+        max-width: 350px;
+        transition: transform 0.2s;
+      }
+
+      .review-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .review-card h3 {
+        margin-top: 0;
+        color: #007bff;
+      }
+
+      .rating {
+        color: #ffc107;
+        font-size: 1.2em;
+        margin: 10px 0;
+      }
+
+      .reviewer {
+        font-weight: bold;
+        color: #333;
+        margin-top: 10px;
+      }
+
+      .review-date {
+        color: #666;
+        font-size: 0.9em;
+        margin-top: 5px;
+      }
+
+      /* Status indicators for subscriptions */
+      .status-active {
+        color: #28a745; /* Green for active */
+      }
+
+      .status-cancelled {
+        color: #dc3545; /* Red for cancelled */
+      }
+
+      .status-expired {
+        color: #6c757d; /* Grey for expired */
+      }
+
+      .subscription-card.status-active {
+        border-left: 5px solid #28a745;
+      }
+
+      .subscription-card.status-cancelled {
+        border-left: 5px solid #dc3545;
+        opacity: 0.8;
+      }
+
+      .subscription-card.status-expired {
+        border-left: 5px solid #6c757d;
+        opacity: 0.8;
+      }
+
+      /* Subscription cards */
+      .subscriptions-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .subscription-card {
+        flex: 1 1 300px;
+        min-width: 250px;
+        max-width: 350px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+      }
+
+      .subscription-card:hover {
+        transform: translateY(-5px);
+      }
+
+      /* Client Details Section */
+      #client-details {
+        background-color: #f0f8ff; /* Light blue background */
+        padding: 30px;
+        margin: 20px; /* Margin around the section */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      }
+
+      #client-details h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: #333; /* Darker color for heading */
+      }
+
+      #client-info {
+        font-size: 1.1em;
+        color: #555;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #client-info .client-name {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #007bff;
+      }
+
+      #client-info .client-detail {
+        margin: 5px 0;
+        display: flex;
+        gap: 10px;
+      }
+
+      #client-info .detail-label {
+        font-weight: bold;
+      }
+    </style>
   </body>
 </html>

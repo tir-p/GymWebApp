@@ -4,76 +4,92 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - Gym10</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* Add CSS to control the logo size */
+      .logo-img {
+        max-width: 90px; /* Adjust the max-width as needed */
+        height: auto;
+      }
+      /* Ensure the body and html take the full height of the page */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      /* Use flexbox to ensure footer stays at the bottom */
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      /* Main content should take up the available space */
+      main {
+        flex-grow: 1;
+      }
+
+      /* Footer styling */
+      footer {
+        background-color: #000000; /* Footer background color */
+        text-align: center; /* Center footer text */
+        padding: 18px; /* Padding inside footer */
+        margin-top: auto; /* Ensure footer stays at the bottom */
+      }
+
+      footer p {
+        margin: 0; /* Remove default margin */
+        color: white; /* Footer text color */
+      }
+    </style>
   </head>
-  <body class="bg-gray-50 flex items-center justify-center min-h-screen">
-    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-      <div class="flex flex-col items-center mb-6">
-        <img
-          src="img/logo.jpg"
-          alt="Gym10 Logo"
-          class="h-16 w-16 rounded-full mb-2"
-        />
-        <h1 class="text-2xl font-bold text-green-600">Login to Gym10</h1>
-      </div>
+  <body>
+    <header>
+      <nav class="navbar">
+        <img src="img/logo.jpg" alt="Gym10 Logo" class="logo-img" />
+        <ul class="nav-links">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#services">Services</a></li>
+          <li><a href="index.html#trainers">Trainers</a></li>
+          <li><a href="index.html#pricing-plan">Membership Plan</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="index.html#contact">Contact Us</a></li>
+          <li><a href="login.html" class="login-btn">Login</a></li>
+        </ul>
+      </nav>
+      <h1>Login to Gym10</h1>
+    </header>
+    <main>
+      <h2>Choose Login Type</h2>
       <div
         id="error-message"
-        class="hidden text-red-600 mb-4 text-center"
+        style="display: none; color: red; margin-bottom: 15px"
       ></div>
-      <form id="loginForm" method="post" class="space-y-4">
-        <div>
-          <label for="login-type" class="block font-semibold mb-1"
-            >Login as:</label
-          >
-          <select
-            id="login-type"
-            name="login_type"
-            required
-            class="w-full border border-gray-300 rounded px-3 py-2"
-          >
-            <option value="client">Client (Email)</option>
-            <option value="admin">Admin (Username)</option>
-            <option value="trainer">Trainer (Username)</option>
-          </select>
-        </div>
-        <div>
-          <label for="username-email" class="block font-semibold mb-1"
-            >Username or Email</label
-          >
-          <input
-            type="text"
-            id="username-email"
-            name="username_email"
-            required
-            class="w-full border border-gray-300 rounded px-3 py-2"
-          />
-        </div>
-        <div>
-          <label for="password" class="block font-semibold mb-1"
-            >Password</label
-          >
-          <input
-            type="password"
-            id="password"
-            name="password"
-            required
-            class="w-full border border-gray-300 rounded px-3 py-2"
-          />
-        </div>
-        <button
-          type="submit"
-          class="w-full bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600 transition"
+      <form id="loginForm" method="post">
+        <label for="login-type">Login as:</label>
+        <select
+          id="login-type"
+          name="login_type"
+          required
+          onchange="toggleLoginFields()"
         >
-          Login
-        </button>
+          <option value="client">Client (Email)</option>
+          <option value="admin">Admin (Username)</option>
+          <option value="trainer">Trainer (Username)</option>
+        </select>
+
+        <label for="username-email">Username or Email</label>
+        <input type="text" id="username-email" name="username_email" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit">Login</button>
       </form>
-      <p class="mt-4 text-center text-gray-600">
-        Don't have an account?
-        <a href="register.html" class="text-green-600 hover:underline"
-          >Register here</a
-        >
-      </p>
-    </div>
+      <p>Don't have an account? <a href="register.html">Register here</a></p>
+    </main>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       // Function to toggle the placeholder text based on login type
@@ -85,18 +101,20 @@
             ? "Username"
             : "Email";
       }
+
       // Initialize the placeholder
       toggleLoginFields();
-      $("#login-type").on("change", toggleLoginFields);
 
       $(document).ready(function () {
         $("#loginForm").submit(function (e) {
           e.preventDefault();
+
+          // Clear previous error messages
           $("#error-message").hide().html("");
-          $("#error-message")
-            .html("Logging in...")
-            .removeClass("hidden")
-            .show();
+
+          // Show loading message
+          $("#error-message").html("Logging in...").show();
+
           $.ajax({
             url: "login.php",
             type: "POST",
@@ -104,23 +122,24 @@
             dataType: "json",
             success: function (response) {
               if (response.success) {
+                // Redirect based on user type
                 window.location.href = response.data.redirect;
               } else {
-                $("#error-message")
-                  .html(response.message)
-                  .removeClass("hidden")
-                  .show();
+                // Show error message
+                $("#error-message").html(response.message).show();
               }
             },
-            error: function () {
+            error: function (xhr, status, error) {
               $("#error-message")
                 .html("An error occurred. Please try again.")
-                .removeClass("hidden")
                 .show();
             },
           });
         });
       });
     </script>
+    <footer>
+      <p>&copy; 2024 Gym10 - All Rights Reserved</p>
+    </footer>
   </body>
 </html>
