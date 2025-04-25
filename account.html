@@ -129,7 +129,7 @@
     </header>
 
     <main class="account-section">
-      <h2>Welcome, <span id="user-name">John Doe</span></h2>
+      <h2>Welcome, <span id="user-name"></span></h2>
       <p>Here you can manage your account details and bookings.</p>
 
       <!-- Account Info Section -->
@@ -138,15 +138,12 @@
         <form
           id="account-form"
           class="account-form"
-          method="POST"
-          action="update_account.php"
         >
           <label for="email">Email:</label>
           <input
             type="email"
             id="email"
             name="email"
-            value="john.doe@example.com"
             required
           />
 
@@ -155,13 +152,12 @@
             type="tel"
             id="phone"
             name="phone"
-            value="+1234567890"
             required
           />
 
           <button type="submit">Update Account Info</button>
         </form>
-
+        <div id="account-update-msg"></div>
         <button onclick="showPasswordForm()">Change Password</button>
       </section>
 
@@ -171,8 +167,6 @@
         <form
           id="password-form"
           class="account-form"
-          method="POST"
-          action="change_password.php"
         >
           <label for="current-password">Current Password:</label>
           <input
@@ -200,28 +194,109 @@
 
           <button type="submit">Change Password</button>
         </form>
+        <div id="password-update-msg"></div>
       </section>
 
       <!-- Booking List Section -->
       <section id="booking-list">
         <h3>Your Bookings</h3>
-        <p>Loading bookings...</p>
+        <div class="loading">Loading bookings...</div>
+        <ul id="bookings-ul"></ul>
       </section>
     </main>
 
     <script>
-      $(document).ready(function () {
+      // Fetch and populate user info
+      function loadUserInfo() {
         $.ajax({
-          url: "fetch_bookings.php",
-          method: "GET",
-          success: function (data) {
-            $("#booking-list").html(data);
+          url: 'fetch_user_info.php',
+          method: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            if (data.success) {
+              $('#user-name').text(data.name);
+              $('#email').val(data.email);
+              $('#phone').val(data.phone);
+            } else {
+              $('#user-name').text('');
+              $('#account-update-msg').html('<span style="color:red">Failed to load user info.</span>');
+            }
           },
-          error: function () {
-            alert("Error loading bookings.");
+          error: function() {
+            $('#account-update-msg').html('<span style="color:red">Error loading user info.</span>');
+          }
+        });
+      }
+      // On page load
+      $(function() {
+        loadUserInfo();
+      });
+      // Account update via AJAX
+      $('#account-form').on('submit', function(e) {
+        e.preventDefault();
+        var email = $('#email').val();
+        var phone = $('#phone').val();
+        // Simple validation
+        if (!email.match(/^\S+@\S+\.\S+$/)) {
+          $('#account-update-msg').html('<span style="color:red">Invalid email address.</span>');
+          return;
+        }
+        if (!phone.match(/^\+?\d{8,15}$/)) {
+          $('#account-update-msg').html('<span style="color:red">Invalid phone number.</span>');
+          return;
+        }
+        $.ajax({
+          url: 'update_account.php',
+          method: 'POST',
+          data: { email: email, phone: phone },
+          success: function(resp) {
+            $('#account-update-msg').html(resp);
+            loadUserInfo();
           },
+          error: function() {
+            $('#account-update-msg').html('<span style="color:red">Error updating account.</span>');
+          }
         });
       });
+      // Password change via AJAX
+      $('#password-form').on('submit', function(e) {
+        e.preventDefault();
+        var curr = $('#current-password').val();
+        var npw = $('#new-password').val();
+        var cpw = $('#confirm-password').val();
+        if (npw.length < 6) {
+          $('#password-update-msg').html('<span style="color:red">Password must be at least 6 characters.</span>');
+          return;
+        }
+        if (npw !== cpw) {
+          $('#password-update-msg').html('<span style="color:red">Passwords do not match.</span>');
+          return;
+        }
+        $.ajax({
+          url: 'change_password.php',
+          method: 'POST',
+          data: { 'current-password': curr, 'new-password': npw, 'confirm-password': cpw },
+          success: function(resp) {
+            $('#password-update-msg').html(resp);
+            if (resp.toLowerCase().includes('success')) {
+              $('#password-form')[0].reset();
+              setTimeout(function() { $('#password-change').hide(); }, 2000);
+            }
+          },
+          error: function() {
+            $('#password-update-msg').html('<span style="color:red">Error changing password.</span>');
+          }
+        });
+      });
+      // Show/hide password form
+      function showPasswordForm() {
+        var section = document.getElementById('password-change');
+        if (section.style.display === 'none' || section.style.display === '') {
+          section.style.display = 'block';
+        } else {
+          section.style.display = 'none';
+        }
+      }
     </script>
   </body>
 </html>
