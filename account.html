@@ -258,6 +258,7 @@
       <p>&copy; 2024 Gym10 - All Rights Reserved</p>
     </footer>
     <script>
+      let userEmail = "";
       // Fetch and populate user info
       function loadUserInfo() {
         $.ajax({
@@ -268,6 +269,7 @@
             if (data.success) {
               $("#email").val(data.email);
               $("#phone").val(data.phone);
+              userEmail = data.email; // Store email for password change
             } else {
               $("#account-update-msg")
                 .removeClass("success")
@@ -359,22 +361,30 @@
         $.ajax({
           url: "change_password.php",
           method: "POST",
+          dataType: "json",
           data: {
-            "current-password": curr,
-            "new-password": npw,
-            "confirm-password": cpw,
+            user_type: "client", // or "admin"/"trainer" as needed
+            identifier: userEmail, // from loadUserInfo
+            current_password: curr,
+            new_password: npw
           },
           success: function (resp) {
-            $("#password-update-msg")
-              .removeClass("error")
-              .addClass("success")
-              .html(resp)
-              .show();
-            if (resp.toLowerCase().includes("success")) {
+            if (resp.success) {
+              $("#password-update-msg")
+                .removeClass("error")
+                .addClass("success")
+                .text(resp.message)
+                .show();
               $("#password-form")[0].reset();
               setTimeout(function () {
                 $("#password-section").slideUp();
               }, 2000);
+            } else {
+              $("#password-update-msg")
+                .removeClass("success")
+                .addClass("error")
+                .text(resp.message)
+                .show();
             }
           },
           error: function () {
